@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 
 public class ParserTest  {
 
-    String line1 = "07:21:41.535679 91423200us tsft short preamble 6.0 Mb/s 5200 MHz 11a -70dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:68:ad:bb (oui Unknown) DA:Broadcast SA:dd:dd:dd:dd:ad:be (oui Unknown) Beacon (acmevisitor) [6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 Mbit] ESS[|802.11]";
-    String line2 = "11:37:22.811107 92698955us tsft short preamble 24.0 Mb/s 5200 MHz 11a -74dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:69:ad:bb (oui Unknown) SA:55:55:55:55:fe:fa (oui Unknown) DA:da:da:da:da:ad:bc (oui Unknown)";
+    String line1 = "07:21:41.535679 91423200us tsft short preamble 6.0 Mb/s 5200 MHz 11a -70dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:68:ad:bb (oui Unknown) DA:Broadcast SA:5a:5a:5a:5a:ad:be (oui Unknown) Beacon (acmevisitor) [6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 Mbit] ESS[|802.11]";
+    String line2 = "11:37:22.811107 92698955us tsft short preamble 24.0 Mb/s 5200 MHz 11a -74dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:69:ad:bb (oui Unknown) SA:5a:5a:5a:5a:fe:fa (oui Unknown) DA:da:da:da:da:ad:bc (oui Unknown)";
     String line3 = "08:58:14.793335 33575772us tsft short preamble 24.0 Mb/s 5240 MHz 11a -65dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:e4:4d (oui Unknown) Clear-To-Send";
     String line4 = "08:58:14.793409 33575885us tsft short preamble 24.0 Mb/s 5240 MHz 11a -65dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:e4:4d (oui Unknown) BA";
     String line5 = "08:58:14.795504 33577940us tsft short preamble 24.0 Mb/s 5240 MHz 11a -76dB signal -99dB noise antenna 1 (H) Unknown Ctrl SubtypeUnknown Ctrl Subtype";
@@ -39,6 +39,16 @@ public class ParserTest  {
     }
 
     @Test
+    public void SA() {
+        assertSA(line1, "5a:5a:5a:5a:ad:be");
+        assertSA(line2, "5a:5a:5a:5a:fe:fa");
+        assertSA(line3, null);
+        assertSA(line4, null);
+        assertSA(line5, null);
+        assertSA(line6, "5a:5a:5a:5a:1f:c4");
+    }
+
+    @Test
     public void DA() {
         assertDA(line1, "Broadcast");
         assertDA(line2, "da:da:da:da:ad:bc");
@@ -60,6 +70,10 @@ public class ParserTest  {
 
     void assertBSSID(String line, String mac) {
         assertMac(parse(line).BSSID, mac(mac));
+    }
+
+    void assertSA(String line, String mac) {
+        assertMac(parse(line).SA, mac(mac));
     }
 
     void assertDA(String line, String mac) {
