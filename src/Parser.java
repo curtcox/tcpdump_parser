@@ -21,19 +21,13 @@ final class Parser {
         return LocalTime.of(hour,minute,second,nano);
     }
 
-    private static Mac BSSID(String[] fields) {
-        for (String field : fields) {
-            if (field.startsWith("BSSID")) {
-                return Mac.of(field.split("BSSID:")[1]);
-            }
-        }
-        return null;
-    }
+    private static Mac BSSID(String[] fields) { return mac("BSSID",fields); }
+    private static Mac DA(String[] fields)    { return mac("DA",fields); }
 
-    private static Mac DA(String[] fields) {
+    private static Mac mac(String type,String[] fields) {
         for (String field : fields) {
-            if (field.startsWith("DA")) {
-                return Mac.of(field.split("DA:")[1]);
+            if (field.startsWith(type)) {
+                return Mac.of(field.split(type + ":")[1]);
             }
         }
         return null;
