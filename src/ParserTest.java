@@ -1,5 +1,8 @@
 import org.junit.Test;
+
+import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 import java.time.*;
 
 import static org.junit.Assert.*;
@@ -110,5 +113,27 @@ public class ParserTest  {
 
     void assertMac(Mac actual, Mac expected) {
         assertEquals(expected,actual);
+    }
+
+    @Test
+    public void empty_stream_has_no_packets() {
+        Stream stream = Parser.parse(stream());
+        assertEquals(stream.count(),0);
+    }
+
+    @Test
+    public void stream_with_1_line_has_a_packet() {
+        Stream stream = Parser.parse(stream(line1));
+        assertEquals(stream.count(),1);
+    }
+
+    InputStream stream(String... lines) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(bytes);
+        for (String line : lines) {
+            writer.write(line + System.lineSeparator());
+        }
+        writer.flush();
+        return new ByteArrayInputStream(bytes.toByteArray());
     }
 }

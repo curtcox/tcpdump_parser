@@ -1,5 +1,7 @@
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.*;
+import java.io.*;
 
 final class Parser {
 
@@ -13,6 +15,11 @@ final class Parser {
         builder.SA        = SA(fields);
         builder.TA        = TA(fields);
         return builder.build();
+    }
+
+    static Stream<Packet> parse(InputStream inputStream) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return reader.lines().map(line -> parse(line));
     }
 
     private static LocalTime localTime(String[] fields) {
