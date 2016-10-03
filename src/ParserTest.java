@@ -30,7 +30,19 @@ public class ParserTest  {
 
     @Test
     public void BSSID() {
-        assertEquals(Mac.of("d8:bb:bb:68:ad:bb"),parse(line1).BSSID);
-        assertEquals(Mac.of("d8:bb:bb:69:ad:bb"),parse(line2).BSSID);
+        assertBSSID(line1, "d8:bb:bb:68:ad:bb");
+        assertBSSID(line2, "d8:bb:bb:69:ad:bb");
+        assertBSSID(line3, null);
+        assertBSSID(line4, null);
+        assertBSSID(line5, null);
+        assertBSSID(line6, "bb:bb:bb:bb:d8:7b");
+    }
+
+    void assertBSSID(String line, String mac) {
+        assertMac(parse(line).BSSID,mac == null ? null : Mac.of(mac));
+    }
+
+    void assertMac(Mac actual, Mac expected) {
+        assertEquals(expected,actual);
     }
 }
