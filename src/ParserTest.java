@@ -38,8 +38,26 @@ public class ParserTest  {
         assertBSSID(line6, "bb:bb:bb:bb:d8:7b");
     }
 
+    @Test
+    public void DA() {
+        assertDA(line1, "Broadcast");
+        assertDA(line2, "da:da:da:da:ad:bc");
+        assertDA(line3, null);
+        assertDA(line4, null);
+        assertDA(line5, null);
+        assertDA(line6, "da:da:da:da:e4:4d");
+    }
+
     void assertBSSID(String line, String mac) {
-        assertMac(parse(line).BSSID,mac == null ? null : Mac.of(mac));
+        assertMac(parse(line).BSSID, mac(mac));
+    }
+
+    void assertDA(String line, String mac) {
+        assertMac(parse(line).DA, mac(mac));
+    }
+
+    Mac mac(String mac) {
+        return mac == null ? null : Mac.of(mac);
     }
 
     void assertMac(Mac actual, Mac expected) {

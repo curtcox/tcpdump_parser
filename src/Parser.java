@@ -5,7 +5,11 @@ final class Parser {
 
     static Packet parse(String line) {
         String[] fields = line.split(" ");
-        return new Packet(localTime(fields),BSSID(fields));
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime(fields);
+        builder.BSSID     = BSSID(fields);
+        builder.DA        = DA(fields);
+        return builder.build();
     }
 
     private static LocalTime localTime(String[] fields) {
@@ -25,4 +29,14 @@ final class Parser {
         }
         return null;
     }
+
+    private static Mac DA(String[] fields) {
+        for (String field : fields) {
+            if (field.startsWith("DA")) {
+                return Mac.of(field.split("DA:")[1]);
+            }
+        }
+        return null;
+    }
+
 }
