@@ -12,6 +12,7 @@ public class ParserTest  {
     String line4 = "08:58:14.793409 33575885us tsft short preamble 24.0 Mb/s 5240 MHz 11a -65dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:e4:4d (oui Unknown) BA";
     String line5 = "08:58:14.795504 33577940us tsft short preamble 24.0 Mb/s 5240 MHz 11a -76dB signal -99dB noise antenna 1 (H) Unknown Ctrl SubtypeUnknown Ctrl Subtype";
     String line6 = "08:58:14.792914 33575259us tsft -65dB signal -99dB noise antenna 1 5240 MHz 11a ht/20 [bit 20] CF +QoS DA:da:da:da:da:e4:4d (oui Unknown) BSSID:bb:bb:bb:bb:d8:7b (oui Unknown) SA:5a:5a:5a:5a:1f:c4 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 17.248.133.169.https > 192.168.14.113.58076: Flags [P.], seq 0:699, ack 1, win 832, options [nop,nop,TS val 828748516 ecr 798386358], length 699";
+    String line7 = "08:58:14.782486 33564956us tsft short preamble 24.0 Mb/s 5240 MHz 11a -75dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:d8:7b (oui Unknown) TA:2a:2a:2a:2a:e4:4d (oui Unknown) Request-To-Send\n";
 
     @Test
     public void parse_returns_a_packet() {
@@ -36,6 +37,7 @@ public class ParserTest  {
         assertBSSID(line4, null);
         assertBSSID(line5, null);
         assertBSSID(line6, "bb:bb:bb:bb:d8:7b");
+        assertBSSID(line7, null);
     }
 
     @Test
@@ -46,6 +48,7 @@ public class ParserTest  {
         assertSA(line4, null);
         assertSA(line5, null);
         assertSA(line6, "5a:5a:5a:5a:1f:c4");
+        assertSA(line7, null);
     }
 
     @Test
@@ -56,6 +59,7 @@ public class ParserTest  {
         assertDA(line4, null);
         assertDA(line5, null);
         assertDA(line6, "da:da:da:da:e4:4d");
+        assertDA(line7, null);
     }
 
     @Test
@@ -66,6 +70,18 @@ public class ParserTest  {
         assertRA(line4, "4a:4a:4a:4a:e4:4d");
         assertRA(line5, null);
         assertRA(line6, null);
+        assertRA(line7, "4a:4a:4a:4a:d8:7b");
+    }
+
+    @Test
+    public void TA() {
+        assertTA(line1, null);
+        assertTA(line2, null);
+        assertTA(line3, null);
+        assertTA(line4, null);
+        assertTA(line5, null);
+        assertTA(line6, null);
+        assertTA(line7, "2a:2a:2a:2a:e4:4d");
     }
 
     void assertBSSID(String line, String mac) {
@@ -82,6 +98,10 @@ public class ParserTest  {
 
     void assertRA(String line, String mac) {
         assertMac(parse(line).RA, mac(mac));
+    }
+
+    void assertTA(String line, String mac) {
+        assertMac(parse(line).TA, mac(mac));
     }
 
     Mac mac(String mac) {

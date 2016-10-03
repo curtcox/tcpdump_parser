@@ -7,6 +7,7 @@ final class Packet {
     final Mac DA;
     final Mac RA;
     final Mac SA;
+    final Mac TA;
 
     private Packet(Builder builder) {
         localTime = builder.localTime;
@@ -14,6 +15,7 @@ final class Packet {
         DA        = builder.DA;
         RA        = builder.RA;
         SA        = builder.SA;
+        TA        = builder.TA;
     }
 
     static class Builder {
@@ -22,6 +24,7 @@ final class Packet {
         Mac DA;
         Mac RA;
         Mac SA;
+        Mac TA;
 
         Packet build() {
             return new Packet(this);

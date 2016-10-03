@@ -11,6 +11,7 @@ final class Parser {
         builder.DA        = DA(fields);
         builder.RA        = RA(fields);
         builder.SA        = SA(fields);
+        builder.TA        = TA(fields);
         return builder.build();
     }
 
@@ -27,6 +28,7 @@ final class Parser {
     private static Mac DA(String[] fields)    { return mac("DA",fields); }
     private static Mac RA(String[] fields)    { return mac("RA",fields); }
     private static Mac SA(String[] fields)    { return mac("SA",fields); }
+    private static Mac TA(String[] fields)    { return mac("TA",fields); }
 
     private static Mac mac(String type,String[] fields) {
         for (String field : fields) {
