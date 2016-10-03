@@ -1,11 +1,27 @@
 import java.time.LocalTime;
-import java.util.*;
 import java.util.stream.*;
 import java.io.*;
 
 final class Parser {
 
     static Packet parse(String line) {
+        try {
+            return parse0(line);
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException("Unable to parse " + line,e);
+        }
+    }
+
+    static boolean canParse(String line) {
+        try {
+            return parse0(line) != null;
+        } catch (RuntimeException e) {
+            System.err.println("Unable to parse " + line);
+            return false;
+        }
+    }
+
+    private static Packet parse0(String line) {
         String[] fields = line.split(" ");
         Packet.Builder builder = Packet.builder();
         builder.localTime = localTime(fields);
@@ -19,7 +35,18 @@ final class Parser {
 
     static Stream<Packet> parse(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return reader.lines().map(line -> parse(line));
+        return reader.lines()
+                .filter(line -> !line.trim().isEmpty())
+                .map(line -> parse(line));
+    }
+
+    static Stream<Packet> parseValid(InputStream inputStream) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return reader.lines()
+                .filter(line -> !line.trim().isEmpty())
+                .filter(line -> !line.startsWith("\t0x"))
+                .filter(line -> Parser.canParse(line))
+                .map(line -> parse(line));
     }
 
     private static LocalTime localTime(String[] fields) {
@@ -46,4 +73,7 @@ final class Parser {
         return null;
     }
 
+    public static void main(String[] args) {
+        parse(System.in).forEach(packet -> System.out.println(packet));
+    }
 }
