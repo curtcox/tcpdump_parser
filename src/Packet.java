@@ -1,4 +1,5 @@
 import java.time.LocalTime;
+import java.util.*;
 
 final class Packet {
 
@@ -33,5 +34,17 @@ final class Packet {
 
     static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        Map map = new TreeMap();
+        if (localTime != null) { map.put("localTime", localTime.toString());}
+        if (BSSID != null)     { map.put("BSSID",BSSID); }
+        if (SA != null)        { map.put("SA",SA); }
+        if (TA != null)        { map.put("TA",TA); }
+        if (RA != null)        { map.put("RA",RA); }
+        if (DA != null)        { map.put("DA",DA); }
+        return "Packet:" + map;
     }
 }
