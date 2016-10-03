@@ -5,17 +5,20 @@ final class Packet {
     final LocalTime localTime;
     final Mac BSSID;
     final Mac DA;
+    final Mac RA;
 
     private Packet(Builder builder) {
         localTime = builder.localTime;
         BSSID     = builder.BSSID;
         DA        = builder.DA;
+        RA        = builder.RA;
     }
 
     static class Builder {
         LocalTime localTime;
         Mac BSSID;
         Mac DA;
+        Mac RA;
 
         Packet build() {
             return new Packet(this);

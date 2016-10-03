@@ -48,12 +48,26 @@ public class ParserTest  {
         assertDA(line6, "da:da:da:da:e4:4d");
     }
 
+    @Test
+    public void RA() {
+        assertRA(line1, null);
+        assertRA(line2, null);
+        assertRA(line3, "4a:4a:4a:4a:e4:4d");
+        assertRA(line4, "4a:4a:4a:4a:e4:4d");
+        assertRA(line5, null);
+        assertRA(line6, null);
+    }
+
     void assertBSSID(String line, String mac) {
         assertMac(parse(line).BSSID, mac(mac));
     }
 
     void assertDA(String line, String mac) {
         assertMac(parse(line).DA, mac(mac));
+    }
+
+    void assertRA(String line, String mac) {
+        assertMac(parse(line).RA, mac(mac));
     }
 
     Mac mac(String mac) {

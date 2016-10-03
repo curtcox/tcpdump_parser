@@ -9,6 +9,7 @@ final class Parser {
         builder.localTime = localTime(fields);
         builder.BSSID     = BSSID(fields);
         builder.DA        = DA(fields);
+        builder.RA        = RA(fields);
         return builder.build();
     }
 
@@ -23,6 +24,7 @@ final class Parser {
 
     private static Mac BSSID(String[] fields) { return mac("BSSID",fields); }
     private static Mac DA(String[] fields)    { return mac("DA",fields); }
+    private static Mac RA(String[] fields)    { return mac("RA",fields); }
 
     private static Mac mac(String type,String[] fields) {
         for (String field : fields) {
