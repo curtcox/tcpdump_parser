@@ -16,8 +16,6 @@ final class Mac {
         return value.equals(that.value);
     }
 
-    @Override
-    public String toString() {
-        return value;
-    }
+    @Override public String toString() { return value;            }
+    @Override public int    hashCode() { return value.hashCode(); }
 }
