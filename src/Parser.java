@@ -97,7 +97,11 @@ final class Parser {
     private static Integer length(String[] fields)  {
         for (int i = 0; i<fields.length; i++) {
             if (fields[i].equals("length")) {
-                return Integer.parseInt(fields[i + 1]);
+                String value = fields[i + 1];
+                if (value.endsWith(":")) {
+                    value = value.substring(0,value.length() - 1);
+                }
+                return Integer.parseInt(value);
             }
         }
         return null;

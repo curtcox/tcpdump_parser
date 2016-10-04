@@ -1,4 +1,4 @@
-final class Mac {
+final class Mac implements Comparable {
 
     final String value;
 
@@ -18,4 +18,8 @@ final class Mac {
 
     @Override public String toString() { return value;            }
     @Override public int    hashCode() { return value.hashCode(); }
+    @Override public int compareTo(Object o) {
+        Mac that = (Mac) o;
+        return value.compareTo(that.value);
+    }
 }
