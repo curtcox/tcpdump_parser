@@ -1,11 +1,13 @@
 import org.junit.Test;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
-import java.time.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.time.LocalTime;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ParserTest  {
 
@@ -16,6 +18,7 @@ public class ParserTest  {
     String line5 = "08:58:14.795504 33577940us tsft short preamble 24.0 Mb/s 5240 MHz 11a -76dB signal -99dB noise antenna 1 (H) Unknown Ctrl SubtypeUnknown Ctrl Subtype";
     String line6 = "08:58:14.792914 33575259us tsft -65dB signal -99dB noise antenna 1 5240 MHz 11a ht/20 [bit 20] CF +QoS DA:da:da:da:da:e4:4d (oui Unknown) BSSID:bb:bb:bb:bb:d8:7b (oui Unknown) SA:5a:5a:5a:5a:1f:c4 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 17.248.133.169.https > 192.168.14.113.58076: Flags [P.], seq 0:699, ack 1, win 832, options [nop,nop,TS val 828748516 ecr 798386358], length 699";
     String line7 = "08:58:14.782486 33564956us tsft short preamble 24.0 Mb/s 5240 MHz 11a -75dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:d8:7b (oui Unknown) TA:2a:2a:2a:2a:e4:4d (oui Unknown) Request-To-Send\n";
+    String line8 = "18:43:57.175984 3776822007us tsft bad-fcs -72dB signal -91dB noise antenna 0 2462 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC Strictly Ordered 45us CF +QoS BSSID:ba:ba:ba:ba:3d:a7 SA:5a:5a:5a:5a:76:58 DA:da:da:da:da:ee:fd LLC, dsap Unknown (0xce) Group, ssap Unknown (0x8c) Command, ctrl 0x2000: Information, send seq 0, rcv seq 16, Flags [Command], length 1524";
 
     @Test
     public void parse_returns_a_packet() {
@@ -33,6 +36,66 @@ public class ParserTest  {
     }
 
     @Test
+    public void signal() {
+        assertSignal(line1, "-70dB");
+        assertSignal(line2, "-74dB");
+        assertSignal(line3, "-65dB");
+        assertSignal(line4, "-65dB");
+        assertSignal(line5, "-76dB");
+        assertSignal(line6, "-65dB");
+        assertSignal(line7, "-75dB");
+        assertSignal(line8, "-72dB");
+    }
+
+    @Test
+    public void noise() {
+        assertNoise(line1, "-99dB");
+        assertNoise(line2, "-99dB");
+        assertNoise(line3, "-99dB");
+        assertNoise(line4, "-99dB");
+        assertNoise(line5, "-99dB");
+        assertNoise(line6, "-99dB");
+        assertNoise(line7, "-99dB");
+        assertNoise(line8, "-91dB");
+    }
+
+    @Test
+    public void offset() {
+        assertOffset(line1, 91423200L);
+        assertOffset(line2, 92698955L);
+        assertOffset(line3, 33575772L);
+        assertOffset(line4, 33575885L);
+        assertOffset(line5, 33577940L);
+        assertOffset(line6, 33575259L);
+        assertOffset(line7, 33564956L);
+        assertOffset(line8, 3776822007L);
+    }
+
+    @Test
+    public void duration() {
+        assertDuration(line1, null);
+        assertDuration(line2, null);
+        assertDuration(line3, null);
+        assertDuration(line4, null);
+        assertDuration(line5, null);
+        assertDuration(line6, null);
+        assertDuration(line7, null);
+        assertDuration(line8, 45L);
+    }
+
+    @Test
+    public void length() {
+        assertLength(line1, null);
+        assertLength(line2, null);
+        assertLength(line3, null);
+        assertLength(line4, null);
+        assertLength(line5, null);
+        assertLength(line6, 699);
+        assertLength(line7, null);
+        assertLength(line8, 1524);
+    }
+
+    @Test
     public void BSSID() {
         assertBSSID(line1, "d8:bb:bb:68:ad:bb");
         assertBSSID(line2, "d8:bb:bb:69:ad:bb");
@@ -41,6 +104,7 @@ public class ParserTest  {
         assertBSSID(line5, null);
         assertBSSID(line6, "bb:bb:bb:bb:d8:7b");
         assertBSSID(line7, null);
+        assertBSSID(line8, "ba:ba:ba:ba:3d:a7");
     }
 
     @Test
@@ -52,6 +116,7 @@ public class ParserTest  {
         assertSA(line5, null);
         assertSA(line6, "5a:5a:5a:5a:1f:c4");
         assertSA(line7, null);
+        assertSA(line8, "5a:5a:5a:5a:76:58");
     }
 
     @Test
@@ -63,6 +128,7 @@ public class ParserTest  {
         assertDA(line5, null);
         assertDA(line6, "da:da:da:da:e4:4d");
         assertDA(line7, null);
+        assertDA(line8, "da:da:da:da:ee:fd");
     }
 
     @Test
@@ -74,6 +140,7 @@ public class ParserTest  {
         assertRA(line5, null);
         assertRA(line6, null);
         assertRA(line7, "4a:4a:4a:4a:d8:7b");
+        assertRA(line8, null);
     }
 
     @Test
@@ -85,6 +152,7 @@ public class ParserTest  {
         assertTA(line5, null);
         assertTA(line6, null);
         assertTA(line7, "2a:2a:2a:2a:e4:4d");
+        assertTA(line8, null);
     }
 
     void assertBSSID(String line, String mac) {
@@ -105,6 +173,26 @@ public class ParserTest  {
 
     void assertTA(String line, String mac) {
         assertMac(parse(line).TA, mac(mac));
+    }
+
+    void assertSignal(String line, String signal) {
+        assertEquals(parse(line).signal, signal);
+    }
+
+    void assertNoise(String line, String noise) {
+        assertEquals(parse(line).noise, noise);
+    }
+
+    void assertOffset(String line, Long offset) {
+        assertEquals(parse(line).offset, offset);
+    }
+
+    void assertDuration(String line, Long duration) {
+        assertEquals(parse(line).duration, duration);
+    }
+
+    void assertLength(String line, Integer length) {
+        assertEquals(parse(line).length, length);
     }
 
     Mac mac(String mac) {

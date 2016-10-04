@@ -9,6 +9,11 @@ final class Packet {
     final Mac RA;
     final Mac SA;
     final Mac TA;
+    final String signal;
+    final String noise;
+    final Long offset;
+    final Long duration;
+    final Integer length;
 
     private Packet(Builder builder) {
         localTime = builder.localTime;
@@ -17,6 +22,11 @@ final class Packet {
         RA        = builder.RA;
         SA        = builder.SA;
         TA        = builder.TA;
+        signal    = builder.signal;
+        noise     = builder.noise;
+        offset    = builder.offset;
+        duration  = builder.duration;
+        length    = builder.length;
     }
 
     static class Builder {
@@ -26,6 +36,11 @@ final class Packet {
         Mac RA;
         Mac SA;
         Mac TA;
+        String signal;
+        String noise;
+        Long offset;
+        Long duration;
+        Integer length;
 
         Packet build() {
             return new Packet(this);
