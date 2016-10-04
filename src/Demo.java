@@ -2,12 +2,13 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 public class Demo {
 
     @Test
     public void demo() throws Exception {
-        countAllMacs();
+        macsThatAppearMoreThanTimes(10);
     }
 
     void dumpAllPackets() throws Exception {
@@ -22,6 +23,31 @@ public class Demo {
 
     void countAllMacs() throws Exception {
         print(allMacs().size());
+    }
+
+    void macsThatAppearMoreThanTimes(int time) throws Exception {
+        Map<Mac,Integer> counts = macToCounts();
+        List<String> lines = allMacs().stream()
+            .filter(m -> counts.get(m) > time)
+            .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
+            .sorted()
+            .collect(Collectors.toList());
+        Collections.reverse(lines);
+        for (String line : lines) {
+            print(line);
+        }
+    }
+
+    Map<Mac,Integer> macToCounts() throws Exception {
+        Counter macs = new Counter();
+        Parser.parseValid(input()).forEach(packet -> {
+            macs.add(packet.BSSID);
+            macs.add(packet.DA);
+            macs.add(packet.SA);
+            macs.add(packet.TA);
+            macs.add(packet.RA);
+        });
+        return macs.counts;
     }
 
     Set<Mac> allMacs() throws Exception {
