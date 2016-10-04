@@ -1,9 +1,13 @@
 final class Mac implements Comparable {
 
     final String value;
+    final String vendor;
+    final String serial;
 
     private Mac(String value) {
         this.value = value;
+        vendor = value.substring(0,8);
+        serial = value.substring(9);
     }
 
     static Mac of(String value) {

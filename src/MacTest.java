@@ -19,4 +19,17 @@ public class MacTest {
         Mac mac = Mac.of("88:66:77:55:33:00");
         assertSame(mac.value,mac.toString());
     }
+
+    @Test
+    public void vendor_returns_first_3_bytes() {
+        assertEquals(Mac.of("01:23:45:55:33:00").vendor,"01:23:45");
+        assertEquals(Mac.of("88:66:77:55:33:00").vendor,"88:66:77");
+    }
+
+    @Test
+    public void serial_returns_last_3_bytes() {
+        assertEquals(Mac.of("01:23:45:65:43:21").serial,"65:43:21");
+        assertEquals(Mac.of("88:66:77:55:33:00").serial,"55:33:00");
+    }
+
 }

@@ -8,7 +8,7 @@ public class Demo {
 
     @Test
     public void demo() throws Exception {
-        topMacsByAppearances(100);
+        allAccessPoints();
     }
 
     void dumpAllPackets() throws Exception {
@@ -23,6 +23,29 @@ public class Demo {
 
     void countAllMacs() throws Exception {
         print(allMacs().size());
+    }
+
+    void allAccessPoints() throws Exception {
+        Parser.parseValid(input())
+                .map(packet -> packet.BSSID)
+                .filter(x -> x!=null)
+                .sorted()
+                .distinct()
+                .forEach(bssid -> {
+                    print(bssid);
+                });
+    }
+
+    void allAccessPointVendors() throws Exception {
+        Parser.parseValid(input())
+                .map(packet -> packet.BSSID)
+                .filter(x -> x!=null)
+                .map(mac -> mac.vendor)
+                .sorted()
+                .distinct()
+                .forEach(vendor -> {
+                    print(vendor);
+                });
     }
 
     void macsThatAppearMoreThanTimes(int time) throws Exception {
