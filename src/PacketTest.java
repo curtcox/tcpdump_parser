@@ -75,7 +75,7 @@ public class PacketTest {
     @Test
     public void toString_contains_duration_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.duration = 42L;
+        builder.duration = Microseconds.of(42L);
         Packet packet = builder.build();
         assertStringIs(packet,"Packet:{duration=42}");
     }
@@ -99,7 +99,7 @@ public class PacketTest {
     @Test
     public void toString_contains_offset_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.offset = 42L;
+        builder.offset = Microseconds.of(42L);
         Packet packet = builder.build();
         assertStringIs(packet,"Packet:{offset=42}");
     }

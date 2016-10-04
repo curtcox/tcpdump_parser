@@ -70,19 +70,17 @@ final class Parser {
     private static Mac TA(String[] fields)          { return mac("TA",fields); }
     private static String signal(String[] fields)   { return dB("signal",fields); }
     private static String noise(String[] fields)    { return dB("noise",fields); }
-    private static Long duration(String[] fields)   {
+    private static Microseconds duration(String[] fields)   {
         for (int i = 2; i<fields.length; i++) {
-            if (fields[i].endsWith("us")) {
-                String[] parts = fields[i].split("u");
-                return Long.parseLong(parts[0]);
+            if (Microseconds.canParse(fields[i])) {
+                return Microseconds.parse(fields[i]);
             }
         }
         return null;
     }
 
-    private static Long offset(String[] fields)     {
-        String[] parts = fields[1].split("u");
-        return Long.parseLong(parts[0]);
+    private static Microseconds offset(String[] fields)     {
+        return Microseconds.parse(fields[1]);
     }
 
     private static String dB(String type, String[] fields)  {

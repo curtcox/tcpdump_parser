@@ -11,8 +11,8 @@ final class Packet {
     final Mac TA;
     final String signal;
     final String noise;
-    final Long offset;
-    final Long duration;
+    final Microseconds offset;
+    final Microseconds duration;
     final Integer length;
 
     private Packet(Builder builder) {
@@ -38,8 +38,8 @@ final class Packet {
         Mac TA;
         String signal;
         String noise;
-        Long offset;
-        Long duration;
+        Microseconds offset;
+        Microseconds duration;
         Integer length;
 
         Packet build() {
