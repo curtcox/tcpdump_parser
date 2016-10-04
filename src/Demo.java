@@ -8,7 +8,7 @@ public class Demo {
 
     @Test
     public void demo() throws Exception {
-        macsThatAppearMoreThanTimes(10);
+        topMacsByAppearances(100);
     }
 
     void dumpAllPackets() throws Exception {
@@ -36,6 +36,16 @@ public class Demo {
         for (String line : lines) {
             print(line);
         }
+    }
+
+    void topMacsByAppearances(int limit) throws Exception {
+        Map<Mac,Integer> counts = macToCounts();
+        List<String> lines = allMacs().stream()
+                .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
+                .sorted()
+                .collect(Collectors.toList());
+        Collections.reverse(lines);
+        lines.stream().limit(limit).forEach(x -> print(x));
     }
 
     Map<Mac,Integer> macToCounts() throws Exception {
