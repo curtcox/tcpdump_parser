@@ -60,6 +60,11 @@ final class Packet {
         if (TA != null)        { map.put("TA",TA); }
         if (RA != null)        { map.put("RA",RA); }
         if (DA != null)        { map.put("DA",DA); }
+        if (length != null)    { map.put("length",length); }
+        if (duration != null)  { map.put("duration",duration); }
+        if (signal != null)    { map.put("signal",signal); }
+        if (noise != null)     { map.put("noise",noise); }
+        if (offset != null)    { map.put("offset",offset); }
         return "Packet:" + map;
     }
 }
