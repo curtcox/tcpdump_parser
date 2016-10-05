@@ -55,6 +55,10 @@ final class Parser {
                 .map(line -> parse(line));
     }
 
+    static Stream<Packet> parseReliable(InputStream inputStream) {
+        return parseValid(inputStream).filter(packet -> !packet.radioTap.badFcs);
+    }
+
     private static LocalTime localTime(String[] fields) {
         String[] parts = fields[0].split(":");
         int hour   = Integer.parseInt(parts[0]);

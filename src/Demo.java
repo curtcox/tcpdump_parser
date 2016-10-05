@@ -8,7 +8,7 @@ public class Demo {
 
     @Test
     public void demo() throws Exception {
-        allAccessPoints();
+        topMacsByAppearances(100);
     }
 
     void dumpAllPackets() throws Exception {
@@ -26,7 +26,7 @@ public class Demo {
     }
 
     void allAccessPoints() throws Exception {
-        Parser.parseValid(input())
+        Parser.parseReliable(input())
                 .map(packet -> packet.BSSID)
                 .filter(x -> x!=null)
                 .sorted()
@@ -37,7 +37,7 @@ public class Demo {
     }
 
     void allAccessPointVendors() throws Exception {
-        Parser.parseValid(input())
+        Parser.parseReliable(input())
                 .map(packet -> packet.BSSID)
                 .filter(x -> x!=null)
                 .map(mac -> mac.vendor)
@@ -73,25 +73,27 @@ public class Demo {
 
     Map<Mac,Integer> macToCounts() throws Exception {
         Counter macs = new Counter();
-        Parser.parseValid(input()).forEach(packet -> {
-            macs.add(packet.BSSID);
-            macs.add(packet.DA);
-            macs.add(packet.SA);
-            macs.add(packet.TA);
-            macs.add(packet.RA);
-        });
+        Parser.parseReliable(input())
+                .forEach(packet -> {
+                    macs.add(packet.BSSID);
+                    macs.add(packet.DA);
+                    macs.add(packet.SA);
+                    macs.add(packet.TA);
+                    macs.add(packet.RA);
+                });
         return macs.counts;
     }
 
     Set<Mac> allMacs() throws Exception {
         Set macs = new HashSet();
-        Parser.parseValid(input()).forEach(packet -> {
-            macs.add(packet.BSSID);
-            macs.add(packet.DA);
-            macs.add(packet.SA);
-            macs.add(packet.TA);
-            macs.add(packet.RA);
-        });
+        Parser.parseValid(input())
+                .forEach(packet -> {
+                    macs.add(packet.BSSID);
+                    macs.add(packet.DA);
+                    macs.add(packet.SA);
+                    macs.add(packet.TA);
+                    macs.add(packet.RA);
+                });
         macs.remove(null);
         return new TreeSet(macs);
     }
