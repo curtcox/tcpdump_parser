@@ -1,15 +1,20 @@
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.LocalTime;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ParserTest  {
+
+/*
+ * There doesn't appear to be any good documentation on the output of tcpdump.
+ * You would expect this to be on the man page, but it is not.
+ *
+ * The best I have found is this:
+ * https://github.com/the-tcpdump-group/tcpdump/blob/master/print-802_11.c
+ */
 
     String line1 = "07:21:41.535679 91423200us tsft short preamble 6.0 Mb/s 5200 MHz 11a -70dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:68:ad:bb (oui Unknown) DA:Broadcast SA:5a:5a:5a:5a:ad:be (oui Unknown) Beacon (acmevisitor) [6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 Mbit] ESS[|802.11]";
     String line2 = "11:37:22.811107 92698955us tsft short preamble 24.0 Mb/s 5200 MHz 11a -74dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:69:ad:bb (oui Unknown) SA:5a:5a:5a:5a:fe:fa (oui Unknown) DA:da:da:da:da:ad:bc (oui Unknown)";

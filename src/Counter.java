@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Counter<K> {
+final class Counter<K> {
 
     final Map<K,Integer> counts = new HashMap();
 

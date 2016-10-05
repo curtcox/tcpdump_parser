@@ -1,4 +1,4 @@
-class Microseconds {
+final class Microseconds {
 
     final long value;
 
