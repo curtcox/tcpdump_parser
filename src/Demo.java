@@ -26,7 +26,7 @@ public class Demo {
     }
 
     void allAccessPoints() throws Exception {
-        Parser.parseReliable(input())
+        Parser.parseValid(input()).reliable()
                 .map(packet -> packet.BSSID)
                 .filter(x -> x!=null)
                 .sorted()
@@ -37,7 +37,7 @@ public class Demo {
     }
 
     void allAccessPointVendors() throws Exception {
-        Parser.parseReliable(input())
+        Parser.parseValid(input()).reliable()
                 .map(packet -> packet.BSSID)
                 .filter(x -> x!=null)
                 .map(mac -> mac.vendor)
@@ -73,7 +73,7 @@ public class Demo {
 
     Map<Mac,Integer> macToCounts() throws Exception {
         Counter macs = new Counter();
-        Parser.parseReliable(input())
+        Parser.parseValid(input()).reliable()
                 .forEach(packet -> {
                     macs.add(packet.BSSID);
                     macs.add(packet.DA);

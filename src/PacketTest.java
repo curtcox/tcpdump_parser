@@ -27,41 +27,41 @@ public class PacketTest {
     @Test
     public void toString_contains_BSSID_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.BSSID = mac("ba");
+        builder.BSSID = mac("ba:ba:ba:ba");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{BSSID=ba}");
+        assertStringIs(packet,"Packet:{BSSID=ba:ba:ba:ba}");
     }
 
     @Test
     public void toString_contains_SA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.SA = mac("5a");
+        builder.SA = mac("5a:5a:5a:5a");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{SA=5a}");
+        assertStringIs(packet,"Packet:{SA=5a:5a:5a:5a}");
     }
 
     @Test
     public void toString_contains_DA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.DA = mac("da");
+        builder.DA = mac("da:da:da:da");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{DA=da}");
+        assertStringIs(packet,"Packet:{DA=da:da:da:da}");
     }
 
     @Test
     public void toString_contains_TA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.TA = mac("2a");
+        builder.TA = mac("2a:2a:2a:2a");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{TA=2a}");
+        assertStringIs(packet,"Packet:{TA=2a:2a:2a:2a}");
     }
 
     @Test
     public void toString_contains_RA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.RA = mac("4a");
+        builder.RA = mac("4a:4a:4a:4a");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{RA=4a}");
+        assertStringIs(packet,"Packet:{RA=4a:4a:4a:4a}");
     }
 
     @Test
@@ -107,13 +107,13 @@ public class PacketTest {
     @Test
     public void toString_contains_all_Macs_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.BSSID = mac("b1");
-        builder.SA = mac("52");
-        builder.RA = mac("43");
-        builder.DA = mac("d4");
-        builder.TA = mac("25");
+        builder.BSSID = mac("b1:b1:b1:b1");
+        builder.SA = mac("52:52:52:52");
+        builder.RA = mac("43:43:43:43");
+        builder.DA = mac("d4:d4:d4:d4");
+        builder.TA = mac("25:25:25:25");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{BSSID=b1, DA=d4, RA=43, SA=52, TA=25}");
+        assertStringIs(packet,"Packet:{BSSID=b1:b1:b1:b1, DA=d4:d4:d4:d4, RA=43:43:43:43, SA=52:52:52:52, TA=25:25:25:25}");
     }
 
     void assertStringIs(Packet packet, String string) {

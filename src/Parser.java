@@ -39,24 +39,20 @@ final class Parser {
         return builder.build();
     }
 
-    static Stream<Packet> parse(InputStream inputStream) {
+    static Packets parse(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return reader.lines()
+        return Packets.of(reader.lines()
                 .filter(line -> !line.trim().isEmpty())
-                .map(line -> parse(line));
+                .map(line -> parse(line)));
     }
 
-    static Stream<Packet> parseValid(InputStream inputStream) {
+    static Packets parseValid(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return reader.lines()
+        return Packets.of(reader.lines()
                 .filter(line -> !line.trim().isEmpty())
                 .filter(line -> !line.startsWith("\t0x"))
                 .filter(line -> Parser.canParse(line))
-                .map(line -> parse(line));
-    }
-
-    static Stream<Packet> parseReliable(InputStream inputStream) {
-        return parseValid(inputStream).filter(packet -> !packet.radioTap.badFcs);
+                .map(line -> parse(line)));
     }
 
     private static LocalTime localTime(String[] fields) {
