@@ -14,6 +14,7 @@ final class Packet {
     final Microseconds offset;
     final Microseconds duration;
     final Integer length;
+    final RadioTap radioTap;
 
     private Packet(Builder builder) {
         localTime = builder.localTime;
@@ -27,6 +28,7 @@ final class Packet {
         offset    = builder.offset;
         duration  = builder.duration;
         length    = builder.length;
+        radioTap  = builder.radioTap;
     }
 
     static class Builder {
@@ -40,6 +42,7 @@ final class Packet {
         String noise;
         Microseconds offset;
         Microseconds duration;
+        RadioTap radioTap;
         Integer length;
 
         Packet build() {

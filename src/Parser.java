@@ -35,6 +35,7 @@ final class Parser {
         builder.offset    = offset(fields);
         builder.duration  = duration(fields);
         builder.length    = length(fields);
+        builder.radioTap  = RadioTap.parse(fields);
         return builder.build();
     }
 

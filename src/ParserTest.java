@@ -65,6 +65,22 @@ public class ParserTest  {
     }
 
     @Test
+    public void radio_tap_short_preamble() {
+        assert(parse(line1).radioTap.shortPreamble);
+        assert(parse(line2).radioTap.shortPreamble);
+        assert(parse(line6).radioTap.shortPreamble == false);
+        assert(parse(line8).radioTap.shortPreamble == false);
+    }
+
+    @Test
+    public void radio_tap_bad_fcs() {
+        assert(parse(line8).radioTap.badFcs);
+        assert(parse(line11).radioTap.badFcs);
+        assert(parse(line1).radioTap.badFcs == false);
+        assert(parse(line2).radioTap.badFcs == false);
+    }
+
+    @Test
     public void signal() {
         assertSignal(line1, "-70dB");
         assertSignal(line2, "-74dB");
