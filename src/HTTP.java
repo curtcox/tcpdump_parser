@@ -1,3 +1,4 @@
+import java.util.*;
 
 final class HTTP {
 
@@ -105,4 +106,15 @@ final class HTTP {
             return new HTTP(this);
         }
     }
+
+    @Override
+    public String toString() {
+        Map map = new TreeMap();
+        map.put("length",length);
+        if (verb   != null) { map.put("verb",  verb);   }
+        if (url    != null) { map.put("url",   url);    }
+        if (status != null) { map.put("status",status); }
+        return "HTTP:" + map;
+    }
+
 }

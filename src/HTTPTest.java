@@ -90,7 +90,22 @@ public class HTTPTest {
         assertEquals(url, parse(sample).url);
     }
 
+    void assertString(String sample, String string) {
+        assertEquals(string, parse(sample).toString());
+    }
+
     HTTP parse(String sample) {
         return HTTP.parse(sample.split(" "));
+    }
+
+    @Test
+    public void toString_contains_expected_values() {
+        assertString(sample1,"HTTP:{length=194}");
+        assertString(sample2,"HTTP:{length=1460}");
+        assertString(sample3,"HTTP:{length=237, status=200}");
+        assertString(sample4,"HTTP:{length=229, url=/generate_204/?unused=1475603635753, verb=GET}");
+        assertString(sample5,"HTTP:{length=386, url=/devhand/devicehandler.ashx, verb=POST}");
+        assertString(sample6,"HTTP:{length=105, status=204}");
+        assertString(sample7,"HTTP:{length=188, status=200}");
     }
 }
