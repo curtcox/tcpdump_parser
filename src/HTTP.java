@@ -3,10 +3,12 @@ final class HTTP {
 
     final int length;
     final String verb;
+    final String url;
 
     public HTTP(Builder builder) {
         length = builder.length;
         verb = builder.verb;
+        url = builder.url;
     }
 
     static HTTP parse(String[] parts) {
@@ -14,6 +16,7 @@ final class HTTP {
         int start = startIndex(parts);
         builder.length = parseLength(parts[start + 1]);
         builder.verb = parseVerb(parts,start);
+        builder.url = parseUrl(parts,start);
         return builder.build();
     }
 
@@ -39,9 +42,19 @@ final class HTTP {
         return null;
     }
 
+    static String parseUrl(String[] parts, int start) {
+        for (int i = start; i < parts.length; i++) {
+            if (parts[i].equals("HTTP:") && !parts[i + 1].startsWith("HTTP")) {
+                return parts[i+2];
+            }
+        }
+        return null;
+    }
+
     static class Builder {
         int length;
         String verb;
+        String url;
 
         HTTP build() {
             return new HTTP(this);
