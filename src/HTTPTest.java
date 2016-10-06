@@ -12,6 +12,16 @@ public class HTTPTest {
     String sample6 = "length 105: HTTP: HTTP/1.1 204 No Content";
 
     @Test
+    public void status() {
+        assertStatus(sample1,null);
+        assertStatus(sample2,null);
+        assertStatus(sample3,200);
+        assertStatus(sample4,null);
+        assertStatus(sample5,null);
+        assertStatus(sample6,204);
+    }
+
+    @Test
     public void url() {
         assertUrl(sample1,null);
         assertUrl(sample2,null);
@@ -43,6 +53,10 @@ public class HTTPTest {
 
     void assertLength(String sample, int length) {
         assertEquals(length, parse(sample).length);
+    }
+
+    void assertStatus(String sample, Integer status) {
+        assertEquals(status, parse(sample).status);
     }
 
     void assertVerb(String sample, String verb) {
