@@ -21,8 +21,22 @@ public class HTTPTest {
         assertLength(sample6,105);
     }
 
+    @Test
+    public void verb() {
+        assertVerb(sample1,null);
+        assertVerb(sample2,null);
+        assertVerb(sample3,null);
+        assertVerb(sample4,"GET");
+        assertVerb(sample5,"POST");
+        assertVerb(sample6,null);
+    }
+
     void assertLength(String sample, int length) {
-        assertEquals(parse(sample).length,length);
+        assertEquals(length, parse(sample).length);
+    }
+
+    void assertVerb(String sample, String verb) {
+        assertEquals(verb, parse(sample).verb);
     }
 
     HTTP parse(String sample) {
