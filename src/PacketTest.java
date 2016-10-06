@@ -14,6 +14,13 @@ public class PacketTest {
     }
 
     @Test
+    public void toString_contains_HTTP_when_specified() {
+        Packet.Builder builder = Packet.builder();
+        builder.http = HTTP.parse("length 188: HTTP: HTTP/1.0 200 OK".split(" "));
+        assertStringIs(builder.build(),"Packet:{http=HTTP:{length=188, status=200}}");
+    }
+
+    @Test
     public void toString_contains_localTime_when_specified() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = LocalTime.NOON;

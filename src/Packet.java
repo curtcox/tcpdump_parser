@@ -71,6 +71,7 @@ final class Packet {
         if (signal != null)    { map.put("signal",signal); }
         if (noise != null)     { map.put("noise",noise); }
         if (offset != null)    { map.put("offset",offset); }
+        if (http != null)      { map.put("http",http); }
         return "Packet:" + map;
     }
 }
