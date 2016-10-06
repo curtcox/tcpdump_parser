@@ -8,13 +8,12 @@ public class Demo {
 
     @Test
     public void demo() throws Exception {
-        topMacsByAppearances(100);
+        topMacsByAppearances();
     }
 
     void dumpAllPackets() throws Exception {
-        Parser.parseValid(input()).forEach(packet -> {
-            print(packet);
-        });
+        Parser.parseValid(input())
+                .forEach(packet -> print(packet));
     }
 
     void listAllMacs() throws Exception {
@@ -25,77 +24,27 @@ public class Demo {
         print(allMacs().size());
     }
 
+    void topMacsByAppearances() throws Exception {
+        packets().topMacsByAppearances(100)
+                .forEach(x -> print(x));
+    }
+
     void allAccessPoints() throws Exception {
-        Parser.parseValid(input()).reliable()
-                .map(packet -> packet.BSSID)
-                .filter(x -> x!=null)
-                .sorted()
-                .distinct()
-                .forEach(bssid -> {
-                    print(bssid);
-                });
+        packets().allAccessPoints()
+                .forEach(bssid -> print(bssid));
     }
 
     void allAccessPointVendors() throws Exception {
-        Parser.parseValid(input()).reliable()
-                .map(packet -> packet.BSSID)
-                .filter(x -> x!=null)
-                .map(mac -> mac.vendor)
-                .sorted()
-                .distinct()
-                .forEach(vendor -> {
-                    print(vendor);
-                });
-    }
-
-    void macsThatAppearMoreThanTimes(int time) throws Exception {
-        Map<Mac,Integer> counts = macToCounts();
-        List<String> lines = allMacs().stream()
-            .filter(m -> counts.get(m) > time)
-            .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
-            .sorted()
-            .collect(Collectors.toList());
-        Collections.reverse(lines);
-        for (String line : lines) {
-            print(line);
-        }
-    }
-
-    void topMacsByAppearances(int limit) throws Exception {
-        Map<Mac,Integer> counts = macToCounts();
-        List<String> lines = allMacs().stream()
-                .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
-                .sorted()
-                .collect(Collectors.toList());
-        Collections.reverse(lines);
-        lines.stream().limit(limit).forEach(x -> print(x));
-    }
-
-    Map<Mac,Integer> macToCounts() throws Exception {
-        Counter macs = new Counter();
-        Parser.parseValid(input()).reliable()
-                .forEach(packet -> {
-                    macs.add(packet.BSSID);
-                    macs.add(packet.DA);
-                    macs.add(packet.SA);
-                    macs.add(packet.TA);
-                    macs.add(packet.RA);
-                });
-        return macs.counts;
+        packets().allAccessPointVendors()
+                .forEach(vendor -> print(vendor));
     }
 
     Set<Mac> allMacs() throws Exception {
-        Set macs = new HashSet();
-        Parser.parseValid(input())
-                .forEach(packet -> {
-                    macs.add(packet.BSSID);
-                    macs.add(packet.DA);
-                    macs.add(packet.SA);
-                    macs.add(packet.TA);
-                    macs.add(packet.RA);
-                });
-        macs.remove(null);
-        return new TreeSet(macs);
+        return packets().allMacs();
+    }
+
+    Packets packets() throws Exception {
+        return Parser.parseValid(input()).reliable();
     }
 
     InputStream input() throws FileNotFoundException {
