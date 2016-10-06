@@ -15,6 +15,7 @@ final class Packet {
     final Microseconds duration;
     final Integer length;
     final RadioTap radioTap;
+    final HTTP http;
 
     private Packet(Builder builder) {
         localTime = builder.localTime;
@@ -29,6 +30,7 @@ final class Packet {
         duration  = builder.duration;
         length    = builder.length;
         radioTap  = builder.radioTap;
+        http      = builder.http;
     }
 
     static class Builder {
@@ -44,6 +46,7 @@ final class Packet {
         Microseconds duration;
         RadioTap radioTap;
         Integer length;
+        HTTP http;
 
         Packet build() {
             return new Packet(this);

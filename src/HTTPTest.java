@@ -10,6 +10,25 @@ public class HTTPTest {
     String sample4 = "the one that we length 229: HTTP: GET /generate_204/?unused=1475603635753 HTTP/1.1";
     String sample5 = "use to find the length 386: HTTP: POST /devhand/devicehandler.ashx HTTP/1.1";
     String sample6 = "length 105: HTTP: HTTP/1.1 204 No Content";
+    String sample7 = "length 188: HTTP: HTTP/1.0 200 OK";
+
+    @Test
+    public void parse_returns_HTTP_when_sample_is_valid() {
+        assertNotNull(parse(sample1));
+        assertNotNull(parse(sample2));
+        assertNotNull(parse(sample3));
+        assertNotNull(parse(sample4));
+        assertNotNull(parse(sample5));
+        assertNotNull(parse(sample6));
+    }
+
+    @Test
+    public void parse_returns_null_when_sample_is_NOT_valid() {
+        assertNull(parse(""));
+        assertNull(parse("this is"));
+        assertNull(parse("not the key we are looking for"));
+        assertNull(parse("Flags [Command], length 1524"));
+    }
 
     @Test
     public void status() {
@@ -19,6 +38,7 @@ public class HTTPTest {
         assertStatus(sample4,null);
         assertStatus(sample5,null);
         assertStatus(sample6,204);
+        assertStatus(sample7,200);
     }
 
     @Test
@@ -29,6 +49,7 @@ public class HTTPTest {
         assertUrl(sample4,"/generate_204/?unused=1475603635753");
         assertUrl(sample5,"/devhand/devicehandler.ashx");
         assertUrl(sample6,null);
+        assertUrl(sample7,null);
     }
 
     @Test
@@ -39,6 +60,7 @@ public class HTTPTest {
         assertLength(sample4,229);
         assertLength(sample5,386);
         assertLength(sample6,105);
+        assertLength(sample7,188);
     }
 
     @Test
@@ -49,6 +71,7 @@ public class HTTPTest {
         assertVerb(sample4,"GET");
         assertVerb(sample5,"POST");
         assertVerb(sample6,null);
+        assertVerb(sample7,null);
     }
 
     void assertLength(String sample, int length) {

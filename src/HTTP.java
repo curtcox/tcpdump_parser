@@ -14,6 +14,30 @@ final class HTTP {
     }
 
     static HTTP parse(String[] parts) {
+        if (!isHTTP(parts)) {
+            return null;
+        }
+        try {
+            return parse0(parts);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    static boolean isHTTP(String[] parts) {
+        boolean lengthFound = false;
+        for (String part : parts) {
+            if (lengthFound && part.startsWith("HTTP")) {
+                return true;
+            }
+            if (part.equals("length")) {
+                lengthFound = true;
+            }
+        }
+        return false;
+    }
+
+    private static HTTP parse0(String[] parts) {
         Builder builder = new Builder();
         int start = startIndex(parts);
         builder.length = parseLength(parts[start + 1]);
@@ -47,7 +71,7 @@ final class HTTP {
 
     static Integer parseStatus(String[] parts, int start) {
         for (int i = start; i < parts.length; i++) {
-            if (parts[i].equals("HTTP/1.1")) {
+            if (parts[i].startsWith("HTTP/")) {
                 return parts.length > i + 1 ? parseInt(parts[i + 1]) : null;
             }
         }

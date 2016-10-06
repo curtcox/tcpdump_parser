@@ -36,6 +36,7 @@ final class Parser {
         builder.duration  = duration(fields);
         builder.length    = length(fields);
         builder.radioTap  = RadioTap.parse(fields);
+        builder.http      = HTTP.parse(fields);
         return builder.build();
     }
 

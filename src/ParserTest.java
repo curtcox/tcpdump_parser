@@ -2,7 +2,6 @@ import org.junit.Test;
 
 import java.io.*;
 import java.time.LocalTime;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -62,6 +61,16 @@ public class ParserTest  {
     public void localTime() {
         assertEquals(LocalTime.of(07,21,41,535679000),parse(line1).localTime);
         assertEquals(LocalTime.of(11,37,22,811107000),parse(line2).localTime);
+    }
+
+    @Test
+    public void HTTP() {
+        assert(parse(line8).http == null);
+
+        HTTP http = parse(line9).http;
+        assertNotNull(http);
+        assert(http.length == 188);
+        assert(http.status == 200);
     }
 
     @Test
