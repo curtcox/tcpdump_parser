@@ -42,8 +42,22 @@ public class SocketTest {
         assertHost(sample6,"10.33.44.33");
     }
 
+    @Test
+    public void port() {
+        assertPort(sample1,"https");
+        assertPort(sample2,"80");
+        assertPort(sample3,"https");
+        assertPort(sample4,"58076");
+        assertPort(sample5,"61028");
+        assertPort(sample6,"43114");
+    }
+
     void assertHost(String sample, String host) {
         assertEquals(host,parse(sample).host);
+    }
+
+    void assertPort(String sample, String port) {
+        assertEquals(port, parse(sample).port);
     }
 
     Socket parse(String sample) {
