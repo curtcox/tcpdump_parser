@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -29,6 +30,20 @@ public class SocketTest {
         assertNull(parse("not.the.key.we.are.looking:for"));
         assertNull(parse("IP"));
         assertNull(parse("IPv4"));
+    }
+
+    @Test
+    public void host() {
+        assertHost(sample1,"17.248.133.169");
+        assertHost(sample2,"23.44.7.39");
+        assertHost(sample3,"132.245.72.114");
+        assertHost(sample4,"192.168.14.113");
+        assertHost(sample5,"192.168.14.112");
+        assertHost(sample6,"10.33.44.33");
+    }
+
+    void assertHost(String sample, String host) {
+        assertEquals(host,parse(sample).host);
     }
 
     Socket parse(String sample) {
