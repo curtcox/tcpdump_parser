@@ -7,12 +7,19 @@ public class Demo {
 
     @Test
     public void demo() throws Exception {
-        topMacsByAppearances();
+        networkQuality();
     }
 
     void dumpAllPackets() throws Exception {
         Parser.parseValid(input())
                 .forEach(packet -> print(packet));
+    }
+
+    void networkQuality() throws Exception {
+        long all = Parser.parseValid(input()).count();
+        long reliable = Parser.parseValid(input()).reliable().count();
+        double percent = (reliable  * 100.0 ) / all;
+        print(reliable + " / " + all + " or " + percent + "% OK");
     }
 
     void listAllMacs() throws Exception {
@@ -47,7 +54,7 @@ public class Demo {
     }
 
     InputStream input() throws FileNotFoundException {
-        return new FileInputStream(new File("/tmp/tcpdump.txt"));
+        return new FileInputStream(new File("/Users/curt.cox/tmp/capture1.txt"));
     }
 
     void print(Object object) {
