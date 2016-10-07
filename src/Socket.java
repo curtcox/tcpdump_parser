@@ -1,5 +1,10 @@
-/**
- * Created by curt.cox on 10/7/16.
- */
-public class Socket {
+final class Socket {
+
+    static Socket parse(String string) {
+        if (string.split("\\.").length == 5) {
+            return new Socket();
+        } else {
+            return null;
+        }
+    }
 }
