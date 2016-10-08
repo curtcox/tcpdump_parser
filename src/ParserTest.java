@@ -74,6 +74,18 @@ public class ParserTest  {
     }
 
     @Test
+    public void IP() {
+        assert(parse(line8).ip == null);
+
+        IP ip = parse(line9).ip;
+        assertNotNull(ip);
+        assertEquals(ip.source.host,"23.44.7.39");
+        assertEquals(ip.source.port,"80");
+        assertEquals(ip.destination.host,"192.168.14.112");
+        assertEquals(ip.destination.port,"61028");
+    }
+
+    @Test
     public void radio_tap_short_preamble() {
         assert(parse(line1).radioTap.shortPreamble);
         assert(parse(line2).radioTap.shortPreamble);

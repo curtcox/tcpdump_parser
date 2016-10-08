@@ -9,6 +9,13 @@ public class IPTest {
     String sample3 = "IP 132.245.72.114.https > 10.33.44.33.43114:";
 
     @Test
+    public void toString_contains_source_and_destination_socket() {
+        assertToString(sample1,"IP{17.248.133.169:https > 192.168.14.113:58076}");
+        assertToString(sample2,"IP{23.44.7.39:80 > 192.168.14.112:61028}");
+        assertToString(sample3,"IP{132.245.72.114:https > 10.33.44.33:43114}");
+    }
+
+    @Test
     public void parse_returns_IP_when_sample_is_valid() {
         assertNotNull(parse(sample1));
         assertNotNull(parse(sample2));
@@ -36,6 +43,10 @@ public class IPTest {
         assertDestination(sample1,"192.168.14.113.58076");
         assertDestination(sample2,"192.168.14.112.61028");
         assertDestination(sample3,"10.33.44.33.43114");
+    }
+
+    void assertToString(String sample, String string) {
+        assertEquals(string,parse(sample).toString());
     }
 
     void assertSource(String sample, String source) {

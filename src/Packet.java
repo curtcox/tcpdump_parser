@@ -16,6 +16,7 @@ final class Packet {
     final Integer length;
     final RadioTap radioTap;
     final HTTP http;
+    final IP ip;
 
     private Packet(Builder builder) {
         localTime = builder.localTime;
@@ -31,6 +32,7 @@ final class Packet {
         length    = builder.length;
         radioTap  = builder.radioTap;
         http      = builder.http;
+        ip        = builder.ip;
     }
 
     static class Builder {
@@ -73,6 +75,7 @@ final class Packet {
         if (noise != null)     { map.put("noise",noise); }
         if (offset != null)    { map.put("offset",offset); }
         if (http != null)      { map.put("http",http); }
+        if (ip != null)        { map.put("ip",ip); }
         return "Packet:" + map;
     }
 }

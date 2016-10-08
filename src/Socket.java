@@ -27,4 +27,16 @@ final class Socket {
         return port.endsWith(":") ? port.substring(0,port.length() - 1) : port;
     }
 
+    public boolean equals(Object o) {
+        return toString().equals(o.toString());
+    }
+
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return host + ":" + port;
+    }
 }

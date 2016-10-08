@@ -16,21 +16,20 @@ final class IP {
     }
 
     static Socket source(String[] parts) {
-        for (int i=0; i<parts.length; i++) {
-            if (parts[i].equals(">")) {
-                return Socket.parse(parts[i-1]);
-            }
-        }
-        return null;
+        return Socket.parse(parts[arrow(parts)-1]);
     }
 
     static Socket destination(String[] parts) {
+        return Socket.parse(parts[arrow(parts)+1]);
+    }
+
+    static int arrow(String[] parts) {
         for (int i=0; i<parts.length; i++) {
             if (parts[i].equals(">")) {
-                return Socket.parse(parts[i+1]);
+                return i;
             }
         }
-        return null;
+        return -1;
     }
 
     static boolean isValid(String[] parts) {
@@ -44,5 +43,10 @@ final class IP {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "IP{" + source + " > " + destination + "}";
     }
 }
