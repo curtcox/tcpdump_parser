@@ -1,13 +1,17 @@
 import org.junit.Test;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Set;
+import java.util.function.Supplier;
 
 public class Demo {
 
     @Test
     public void demo() throws Exception {
-        networkQuality();
+        topMacsByAppearances();
     }
 
     void dumpAllPackets() throws Exception {
@@ -53,8 +57,17 @@ public class Demo {
         return Parser.parseValid(input()).reliable();
     }
 
-    InputStream input() throws FileNotFoundException {
-        return new FileInputStream(new File("/Users/curt.cox/tmp/capture1.txt"));
+    Supplier<InputStream> input() {
+        return new Supplier<InputStream>() {
+            @Override
+            public InputStream get() {
+                try {
+                    return new FileInputStream(new File("/tmp/tcpdump.txt"));
+                } catch (FileNotFoundException e){
+                    throw new RuntimeException(e);
+                }
+            }
+        };
     }
 
     void print(Object object) {

@@ -1,6 +1,8 @@
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalTime;
-import java.util.stream.*;
-import java.io.*;
+import java.util.function.Supplier;
 
 final class Parser {
 
@@ -41,20 +43,24 @@ final class Parser {
         return builder.build();
     }
 
-    static Packets parse(InputStream inputStream) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return Packets.of(reader.lines()
-                .filter(line -> !line.trim().isEmpty())
-                .map(line -> parse(line)));
+    static Packets parse(Supplier<InputStream> inputStream) {
+        return Packets.of(() -> {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream.get()));
+            return reader.lines()
+                    .filter(line -> !line.trim().isEmpty())
+                    .map(line -> parse(line));
+        });
     }
 
-    static Packets parseValid(InputStream inputStream) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return Packets.of(reader.lines()
-                .filter(line -> !line.trim().isEmpty())
-                .filter(line -> !line.startsWith("\t0x"))
-                .filter(line -> Parser.canParse(line))
-                .map(line -> parse(line)));
+    static Packets parseValid(Supplier<InputStream> inputStream) {
+        return Packets.of(() -> {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream.get()));
+            return reader.lines()
+                    .filter(line -> !line.trim().isEmpty())
+                    .filter(line -> !line.startsWith("\t0x"))
+                    .filter(line -> Parser.canParse(line))
+                    .map(line -> parse(line));
+        });
     }
 
     private static LocalTime localTime(String[] fields) {
@@ -118,6 +124,6 @@ final class Parser {
     }
 
     public static void main(String[] args) {
-        parse(System.in).forEach(packet -> System.out.println(packet));
+        parse(() -> System.in).forEach(packet -> System.out.println(packet));
     }
 }

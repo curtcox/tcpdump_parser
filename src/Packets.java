@@ -1,39 +1,45 @@
-import java.io.*;
 import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 final class Packets {
 
-    private final Stream<Packet> stream;
+    private final Supplier<Stream<Packet>> supplier;
 
-    private Packets(Stream<Packet> stream) {
-        this.stream = stream;
+    private Packets(Supplier<Stream<Packet>> supplier) {
+        this.supplier = supplier;
     }
 
-    static Packets of(Stream<Packet> stream) {
+    static Packets of(Supplier<Stream<Packet>> stream) {
         return new Packets(stream);
     }
 
+    private Stream<Packet> stream() {
+        return supplier.get();
+    }
+
     Packets reliable() {
-        return Packets.of(stream.filter(packet -> !packet.radioTap.badFcs));
+        return Packets.of(() -> stream().filter(packet -> !packet.radioTap.badFcs));
     }
 
     void forEach(Consumer<Packet> action) {
-        stream.forEach(action);
+        stream().forEach(action);
     }
 
     <R> Stream<R> map(Function<Packet, ? extends R> mapper) {
-        return stream.map(mapper);
+        return stream().map(mapper);
     }
 
     long count() {
-        return stream.count();
+        return stream().count();
     }
 
     Set<Mac> allMacs() {
         Set macs = new HashSet();
-        stream.forEach(packet -> {
+        stream().forEach(packet -> {
                     macs.add(packet.BSSID);
                     macs.add(packet.DA);
                     macs.add(packet.SA);
@@ -46,7 +52,7 @@ final class Packets {
 
     Map<Mac,Integer> macToCounts() {
         Counter macs = new Counter();
-        stream.forEach(packet -> {
+        stream().forEach(packet -> {
                     macs.add(packet.BSSID);
                     macs.add(packet.DA);
                     macs.add(packet.SA);
@@ -57,14 +63,14 @@ final class Packets {
     }
 
     Stream<Mac> allAccessPoints() {
-        return stream.map(packet -> packet.BSSID)
+        return stream().map(packet -> packet.BSSID)
                 .filter(x -> x!=null)
                 .sorted()
                 .distinct();
     }
 
     Stream<String> allAccessPointVendors() {
-        return stream.map(packet -> packet.BSSID)
+        return stream().map(packet -> packet.BSSID)
                 .filter(x -> x!=null)
                 .map(mac -> mac.vendor)
                 .sorted()

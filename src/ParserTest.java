@@ -277,12 +277,12 @@ public class ParserTest  {
 
     @Test
     public void empty_stream_has_no_packets() {
-        assertEquals(Parser.parse(stream()).count(),0);
+        assertEquals(Parser.parse(() -> stream()).count(),0);
     }
 
     @Test
     public void stream_with_1_line_has_a_packet() {
-        assertEquals(Parser.parse(stream(line1)).count(),1);
+        assertEquals(Parser.parse(() -> stream(line1)).count(),1);
     }
 
     InputStream stream(String... lines) {
