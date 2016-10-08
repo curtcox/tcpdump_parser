@@ -22,8 +22,8 @@ final class Packets {
         return Packets.of(() -> stream().filter(packet -> !packet.radioTap.badFcs));
     }
 
-    Packets containsAny(Mac... macs) {
-        return Packets.of(() -> stream().filter(packet -> packet.containsAny(macs)));
+    Packets contains(Mac mac) {
+        return Packets.of(() -> stream().filter(packet -> packet.contains(mac)));
     }
 
     void forEach(Consumer<Packet> action) {

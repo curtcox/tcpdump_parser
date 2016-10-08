@@ -35,13 +35,8 @@ final class Packet {
         ip        = builder.ip;
     }
 
-    boolean containsAny(Mac... macs) {
-        for (Mac mac : macs) {
-            if (allMacs().contains(mac)) {
-                return true;
-            }
-        }
-        return false;
+    boolean contains(Mac mac) {
+        return mac.equals(BSSID) || mac.equals(SA) || mac.equals(RA) || mac.equals(DA) || mac.equals(TA);
     }
 
     Set<Mac> allMacs() {

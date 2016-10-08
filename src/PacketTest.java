@@ -171,11 +171,11 @@ public class PacketTest {
         builder.DA = DA;
         builder.TA = TA;
         Packet packet = builder.build();
-        assert(packet.containsAny(BSSID));
-        assert(packet.containsAny(SA));
-        assert(packet.containsAny(RA));
-        assert(packet.containsAny(DA));
-        assert(packet.containsAny(TA));
+        assert(packet.contains(BSSID));
+        assert(packet.contains(SA));
+        assert(packet.contains(RA));
+        assert(packet.contains(DA));
+        assert(packet.contains(TA));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class PacketTest {
         builder.DA = DA;
         builder.TA = TA;
         Packet packet = builder.build();
-        assertFalse(packet.containsAny(mac("00:00:00:00")));
+        assertFalse(packet.contains(mac("00:00:00:00")));
     }
 
     @Test
