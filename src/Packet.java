@@ -35,6 +35,16 @@ final class Packet {
         ip        = builder.ip;
     }
 
+    boolean containsAny(Mac... macs) {
+        return false;
+    }
+
+    Set<Mac> allMacs() {
+        Set<Mac> all = new HashSet(Arrays.asList(new Mac[]{BSSID,SA,RA,DA,TA}));
+        all.remove(null);
+        return all;
+    }
+
     static class Builder {
         LocalTime localTime;
         Mac BSSID;

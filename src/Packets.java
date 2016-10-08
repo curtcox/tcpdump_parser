@@ -25,6 +25,10 @@ final class Packets {
         return Packets.of(() -> stream().filter(packet -> !packet.radioTap.badFcs));
     }
 
+    Packets containsAny(Mac... macs) {
+        return Packets.of(() -> stream().filter(packet -> packet.containsAny(macs)));
+    }
+
     void forEach(Consumer<Packet> action) {
         stream().forEach(action);
     }
@@ -39,14 +43,7 @@ final class Packets {
 
     Set<Mac> allMacs() {
         Set macs = new HashSet();
-        stream().forEach(packet -> {
-                    macs.add(packet.BSSID);
-                    macs.add(packet.DA);
-                    macs.add(packet.SA);
-                    macs.add(packet.TA);
-                    macs.add(packet.RA);
-                });
-        macs.remove(null);
+        stream().forEach(packet -> macs.addAll(packet.allMacs()) );
         return new TreeSet(macs);
     }
 

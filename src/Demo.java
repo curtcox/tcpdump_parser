@@ -1,17 +1,15 @@
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.Set;
-import java.util.function.Supplier;
+import java.io.*;
+import java.util.*;
+import java.util.function.*;
 
 public class Demo {
 
     @Test
     public void demo() throws Exception {
-        topMacsByAppearances();
+        topMacsByAppearances(20);
+        allAccessPoints();
     }
 
     void dumpAllPackets() throws Exception {
@@ -34,8 +32,8 @@ public class Demo {
         print(allMacs().size());
     }
 
-    void topMacsByAppearances() throws Exception {
-        packets().topMacsByAppearances(100)
+    void topMacsByAppearances(int count) throws Exception {
+        packets().topMacsByAppearances(count)
                 .forEach(x -> print(x));
     }
 
