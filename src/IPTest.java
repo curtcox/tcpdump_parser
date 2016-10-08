@@ -24,6 +24,28 @@ public class IPTest {
         assertNull(parse("IPv4"));
     }
 
+    @Test
+    public void source() {
+        assertSource(sample1,"17.248.133.169.https");
+        assertSource(sample2,"23.44.7.39.80");
+        assertSource(sample3,"132.245.72.114.https");
+    }
+
+    @Test
+    public void destination() {
+        assertDestination(sample1,"192.168.14.113.58076");
+        assertDestination(sample2,"192.168.14.112.61028");
+        assertDestination(sample3,"10.33.44.33.43114");
+    }
+
+    void assertSource(String sample, String source) {
+        assertEquals(Socket.parse(source),parse(sample).source);
+    }
+
+    void assertDestination(String sample, String destination) {
+        assertEquals(Socket.parse(destination),parse(sample).destination);
+    }
+
     IP parse(String sample) {
         return IP.parse(sample.split(" "));
     }

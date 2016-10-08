@@ -47,6 +47,7 @@ final class Packet {
         RadioTap radioTap;
         Integer length;
         HTTP http;
+        IP ip;
 
         Packet build() {
             return new Packet(this);
