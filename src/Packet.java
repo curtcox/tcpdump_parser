@@ -36,6 +36,11 @@ final class Packet {
     }
 
     boolean containsAny(Mac... macs) {
+        for (Mac mac : macs) {
+            if (allMacs().contains(mac)) {
+                return true;
+            }
+        }
         return false;
     }
 

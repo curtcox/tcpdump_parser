@@ -3,7 +3,7 @@ import org.junit.Test;
 import java.time.LocalTime;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class PacketTest {
 
@@ -155,6 +155,44 @@ public class PacketTest {
         Packet packet = builder.build();
         Set<Mac> all = new HashSet<>(Arrays.asList(new Mac[]{BSSID,SA,RA,DA,TA}));
         assertEquals(packet.allMacs(),all);
+    }
+
+    @Test
+    public void containsAny_is_true_for_all_contained_macs() {
+        Packet.Builder builder = Packet.builder();
+        Mac BSSID = mac("b1:b1:b1:b1");
+        Mac SA = mac("52:52:52:52");
+        Mac RA = mac("43:43:43:43");
+        Mac DA = mac("d4:d4:d4:d4");
+        Mac TA = mac("25:25:25:25");
+        builder.BSSID = BSSID;
+        builder.SA = SA;
+        builder.RA = RA;
+        builder.DA = DA;
+        builder.TA = TA;
+        Packet packet = builder.build();
+        assert(packet.containsAny(BSSID));
+        assert(packet.containsAny(SA));
+        assert(packet.containsAny(RA));
+        assert(packet.containsAny(DA));
+        assert(packet.containsAny(TA));
+    }
+
+    @Test
+    public void containsAny_is_false_for_all_not_contained_macs() {
+        Packet.Builder builder = Packet.builder();
+        Mac BSSID = mac("b1:b1:b1:b1");
+        Mac SA = mac("52:52:52:52");
+        Mac RA = mac("43:43:43:43");
+        Mac DA = mac("d4:d4:d4:d4");
+        Mac TA = mac("25:25:25:25");
+        builder.BSSID = BSSID;
+        builder.SA = SA;
+        builder.RA = RA;
+        builder.DA = DA;
+        builder.TA = TA;
+        Packet packet = builder.build();
+        assertFalse(packet.containsAny(mac("00:00:00:00")));
     }
 
     @Test
