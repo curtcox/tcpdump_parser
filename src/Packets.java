@@ -19,7 +19,19 @@ final class Packets {
     }
 
     Packets reliable() {
-        return Packets.of(() -> stream().filter(packet -> !packet.radioTap.badFcs));
+        return filter(packet -> !packet.radioTap.badFcs);
+    }
+
+    Packets IP() {
+        return filter(packet -> packet.ip != null);
+    }
+
+    Packets HTTP() {
+        return filter(packet -> packet.http != null);
+    }
+
+    Packets filter(Predicate<Packet> predicate) {
+        return Packets.of(() -> stream().filter(predicate));
     }
 
     Packets contains(Mac mac) {
@@ -44,6 +56,13 @@ final class Packets {
         return new TreeSet(macs);
     }
 
+    Set<Mac> allClients() {
+        Set macs = allMacs();
+        macs.removeAll(allAccessPoints().collect(Collectors.toList()));
+        macs.removeAll(Mac.BROADCAST);
+        return new TreeSet(macs);
+    }
+
     Map<Mac,Integer> macToCounts() {
         Counter macs = new Counter();
         stream().forEach(packet -> {
@@ -53,7 +72,21 @@ final class Packets {
                     macs.add(packet.TA);
                     macs.add(packet.RA);
                 });
-        return macs.counts;
+        return macs.counts();
+    }
+
+    Map<Packet,Integer> macPathsToCounts() {
+        Counter macs = new Counter();
+        stream().forEach(packet -> {
+            Packet.Builder builder = Packet.builder();
+            builder.BSSID = packet.BSSID;
+            builder.DA = packet.DA;
+            builder.SA = packet.SA;
+            builder.TA = packet.TA;
+            builder.RA = packet.RA;
+            macs.add(builder.build());
+        });
+        return macs.counts();
     }
 
     Stream<Mac> allAccessPoints() {
@@ -77,14 +110,14 @@ final class Packets {
                 .filter(m -> counts.get(m) > time);
     }
 
-    Stream<String> topMacsByAppearances(int limit) {
-        Map<Mac,Integer> counts = macToCounts();
-        List<String> lines = allMacs().stream()
-                .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
-                .sorted()
-                .collect(Collectors.toList());
-        Collections.reverse(lines);
-        return lines.stream().limit(limit);
-    }
+//    Stream<String> topMacsByAppearances(int limit) {
+//        Map<Mac,Integer> counts = macToCounts();
+//        List<String> lines = allMacs().stream()
+//                .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
+//                .sorted()
+//                .collect(Collectors.toList());
+//        Collections.reverse(lines);
+//        return lines.stream().limit(limit);
+//    }
 
 }

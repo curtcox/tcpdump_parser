@@ -158,7 +158,7 @@ public class PacketTest {
     }
 
     @Test
-    public void containsAny_is_true_for_all_contained_macs() {
+    public void contains_is_true_for_all_contained_macs() {
         Packet.Builder builder = Packet.builder();
         Mac BSSID = mac("b1:b1:b1:b1");
         Mac SA = mac("52:52:52:52");
@@ -179,7 +179,7 @@ public class PacketTest {
     }
 
     @Test
-    public void containsAny_is_false_for_all_not_contained_macs() {
+    public void contains_is_false_for_all_not_contained_macs() {
         Packet.Builder builder = Packet.builder();
         Mac BSSID = mac("b1:b1:b1:b1");
         Mac SA = mac("52:52:52:52");
@@ -196,11 +196,91 @@ public class PacketTest {
     }
 
     @Test
+    public void contains_is_false_for_null_macs() {
+        Packet.Builder builder = Packet.builder();
+        Packet packet = builder.build();
+        assertFalse(packet.contains(mac("00:00:00:00")));
+    }
+
+    @Test
     public void allMacs_exactly_contains_all_Macs_when_none_specified() {
         Packet.Builder builder = Packet.builder();
         Packet packet = builder.build();
         assert(packet.allMacs() instanceof Set);
         assert(packet.allMacs().isEmpty());
+    }
+
+    @Test
+    public void packets_are_equal_when_all_they_have_is_MACs_but_the_MACs_are_the_same() {
+        Packet.Builder builder = Packet.builder();
+        assertEqual(builder.build(),builder.build());
+        builder.BSSID = mac("b1:b1:b1:b1");
+        assertEqual(builder.build(),builder.build());
+        builder.SA = mac("52:52:52:52");
+        assertEqual(builder.build(),builder.build());
+        builder.RA = mac("43:43:43:43");
+        assertEqual(builder.build(),builder.build());
+        builder.DA = mac("d4:d4:d4:d4");
+        assertEqual(builder.build(),builder.build());
+        builder.TA = mac("25:25:25:25");
+        assertEqual(builder.build(),builder.build());
+    }
+
+    @Test
+    public void packets_are_not_equal_when_BSSID_is_different() {
+        Packet.Builder builder = Packet.builder();
+        Packet without = builder.build();
+        builder.BSSID  = mac("b1:b1:b1:b1");
+        Packet with    = builder.build();
+        assertNotEqual(with,without);
+    }
+
+    @Test
+    public void packets_are_not_equal_when_SA_is_different() {
+        Packet.Builder builder = Packet.builder();
+        Packet without = builder.build();
+        builder.SA  = mac("b1:b1:b1:b1");
+        Packet with    = builder.build();
+        assertNotEqual(with,without);
+    }
+
+    @Test
+    public void packets_are_not_equal_when_RA_is_different() {
+        Packet.Builder builder = Packet.builder();
+        Packet without = builder.build();
+        builder.RA  = mac("b1:b1:b1:b1");
+        Packet with    = builder.build();
+        assertNotEqual(with,without);
+    }
+
+    @Test
+    public void packets_are_not_equal_when_TA_is_different() {
+        Packet.Builder builder = Packet.builder();
+        Packet without = builder.build();
+        builder.TA  = mac("b1:b1:b1:b1");
+        Packet with    = builder.build();
+        assertNotEqual(with,without);
+    }
+
+    @Test
+    public void packets_are_not_equal_when_DA_is_different() {
+        Packet.Builder builder = Packet.builder();
+        Packet without = builder.build();
+        builder.DA  = mac("b1:b1:b1:b1");
+        Packet with    = builder.build();
+        assertNotEqual(with,without);
+    }
+
+    void assertEqual(Packet a, Packet b) {
+        assertEquals(a,b);
+        assertEquals(b,a);
+        assertEquals(a.hashCode(),b.hashCode());
+    }
+
+    void assertNotEqual(Packet a, Packet b) {
+        assertNotEquals(a,b);
+        assertNotEquals(b,a);
+        assertNotEquals(a.hashCode(),b.hashCode());
     }
 
 }

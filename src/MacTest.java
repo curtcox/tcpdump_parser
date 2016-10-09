@@ -32,4 +32,8 @@ public class MacTest {
         assertEquals(Mac.of("88:66:77:55:33:00").serial,"55:33:00");
     }
 
+    @Test
+    public void equals_returns_false_for_null() {
+        assertFalse(Mac.of("00:00:00:00:00:00").equals(null));
+    }
 }

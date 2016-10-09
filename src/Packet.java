@@ -88,4 +88,20 @@ final class Packet {
         if (ip != null)        { map.put("ip",ip); }
         return "Packet:" + map;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Packet that = (Packet) o;
+        return Objects.equals(BSSID,that.BSSID) &&
+               Objects.equals(SA,that.SA) &&
+               Objects.equals(DA,that.DA) &&
+               Objects.equals(RA,that.RA) &&
+               Objects.equals(TA,that.TA)
+        ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(BSSID,SA,DA,RA,TA);
+    }
 }

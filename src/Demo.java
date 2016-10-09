@@ -8,8 +8,10 @@ public class Demo {
 
     @Test
     public void demo() throws Exception {
-        topMacsByAppearances(20);
-        allAccessPoints();
+        topMacPaths(20);
+        //listConversations();
+        //topMacsByAppearances(20);
+        //allAccessPoints();
     }
 
     void dumpAllPackets() throws Exception {
@@ -28,31 +30,52 @@ public class Demo {
         print(allMacs());
     }
 
+    void listConversations() throws Exception {
+        for (Mac mac : packets().allClients()) {
+            packets().contains(mac).forEach(x -> print(x));
+        }
+    }
+
+    void listIpConversations() throws Exception {
+        for (Mac mac : ipPackets().allClients()) {
+            ipPackets().contains(mac).forEach(x -> print(x));
+        }
+    }
+
     void countAllMacs() throws Exception {
         print(allMacs().size());
     }
 
-    void topMacsByAppearances(int count) throws Exception {
-        packets().topMacsByAppearances(count)
+    void topMacsByAppearances(int count) {
+        packets().macToCounts().entrySet().stream().limit(count)
                 .forEach(x -> print(x));
     }
 
-    void allAccessPoints() throws Exception {
+    void topMacPaths(int count) {
+        packets().macPathsToCounts().entrySet().stream().limit(count)
+                .forEach(x -> print(x));
+    }
+
+    void allAccessPoints() {
         packets().allAccessPoints()
                 .forEach(bssid -> print(bssid));
     }
 
-    void allAccessPointVendors() throws Exception {
+    void allAccessPointVendors() {
         packets().allAccessPointVendors()
                 .forEach(vendor -> print(vendor));
     }
 
-    Set<Mac> allMacs() throws Exception {
+    Set<Mac> allMacs() {
         return packets().allMacs();
     }
 
-    Packets packets() throws Exception {
+    Packets packets() {
         return Parser.parseValid(input()).reliable();
+    }
+
+    Packets ipPackets() {
+        return Parser.parseValid(input()).reliable().IP();
     }
 
     Supplier<InputStream> input() {
