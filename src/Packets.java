@@ -89,6 +89,16 @@ final class Packets {
         return macs.counts();
     }
 
+    Map<Packet,Integer> ipPathsToCounts() {
+        Counter ips = new Counter();
+        stream().forEach(packet -> {
+            Packet.Builder builder = Packet.builder();
+            builder.ip = packet.ip;
+            ips.add(builder.build());
+        });
+        return ips.counts();
+    }
+
     Stream<Mac> allAccessPoints() {
         return stream().map(packet -> packet.BSSID)
                 .filter(x -> x!=null)

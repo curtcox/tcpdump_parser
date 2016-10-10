@@ -45,6 +45,36 @@ public class IPTest {
         assertDestination(sample3,"10.33.44.33.43114");
     }
 
+    @Test
+    public void equal() {
+        assertEqual(sample1);
+        assertEqual(sample2);
+        assertEqual(sample3);
+    }
+
+    @Test
+    public void not_equal() {
+        assertNotEqual(sample1,sample2);
+        assertNotEqual(sample1,sample3);
+        assertNotEqual(sample2,sample3);
+    }
+
+    void assertEqual(String sample) {
+        IP a = parse(sample);
+        IP b = parse(sample);
+        assertEquals(a,b);
+        assertEquals(b,a);
+        assertEquals(a.hashCode(),b.hashCode());
+    }
+
+    void assertNotEqual(String samplea, String sampleb) {
+        IP a = parse(samplea);
+        IP b = parse(sampleb);
+        assertNotEquals(a,b);
+        assertNotEquals(b,a);
+        assertNotEquals(a.hashCode(),b.hashCode());
+    }
+
     void assertToString(String sample, String string) {
         assertEquals(string,parse(sample).toString());
     }

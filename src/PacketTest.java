@@ -139,6 +139,10 @@ public class PacketTest {
         return Mac.of(mac);
     }
 
+    IP ip(String ip) {
+        return IP.parse(ip.split(" "));
+    }
+
     @Test
     public void allMacs_exactly_contains_all_Macs_when_all_specified() {
         Packet.Builder builder = Packet.builder();
@@ -224,6 +228,25 @@ public class PacketTest {
         assertEqual(builder.build(),builder.build());
         builder.TA = mac("25:25:25:25");
         assertEqual(builder.build(),builder.build());
+    }
+
+    @Test
+    public void packets_are_equal_when_all_they_have_is_IPs_but_the_IPs_are_the_same() {
+        Packet.Builder builder = Packet.builder();
+        assertEqual(builder.build(),builder.build());
+        builder.ip = ip("IP 132.245.72.114.https > 10.33.44.33.43114");
+        assertEqual(builder.build(),builder.build());
+    }
+
+    @Test
+    public void packets_are_not_equal_when_all_they_have_is_IPs_but_the_IPs_are_different() {
+        Packet.Builder builder = Packet.builder();
+        assertEqual(builder.build(),builder.build());
+        builder.ip = ip("IP 132.245.72.114.https > 10.33.44.33.43114");
+        Packet a = builder.build();
+        builder.ip = ip("IP 192.168.0.1.https > 10.33.44.33.43114");
+        Packet b = builder.build();
+        assertNotEqual(a,b);
     }
 
     @Test

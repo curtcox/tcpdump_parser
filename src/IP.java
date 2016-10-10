@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 final class IP {
 
     final Socket source;
@@ -43,6 +45,17 @@ final class IP {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        IP that = (IP) o;
+        return Objects.equals(source,that.source) && Objects.equals(destination,that.destination);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source,destination);
     }
 
     @Override

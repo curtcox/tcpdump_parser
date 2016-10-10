@@ -95,16 +95,17 @@ final class Packet {
     @Override
     public boolean equals(Object o) {
         Packet that = (Packet) o;
-        return Objects.equals(BSSID,that.BSSID) &&
-               Objects.equals(SA,that.SA) &&
-               Objects.equals(DA,that.DA) &&
-               Objects.equals(RA,that.RA) &&
-               Objects.equals(TA,that.TA)
+        return  Objects.equals(BSSID,that.BSSID) &&
+                Objects.equals(SA,that.SA) &&
+                Objects.equals(DA,that.DA) &&
+                Objects.equals(RA,that.RA) &&
+                Objects.equals(TA,that.TA) &&
+                Objects.equals(ip,that.ip)
         ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(BSSID,SA,DA,RA,TA);
+        return Objects.hash(BSSID,SA,DA,RA,TA,ip);
     }
 }

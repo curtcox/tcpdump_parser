@@ -7,19 +7,17 @@ import java.util.function.*;
 public class Demo {
 
     @Test
-    public void demo() throws Exception {
-        topMacPaths(20);
-        //listConversations();
-        //topMacsByAppearances(20);
-        //allAccessPoints();
+    public void demo() {
+        topIpPaths(100);
+        listIpConversations();
     }
 
-    void dumpAllPackets() throws Exception {
+    void dumpAllPackets() {
         Parser.parseValid(input())
                 .forEach(packet -> print(packet));
     }
 
-    void networkQuality() throws Exception {
+    void networkQuality() {
         long all = Parser.parseValid(input()).count();
         long reliable = Parser.parseValid(input()).reliable().count();
         double percent = (reliable  * 100.0 ) / all;
@@ -30,19 +28,19 @@ public class Demo {
         print(allMacs());
     }
 
-    void listConversations() throws Exception {
+    void listConversations() {
         for (Mac mac : packets().allClients()) {
             packets().contains(mac).forEach(x -> print(x));
         }
     }
 
-    void listIpConversations() throws Exception {
+    void listIpConversations() {
         for (Mac mac : ipPackets().allClients()) {
             ipPackets().contains(mac).forEach(x -> print(x));
         }
     }
 
-    void countAllMacs() throws Exception {
+    void countAllMacs() {
         print(allMacs().size());
     }
 
@@ -53,6 +51,11 @@ public class Demo {
 
     void topMacPaths(int count) {
         packets().macPathsToCounts().entrySet().stream().limit(count)
+                .forEach(x -> print(x));
+    }
+
+    void topIpPaths(int count) {
+        packets().ipPathsToCounts().entrySet().stream().limit(count)
                 .forEach(x -> print(x));
     }
 
@@ -83,7 +86,7 @@ public class Demo {
             @Override
             public InputStream get() {
                 try {
-                    return new FileInputStream(new File("/tmp/tcpdump.txt"));
+                    return new FileInputStream(new File("/Users/curt.cox/tmp/capture1.txt"));
                 } catch (FileNotFoundException e){
                     throw new RuntimeException(e);
                 }

@@ -27,6 +27,7 @@ public class ParserTest  {
     String line10 = "11:02:46.273066 213699562us tsft 1.0 Mb/s 2412 MHz 11g -83dB signal -92dB noise antenna 0 BSSID:ba:ba:ba:ba:22:2e (oui Unknown) DA:da:da:da:da:08:48 (oui Unknown) SA:5a:5a:5a:5a:22:2e (oui Unknown) DeAuthentication: Previous authentication no longer valid";
     String line11 = "14:36:37.847579 239222453us tsft bad-fcs 1.0 Mb/s 2412 MHz 11g -76dB signal -83dB noise antenna 0 BSSID:ba:ba:ba:ba:32:1e DA:da:da:da:da:b8:7f SA:5a:5a:5a:5a:5d:f5 Probe Request (Home) [1.0 2.0 5.5 11.0 Mbit][|802.11]";
     String line12 = "14:38:09.849876 331222059us tsft 1.0 Mb/s 2412 MHz 11g -73dB signal -83dB noise antenna 0 BSSID:ba:ba:ba:ba:67:1b DA:da:da:da:da:69:18 SA:5a:5a:5a:5a:67:1b Probe Response (MyCharterWiFi1b-2G) [1.0* 2.0* 5.5 11.0 18.0 24.0 36.0 54.0 Mbit] CH: 1, PRIVACY";
+    String line13 = "13:08:10.022784 2303188775us tsft -54dB signal -95dB noise antenna 0 2412 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC [bit 20] CF +QoS DA:00:08:22:a6:1c:fc (oui Unknown) BSSID:8a:15:04:b6:70:80 (oui Unknown) SA:88:15:44:b6:70:80 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 10.128.128.128.domain > 10.121.114.171.btpp2audctr1: 4351 2/0/0 CNAME scontent.xx.fbcdn.net., A 157.240.2.25 (76)";
 
     @Test
     public void parse_returns_a_packet() {
@@ -55,6 +56,7 @@ public class ParserTest  {
         assert(canParse(line10));
         assert(canParse(line11));
         assert(canParse(line12));
+        assert(canParse(line13));
     }
 
     @Test
