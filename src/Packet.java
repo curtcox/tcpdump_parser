@@ -100,12 +100,13 @@ final class Packet {
                 Objects.equals(DA,that.DA) &&
                 Objects.equals(RA,that.RA) &&
                 Objects.equals(TA,that.TA) &&
-                Objects.equals(ip,that.ip)
+                Objects.equals(ip,that.ip) &&
+                Objects.equals(localTime,that.localTime)
         ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(BSSID,SA,DA,RA,TA,ip);
+        return Objects.hash(BSSID,SA,DA,RA,TA,ip,localTime);
     }
 }

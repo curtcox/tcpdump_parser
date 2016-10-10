@@ -239,6 +239,23 @@ public class PacketTest {
     }
 
     @Test
+    public void packets_are_equal_when_all_they_have_is_times_but_the_time_are_the_same() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = LocalTime.NOON;
+        assertEqual(builder.build(),builder.build());
+    }
+
+    @Test
+    public void packets_are_not_equal_when_they_have_different_times() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = LocalTime.NOON;
+        Packet noon = builder.build();
+        builder.localTime = LocalTime.MIDNIGHT;
+        Packet midnight = builder.build();
+        assertNotEqual(noon,midnight);
+    }
+
+    @Test
     public void packets_are_not_equal_when_all_they_have_is_IPs_but_the_IPs_are_different() {
         Packet.Builder builder = Packet.builder();
         assertEqual(builder.build(),builder.build());

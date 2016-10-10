@@ -6,10 +6,21 @@ import java.util.function.*;
 
 public class Demo {
 
+    final String inputFile = "/tmp/capture.txt";
+    final String outputFile = "/tmp/report.txt";
+    PrintStream out = System.out;
+
+    void writeToFile() {
+        try {
+            out = new PrintStream(new FileOutputStream(new File(outputFile)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test
     public void demo() {
-        topIpPaths(100);
-        listIpConversations();
+        summarizeIpConversations();
     }
 
     void dumpAllPackets() {
@@ -40,6 +51,12 @@ public class Demo {
         }
     }
 
+    void summarizeIpConversations() {
+        for (Mac mac : summarizeIpPackets().allClients()) {
+            summarizeIpPackets().map(packet -> packet.localTime + " " + packet.ip ).forEach(x -> print(x));
+        }
+    }
+
     void countAllMacs() {
         print(allMacs().size());
     }
@@ -55,7 +72,7 @@ public class Demo {
     }
 
     void topIpPaths(int count) {
-        packets().ipPathsToCounts().entrySet().stream().limit(count)
+        ipPackets().ipPathsToCounts().entrySet().stream().limit(count)
                 .forEach(x -> print(x));
     }
 
@@ -78,23 +95,24 @@ public class Demo {
     }
 
     Packets ipPackets() {
-        return Parser.parseValid(input()).reliable().IP();
+        return packets().IP();
+    }
+
+    Packets summarizeIpPackets() {
+        return ipPackets().summarize();
     }
 
     Supplier<InputStream> input() {
-        return new Supplier<InputStream>() {
-            @Override
-            public InputStream get() {
-                try {
-                    return new FileInputStream(new File("/Users/curt.cox/tmp/capture1.txt"));
-                } catch (FileNotFoundException e){
-                    throw new RuntimeException(e);
-                }
+        return () -> {
+            try {
+                return new FileInputStream(new File(inputFile));
+            } catch (FileNotFoundException e){
+                throw new RuntimeException(e);
             }
         };
     }
 
     void print(Object object) {
-        System.out.println(object);
+        out.println(object);
     }
 }

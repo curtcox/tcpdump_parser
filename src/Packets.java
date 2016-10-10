@@ -1,3 +1,5 @@
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -28,6 +30,21 @@ final class Packets {
 
     Packets HTTP() {
         return filter(packet -> packet.http != null);
+    }
+
+    Packets summarize() {
+        return Packets.of(
+                () -> map(packet -> {
+                    Packet.Builder builder = Packet.builder();
+                    builder.BSSID = packet.BSSID;
+                    builder.RA = packet.RA;
+                    builder.TA = packet.TA;
+                    builder.DA = packet.DA;
+                    builder.SA = packet.SA;
+                    builder.ip = packet.ip;
+                    builder.localTime = packet.localTime.truncatedTo(ChronoUnit.SECONDS);
+                    return builder.build();
+                }).distinct());
     }
 
     Packets filter(Predicate<Packet> predicate) {
@@ -119,15 +136,5 @@ final class Packets {
         return allMacs().stream()
                 .filter(m -> counts.get(m) > time);
     }
-
-//    Stream<String> topMacsByAppearances(int limit) {
-//        Map<Mac,Integer> counts = macToCounts();
-//        List<String> lines = allMacs().stream()
-//                .map(m -> String.format("%06d", counts.get(m)) + " -> " + m)
-//                .sorted()
-//                .collect(Collectors.toList());
-//        Collections.reverse(lines);
-//        return lines.stream().limit(limit);
-//    }
 
 }
