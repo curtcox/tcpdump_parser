@@ -11,6 +11,8 @@ public class SocketTest {
     String sample5 = "sb-in-f188.1e100.net.5228:";
     String sample6 = "10.33.44.33.43114:";
     String sample7 = "imap14.mail.vip.bf1.yahoo.com.imaps";
+    String sample8 = "fe80::1837:1aaf:ddd3:f7c8.mdns";
+    String sample9 = "ff02::fb.mdns:";
 
     @Test
     public void toString_includes_host_and_port() {
@@ -21,6 +23,8 @@ public class SocketTest {
         assertToString(sample5,"sb-in-f188.1e100.net:5228");
         assertToString(sample6,"10.33.44.33:43114");
         assertToString(sample7,"imap14.mail.vip.bf1.yahoo.com:imaps");
+        assertToString(sample8,"fe80::1837:1aaf:ddd3:f7c8.mdns");
+        assertToString(sample9,"ff02::fb.mdns:");
     }
 
     @Test
@@ -32,6 +36,8 @@ public class SocketTest {
         assertEqual(sample5);
         assertEqual(sample6);
         assertEqual(sample7);
+        assertEqual(sample8);
+        assertEqual(sample9);
     }
 
     @Test
@@ -88,6 +94,8 @@ public class SocketTest {
         assertHost(sample5,"sb-in-f188.1e100.net");
         assertHost(sample6,"10.33.44.33");
         assertHost(sample7,"imap14.mail.vip.bf1.yahoo.com");
+        assertHost(sample8,"fe80::1837:1aaf:ddd3:f7c8");
+        assertHost(sample9,"ff02::fb.");
     }
 
     @Test
@@ -99,6 +107,8 @@ public class SocketTest {
         assertPort(sample5,"5228");
         assertPort(sample6,"43114");
         assertPort(sample7,"imaps");
+        assertPort(sample8,"mdns");
+        assertPort(sample9,"mdns");
     }
 
     void assertHost(String sample, String host) {

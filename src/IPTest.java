@@ -8,6 +8,7 @@ public class IPTest {
     String sample2 = "IPv4 (0x0800): 23.44.7.39.80 > 192.168.14.112.61028";
     String sample3 = "IP 132.245.72.114.https > 10.33.44.33.43114:";
     String sample4 = "IPv4 (0x0800): 10.173.119.71.47276 > sb-in-f188.1e100.net.5228:";
+    String sample5 = "IPv6 (0x86dd): fe80::1837:1aaf:ddd3:f7c8.mdns > ff02::fb.mdns:";
 
     @Test
     public void toString_contains_source_and_destination_socket() {
@@ -15,6 +16,7 @@ public class IPTest {
         assertToString(sample2,"IP{23.44.7.39:80 > 192.168.14.112:61028}");
         assertToString(sample3,"IP{132.245.72.114:https > 10.33.44.33:43114}");
         assertToString(sample4,"IP{10.173.119.71:47276 > sb-in-f188.1e100.net:5228}");
+        assertToString(sample5,"IP{fe80::1837:1aaf:ddd3:f7c8:mdns > ff02::fb:mdns}");
     }
 
     @Test
@@ -23,6 +25,7 @@ public class IPTest {
         assertNotNull(parse(sample2));
         assertNotNull(parse(sample3));
         assertNotNull(parse(sample4));
+        assertNotNull(parse(sample5));
     }
 
     @Test
@@ -39,6 +42,7 @@ public class IPTest {
         assertSource(sample1,"17.248.133.169.https");
         assertSource(sample2,"23.44.7.39.80");
         assertSource(sample3,"132.245.72.114.https");
+        assertSource(sample5,"132.245.72.114.https");
     }
 
     @Test
@@ -46,6 +50,7 @@ public class IPTest {
         assertDestination(sample1,"192.168.14.113.58076");
         assertDestination(sample2,"192.168.14.112.61028");
         assertDestination(sample3,"10.33.44.33.43114");
+        assertDestination(sample4,"10.33.44.33.43114");
     }
 
     @Test
@@ -53,6 +58,8 @@ public class IPTest {
         assertEqual(sample1);
         assertEqual(sample2);
         assertEqual(sample3);
+        assertEqual(sample4);
+        assertEqual(sample5);
     }
 
     @Test
