@@ -7,12 +7,14 @@ public class IPTest {
     String sample1 = "IPv4 (0x0800): 17.248.133.169.https > 192.168.14.113.58076";
     String sample2 = "IPv4 (0x0800): 23.44.7.39.80 > 192.168.14.112.61028";
     String sample3 = "IP 132.245.72.114.https > 10.33.44.33.43114:";
+    String sample4 = "IPv4 (0x0800): 10.173.119.71.47276 > sb-in-f188.1e100.net.5228:";
 
     @Test
     public void toString_contains_source_and_destination_socket() {
         assertToString(sample1,"IP{17.248.133.169:https > 192.168.14.113:58076}");
         assertToString(sample2,"IP{23.44.7.39:80 > 192.168.14.112:61028}");
         assertToString(sample3,"IP{132.245.72.114:https > 10.33.44.33:43114}");
+        assertToString(sample4,"IP{10.173.119.71:47276 > sb-in-f188.1e100.net:5228}");
     }
 
     @Test
@@ -20,6 +22,7 @@ public class IPTest {
         assertNotNull(parse(sample1));
         assertNotNull(parse(sample2));
         assertNotNull(parse(sample3));
+        assertNotNull(parse(sample4));
     }
 
     @Test

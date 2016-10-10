@@ -8,7 +8,7 @@ public class SocketTest {
     String sample2 = "23.44.7.39.80";
     String sample3 = "132.245.72.114.https";
     String sample4 = "192.168.14.113.58076";
-    String sample5 = "192.168.14.112.61028";
+    String sample5 = "sb-in-f188.1e100.net.5228:";
     String sample6 = "10.33.44.33.43114:";
 
     @Test
@@ -17,7 +17,7 @@ public class SocketTest {
         assertToString(sample2,"23.44.7.39:80");
         assertToString(sample3,"132.245.72.114:https");
         assertToString(sample4,"192.168.14.113:58076");
-        assertToString(sample5,"192.168.14.112:61028");
+        assertToString(sample5,"sb-in-f188.1e100.net:5228");
         assertToString(sample6,"10.33.44.33:43114");
     }
 
@@ -82,7 +82,7 @@ public class SocketTest {
         assertHost(sample2,"23.44.7.39");
         assertHost(sample3,"132.245.72.114");
         assertHost(sample4,"192.168.14.113");
-        assertHost(sample5,"192.168.14.112");
+        assertHost(sample5,"sb-in-f188.1e100.net");
         assertHost(sample6,"10.33.44.33");
     }
 
@@ -92,7 +92,7 @@ public class SocketTest {
         assertPort(sample2,"80");
         assertPort(sample3,"https");
         assertPort(sample4,"58076");
-        assertPort(sample5,"61028");
+        assertPort(sample5,"5228");
         assertPort(sample6,"43114");
     }
 
