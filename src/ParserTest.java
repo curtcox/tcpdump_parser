@@ -21,7 +21,7 @@ public class ParserTest  {
     String line4 = "08:58:14.793409 33575885us tsft short preamble 24.0 Mb/s 5240 MHz 11a -65dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:e4:4d (oui Unknown) BA";
     String line5 = "08:58:14.795504 33577940us tsft short preamble 24.0 Mb/s 5240 MHz 11a -76dB signal -99dB noise antenna 1 (H) Unknown Ctrl SubtypeUnknown Ctrl Subtype";
     String line6 = "08:58:14.792914 33575259us tsft -65dB signal -99dB noise antenna 1 5240 MHz 11a ht/20 [bit 20] CF +QoS DA:da:da:da:da:e4:4d (oui Unknown) BSSID:bb:bb:bb:bb:d8:7b (oui Unknown) SA:5a:5a:5a:5a:1f:c4 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 17.248.133.169.https > 192.168.14.113.58076: Flags [P.], seq 0:699, ack 1, win 832, options [nop,nop,TS val 828748516 ecr 798386358], length 699";
-    String line7 = "08:58:14.782486 33564956us tsft short preamble 24.0 Mb/s 5240 MHz 11a -75dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:d8:7b (oui Unknown) TA:2a:2a:2a:2a:e4:4d (oui Unknown) Request-To-Send\n";
+    String line7 = "08:58:14.782486 33564956us tsft short preamble 24.0 Mb/s 5240 MHz 11a -75dB signal -99dB noise antenna 1 RA:4a:4a:4a:4a:d8:7b (oui Unknown) TA:2a:2a:2a:2a:e4:4d (oui Unknown) Request-To-Send";
     String line8 = "18:43:57.175984 3776822007us tsft bad-fcs -72dB signal -91dB noise antenna 0 2462 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC Strictly Ordered 45us CF +QoS BSSID:ba:ba:ba:ba:3d:a7 SA:5a:5a:5a:5a:76:58 DA:da:da:da:da:ee:fd LLC, dsap Unknown (0xce) Group, ssap Unknown (0x8c) Command, ctrl 0x2000: Information, send seq 0, rcv seq 16, Flags [Command], length 1524";
     String line9 = "14:03:38.330729 2554480861us tsft -98dB noise antenna 1 5240 MHz 11a ht/20 [bit 20] CF +QoS DA:da:da:da:da:15:37 BSSID:ba:ba:ba:ba:d8:7b SA:5a:5a:5a:5a:1f:c4 LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 23.44.7.39.80 > 192.168.14.112.61028: Flags [P.], seq 373279892:373280080, ack 3212565907, win 905, options [nop,nop,TS val 2424555772 ecr 49580065], length 188: HTTP: HTTP/1.0 200 OK";
     String line10 = "11:02:46.273066 213699562us tsft 1.0 Mb/s 2412 MHz 11g -83dB signal -92dB noise antenna 0 BSSID:ba:ba:ba:ba:22:2e (oui Unknown) DA:da:da:da:da:08:48 (oui Unknown) SA:5a:5a:5a:5a:22:2e (oui Unknown) DeAuthentication: Previous authentication no longer valid";
@@ -55,6 +55,22 @@ public class ParserTest  {
         assert(canParse(line10));
         assert(canParse(line11));
         assert(canParse(line12));
+    }
+
+    @Test
+    public void type() {
+        assertType(line1,"Beacon");
+        assertType(line2,null);
+        assertType(line3,"Clear-To-Send");
+        assertType(line4,"BA");
+        assertType(line5,"Unknown");
+        assertType(line6,"LLC");
+        assertType(line7,"Request-To-Send");
+        assertType(line8,"LLC");
+        assertType(line9,"LLC");
+        assertType(line10,"DeAuthentication");
+        assertType(line11,"Probe Request");
+        assertType(line12,"Probe Response");
     }
 
     @Test
@@ -246,6 +262,10 @@ public class ParserTest  {
 
     void assertSignal(String line, String signal) {
         assertEquals(parse(line).signal, signal);
+    }
+
+    void assertType(String line, String type) {
+        assertEquals(parse(line).type, type);
     }
 
     void assertNoise(String line, String noise) {

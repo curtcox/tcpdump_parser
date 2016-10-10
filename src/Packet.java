@@ -11,6 +11,7 @@ final class Packet {
     final Mac TA;
     final String signal;
     final String noise;
+    final String type;
     final Microseconds offset;
     final Microseconds duration;
     final Integer length;
@@ -33,6 +34,7 @@ final class Packet {
         radioTap  = builder.radioTap;
         http      = builder.http;
         ip        = builder.ip;
+        type      = builder.type;
     }
 
     boolean contains(Mac mac) {
@@ -60,6 +62,7 @@ final class Packet {
         Integer length;
         HTTP http;
         IP ip;
+        String type;
 
         Packet build() {
             return new Packet(this);

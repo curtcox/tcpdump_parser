@@ -38,6 +38,7 @@ final class Parser {
         builder.radioTap  = RadioTap.parse(fields);
         builder.http      = HTTP.parse(fields);
         builder.ip        = IP.parse(fields);
+        builder.type      = Type.parse(fields);
         return builder.build();
     }
 
