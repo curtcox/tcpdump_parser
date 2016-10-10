@@ -42,7 +42,7 @@ public class IPTest {
         assertSource(sample1,"17.248.133.169.https");
         assertSource(sample2,"23.44.7.39.80");
         assertSource(sample3,"132.245.72.114.https");
-        assertSource(sample5,"132.245.72.114.https");
+        assertSource(sample5,"fe80::1837:1aaf:ddd3:f7c8.mdns");
     }
 
     @Test
@@ -50,7 +50,7 @@ public class IPTest {
         assertDestination(sample1,"192.168.14.113.58076");
         assertDestination(sample2,"192.168.14.112.61028");
         assertDestination(sample3,"10.33.44.33.43114");
-        assertDestination(sample4,"10.33.44.33.43114");
+        assertDestination(sample4,"sb-in-f188.1e100.net.5228");
     }
 
     @Test

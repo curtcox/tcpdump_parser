@@ -23,8 +23,8 @@ public class SocketTest {
         assertToString(sample5,"sb-in-f188.1e100.net:5228");
         assertToString(sample6,"10.33.44.33:43114");
         assertToString(sample7,"imap14.mail.vip.bf1.yahoo.com:imaps");
-        assertToString(sample8,"fe80::1837:1aaf:ddd3:f7c8.mdns");
-        assertToString(sample9,"ff02::fb.mdns:");
+        assertToString(sample8,"fe80::1837:1aaf:ddd3:f7c8:mdns");
+        assertToString(sample9,"ff02::fb:mdns");
     }
 
     @Test
@@ -75,6 +75,8 @@ public class SocketTest {
         assertNotNull(parse(sample5));
         assertNotNull(parse(sample6));
         assertNotNull(parse(sample7));
+        assertNotNull(parse(sample8));
+        assertNotNull(parse(sample9));
     }
 
     @Test
@@ -95,7 +97,7 @@ public class SocketTest {
         assertHost(sample6,"10.33.44.33");
         assertHost(sample7,"imap14.mail.vip.bf1.yahoo.com");
         assertHost(sample8,"fe80::1837:1aaf:ddd3:f7c8");
-        assertHost(sample9,"ff02::fb.");
+        assertHost(sample9,"ff02::fb");
     }
 
     @Test

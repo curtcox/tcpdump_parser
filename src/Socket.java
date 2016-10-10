@@ -10,7 +10,7 @@ final class Socket {
 
     static Socket parse(String string) {
         String[] parts = string.split("\\.");
-        if (parts.length > 3) {
+        if (parts.length > 1) {
             return new Socket(host(string),port(string));
         } else {
             return null;
