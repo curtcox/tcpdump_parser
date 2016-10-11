@@ -1,10 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 final class Timeline {
 
-    private Timeline(Builder builder) {
+    final List<Channel> channels;
 
+    private Timeline(Builder builder) {
+        channels = Collections.unmodifiableList(builder.channels);
     }
 
     static Timeline of(Packets packets) {
@@ -13,14 +14,14 @@ final class Timeline {
         return builder.build();
     }
 
-    List<Channel> channels() {
-        return new ArrayList<>();
-    }
-
     static class Builder {
 
-        void add(Packet packet) {
+        private List<Channel> channels = new ArrayList<>();
 
+        void add(Packet packet) {
+            Channel.Builder channel = Channel.builder();
+            channel.add(packet);
+            channels.add(channel.build());
         }
 
         Timeline build() {
