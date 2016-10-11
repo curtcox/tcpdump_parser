@@ -20,7 +20,7 @@ public class Demo {
 
     @Test
     public void demo() {
-        summarizeIpConversations();
+        timeline();
     }
 
     void dumpAllPackets() {
@@ -49,6 +49,10 @@ public class Demo {
         for (Mac mac : ipPackets().allClients()) {
             ipPackets().contains(mac).forEach(x -> print(x));
         }
+    }
+
+    void timeline() {
+        print(Timeline.of(ipPackets()));
     }
 
     void summarizeIpConversations() {
