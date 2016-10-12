@@ -154,6 +154,54 @@ public class ChannelTest {
         }
     }
 
+    @Test
+    public void throws_helpful_exception_when_packets_added_with_different_server_hosts() {
+        try {
+            Packet.Builder builder = Packet.builder();
+            builder.localTime = localTime;
+            builder.ip = ip;
+            Packet packet1 = builder.build();
+            builder.ip = differentServerHost;
+            Packet packet2 = builder.build();
+            of(packet1,packet2);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Packets in this channel must be between " + ip.source.host + " and " + ip.destination);
+        }
+    }
+
+    @Test
+    public void throws_helpful_exception_when_packets_added_with_different_server_ports() {
+        try {
+            Packet.Builder builder = Packet.builder();
+            builder.localTime = localTime;
+            builder.ip = ip;
+            Packet packet1 = builder.build();
+            builder.ip = differentServerPort;
+            Packet packet2 = builder.build();
+            of(packet1,packet2);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Packets in this channel must be between " + ip.source.host + " and " + ip.destination);
+        }
+    }
+
+    @Test
+    public void throws_helpful_exception_when_packets_added_with_different_server_host_and_ports() {
+        try {
+            Packet.Builder builder = Packet.builder();
+            builder.localTime = localTime;
+            builder.ip = ip;
+            Packet packet1 = builder.build();
+            builder.ip = differentServerHostAndPort;
+            Packet packet2 = builder.build();
+            of(packet1,packet2);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Packets in this channel must be between " + ip.source.host + " and " + ip.destination);
+        }
+    }
+
     Channel of(Packet...packets) {
         return Channel.of(packets);
     }

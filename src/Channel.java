@@ -74,10 +74,10 @@ final class Channel {
         }
 
         private boolean validForThisChannel(IP ip) {
-            if (client == null || ip.source.host.equals(client)) {
+            if (client == null) {
                 return true;
             }
-            return false;
+            return ip.source.host.equals(client) && ip.destination.equals(server);
         }
     }
 }
