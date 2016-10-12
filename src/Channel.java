@@ -57,6 +57,9 @@ final class Channel {
             if (time==null) {
                 throw new IllegalArgumentException("Time missing, but required for timeline packets.");
             }
+            if (begin !=null && time.isBefore(begin)) {
+                throw new IllegalArgumentException("Packets must be added in chronological order.");
+            }
         }
 
         private void check(IP ip) {

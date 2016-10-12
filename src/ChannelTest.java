@@ -16,7 +16,7 @@ public class ChannelTest {
     }
 
     @Test
-    public void channel_of_one_packet_contains_the_packet() {
+    public void channel_of_1_packet_contains_the_packet() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = localTime;
         builder.ip = ip;
@@ -28,7 +28,7 @@ public class ChannelTest {
     }
 
     @Test
-    public void channel_of_one_packet_contains_the_client() {
+    public void channel_of_1_packet_contains_the_client() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = localTime;
         builder.ip = ip;
@@ -38,7 +38,7 @@ public class ChannelTest {
     }
 
     @Test
-    public void channel_of_one_packet_contains_the_server() {
+    public void channel_of_1_packet_contains_the_server() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = localTime;
         builder.ip = ip;
@@ -48,7 +48,7 @@ public class ChannelTest {
     }
 
     @Test
-    public void channel_of_one_packet_contains_the_begin_time() {
+    public void channel_of_1_packet_contains_the_begin_time() {
         Packet.Builder builder = Packet.builder();
         builder.ip = ip;
         builder.localTime = localTime;
@@ -58,7 +58,7 @@ public class ChannelTest {
     }
 
     @Test
-    public void channel_of_one_packet_contains_the_end_time() {
+    public void channel_of_1_packet_contains_the_end_time() {
         Packet.Builder builder = Packet.builder();
         builder.ip = ip;
         builder.localTime = localTime;
@@ -68,7 +68,7 @@ public class ChannelTest {
     }
 
     @Test
-    public void of_throws_helpful_exception_when_missing_IP() {
+    public void throws_helpful_exception_when_missing_IP() {
         try {
             Packet.Builder builder = Packet.builder();
             builder.localTime = localTime;
@@ -80,13 +80,44 @@ public class ChannelTest {
     }
 
     @Test
-    public void of_throws_helpful_exception_when_missing_time() {
+    public void throws_helpful_exception_when_missing_time() {
         try {
             of(Packet.builder().build());
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(),"Time missing, but required for timeline packets.");
         }
+    }
+
+    @Test
+    public void channel_of_2_packets_contains_the_packets() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = ip;
+        Packet packet1 = builder.build();
+        Packet packet2 = builder.build();
+        Channel channel = of(packet1,packet2);
+
+        assertEquals(channel.packets.size(),2);
+        assertSame(channel.packets.get(0),packet1);
+        assertSame(channel.packets.get(1),packet2);
+    }
+
+    @Test
+    public void throws_helpful_exception_when_packets_added_out_of_order() {
+        try {
+            Packet.Builder builder = Packet.builder();
+            builder.localTime = LocalTime.MAX;
+            builder.ip = ip;
+            Packet packet1 = builder.build();
+            builder.localTime = LocalTime.MIN;
+            Packet packet2 = builder.build();
+            of(packet1,packet2);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Packets must be added in chronological order.");
+        }
+
     }
 
     Channel of(Packet...packets) {
