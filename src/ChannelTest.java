@@ -7,7 +7,11 @@ import static org.junit.Assert.*;
 public class ChannelTest {
 
     LocalTime localTime = LocalTime.now();
-    IP ip = IP.parse("IP 132.245.72.114.https > 10.33.44.33.43114".split(" "));
+    IP ip = IP.parse("IP 1.2.3.4.43114 > 5.6.7.8.https".split(" "));
+    IP differentClient = IP.parse("IP 1.2.3.5.43114 > 5.6.7.8.https".split(" "));
+    IP differentServerHost = IP.parse("IP 1.2.3.4.43114 > 5.6.7.9.https".split(" "));
+    IP differentServerPort = IP.parse("IP 1.2.3.4.43114 > 5.6.7.8.http".split(" "));
+    IP differentServerHostAndPort = IP.parse("IP 1.2.3.4.43114 > 5.6.7.9.http".split(" "));
 
     @Test
     public void channel_of_no_packets() {
@@ -131,6 +135,22 @@ public class ChannelTest {
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(),"Packets must be added in chronological order.");
+        }
+    }
+
+    @Test
+    public void throws_helpful_exception_when_packets_added_with_different_clients() {
+        try {
+            Packet.Builder builder = Packet.builder();
+            builder.localTime = localTime;
+            builder.ip = ip;
+            Packet packet1 = builder.build();
+            builder.ip = differentClient;
+            Packet packet2 = builder.build();
+            of(packet1,packet2);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Packets in this channel must be between " + ip.source.host + " and " + ip.destination);
         }
     }
 

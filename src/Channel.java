@@ -68,6 +68,16 @@ final class Channel {
             if (ip==null) {
                 throw new IllegalArgumentException("IP missing, but required for timeline packets.");
             }
+            if (!validForThisChannel(ip)) {
+                throw new IllegalArgumentException("Packets in this channel must be between " + client + " and " + server);
+            }
+        }
+
+        private boolean validForThisChannel(IP ip) {
+            if (client == null || ip.source.host.equals(client)) {
+                return true;
+            }
+            return false;
         }
     }
 }
