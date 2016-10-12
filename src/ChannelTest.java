@@ -104,6 +104,21 @@ public class ChannelTest {
     }
 
     @Test
+    public void channel_of_2_packets_contains_the_proper_begin_and_end_time() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = LocalTime.MIN;
+        builder.ip = ip;
+        Packet packet1 = builder.build();
+        builder.localTime = LocalTime.MAX;
+        Packet packet2 = builder.build();
+
+        Channel channel = of(packet1,packet2);
+
+        assertSame(channel.begin,LocalTime.MIN);
+        assertSame(channel.end,LocalTime.MAX);
+    }
+
+    @Test
     public void throws_helpful_exception_when_packets_added_out_of_order() {
         try {
             Packet.Builder builder = Packet.builder();
@@ -117,7 +132,6 @@ public class ChannelTest {
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(),"Packets must be added in chronological order.");
         }
-
     }
 
     Channel of(Packet...packets) {

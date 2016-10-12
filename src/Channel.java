@@ -44,7 +44,9 @@ final class Channel {
         public void add(Packet packet) {
             LocalTime time = packet.localTime;
             check(time);
-            begin  = time;
+            if (begin==null) {
+                begin = time;
+            }
             end    = time;
             IP ip = packet.ip;
             check(ip);
