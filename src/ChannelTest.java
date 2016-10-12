@@ -1,9 +1,12 @@
 import org.junit.Test;
 
+import java.time.LocalTime;
+
 import static org.junit.Assert.*;
 
 public class ChannelTest {
 
+    LocalTime localTime = LocalTime.now();
     IP ip = IP.parse("IP 132.245.72.114.https > 10.33.44.33.43114".split(" "));
 
     @Test
@@ -39,6 +42,36 @@ public class ChannelTest {
         Channel channel = of(builder.build());
         Packet packet = channel.packets.get(0);
         assertEquals(channel.server,packet.ip.destination);
+    }
+
+    @Test
+    public void channel_of_one_packet_contains_the_begin_time() {
+        Packet.Builder builder = Packet.builder();
+        builder.ip = ip;
+        builder.localTime = localTime;
+        Channel channel = of(builder.build());
+        Packet packet = channel.packets.get(0);
+        assertSame(channel.begin,packet.localTime);
+    }
+
+    @Test
+    public void channel_of_one_packet_contains_the_end_time() {
+        Packet.Builder builder = Packet.builder();
+        builder.ip = ip;
+        builder.localTime = localTime;
+        Channel channel = of(builder.build());
+        Packet packet = channel.packets.get(0);
+        assertSame(channel.end,packet.localTime);
+    }
+
+    @Test
+    public void of_throws_helpful_exception_when_missing_IP() {
+        try {
+            of(Packet.builder().build());
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"IP missing, but required for timeline packets.");
+        }
     }
 
     Channel of(Packet...packets) {
