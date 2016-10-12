@@ -42,15 +42,27 @@ final class Channel {
         }
 
         public void add(Packet packet) {
-            begin  = packet.localTime;
-            end    = packet.localTime;
+            LocalTime time = packet.localTime;
+            check(time);
+            begin  = time;
+            end    = time;
             IP ip = packet.ip;
-            if (ip==null) {
-                throw new IllegalArgumentException("IP missing, but required for timeline packets.");
-            }
+            check(ip);
             client = ip.source.host;
             server = ip.destination;
             packets.add(packet);
+        }
+
+        private void check(LocalTime time) {
+            if (time==null) {
+                throw new IllegalArgumentException("Time missing, but required for timeline packets.");
+            }
+        }
+
+        private void check(IP ip) {
+            if (ip==null) {
+                throw new IllegalArgumentException("IP missing, but required for timeline packets.");
+            }
         }
     }
 }

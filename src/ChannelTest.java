@@ -18,6 +18,7 @@ public class ChannelTest {
     @Test
     public void channel_of_one_packet_contains_the_packet() {
         Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
         builder.ip = ip;
         Packet packet = builder.build();
         Channel channel = of(packet);
@@ -29,6 +30,7 @@ public class ChannelTest {
     @Test
     public void channel_of_one_packet_contains_the_client() {
         Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
         builder.ip = ip;
         Channel channel = of(builder.build());
         Packet packet = channel.packets.get(0);
@@ -38,6 +40,7 @@ public class ChannelTest {
     @Test
     public void channel_of_one_packet_contains_the_server() {
         Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
         builder.ip = ip;
         Channel channel = of(builder.build());
         Packet packet = channel.packets.get(0);
@@ -67,10 +70,22 @@ public class ChannelTest {
     @Test
     public void of_throws_helpful_exception_when_missing_IP() {
         try {
-            of(Packet.builder().build());
+            Packet.Builder builder = Packet.builder();
+            builder.localTime = localTime;
+            of(builder.build());
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(),"IP missing, but required for timeline packets.");
+        }
+    }
+
+    @Test
+    public void of_throws_helpful_exception_when_missing_time() {
+        try {
+            of(Packet.builder().build());
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(),"Time missing, but required for timeline packets.");
         }
     }
 
