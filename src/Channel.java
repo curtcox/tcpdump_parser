@@ -9,7 +9,6 @@ final class Channel {
     final LocalTime begin;
     final LocalTime end;
 
-
     private Channel(Builder builder) {
         server  = builder.server;
         client  = builder.client;
