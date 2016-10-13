@@ -97,9 +97,9 @@ public class ParserTest  {
 
         IP ip = parse(line9).ip;
         assertNotNull(ip);
-        assertEquals(ip.source.host,"23.44.7.39");
+        assertEquals(ip.source.host,Host.of("23.44.7.39"));
         assertEquals(ip.source.port,"80");
-        assertEquals(ip.destination.host,"192.168.14.112");
+        assertEquals(ip.destination.host,Host.of("192.168.14.112"));
         assertEquals(ip.destination.port,"61028");
     }
 

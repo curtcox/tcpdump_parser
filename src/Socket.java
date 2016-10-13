@@ -1,9 +1,9 @@
 final class Socket {
 
-    final String host;
+    final Host host;
     final String port;
 
-    private Socket(String host,String port) {
+    private Socket(Host host,String port) {
         this.host = host;
         this.port = port;
     }
@@ -17,9 +17,9 @@ final class Socket {
         }
     }
 
-    static String host(String string) {
+    static Host host(String string) {
         int lastDot = string.lastIndexOf(".");
-        return string.substring(0,lastDot);
+        return Host.of(string.substring(0,lastDot));
     }
 
     static String port(String string) {

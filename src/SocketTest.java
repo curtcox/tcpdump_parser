@@ -114,7 +114,7 @@ public class SocketTest {
     }
 
     void assertHost(String sample, String host) {
-        assertEquals(host,parse(sample).host);
+        assertEquals(Host.of(host),parse(sample).host);
     }
 
     void assertPort(String sample, String port) {

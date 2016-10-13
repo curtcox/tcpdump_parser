@@ -4,7 +4,7 @@ import java.util.*;
 final class Channel {
 
     final Socket server;
-    final String client;
+    final Host client;
     final List<Packet> packets;
     final LocalTime begin;
     final LocalTime end;
@@ -31,7 +31,7 @@ final class Channel {
 
     static class Builder {
         private Socket server;
-        private String client;
+        private Host client;
         private LocalTime begin;
         private LocalTime end;
         private List<Packet> packets = new ArrayList<>();
@@ -40,7 +40,7 @@ final class Channel {
             return new Channel(this);
         }
 
-        public void add(Packet packet) {
+        void add(Packet packet) {
             LocalTime time = packet.localTime;
             check(time);
             if (begin==null) {
