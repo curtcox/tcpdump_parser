@@ -218,6 +218,42 @@ public class ChannelTest {
         }
     }
 
+    @Test
+    public void accepts_packets_between_same_client_and_server() {
+        Packet.Builder packetBuilder = Packet.builder();
+        packetBuilder.localTime = localTime;
+        packetBuilder.ip = ip;
+        Packet packet1 = packetBuilder.build();
+        Packet packet2 = packetBuilder.build();
+        packetBuilder.ip = ipBack;
+        Packet packet3 = packetBuilder.build();
+        Channel.Builder channelBuilder = Channel.builder();
+        channelBuilder.add(packet1);
+
+        assert(channelBuilder.accepts(packet2));
+        assert(channelBuilder.accepts(packet3));
+    }
+
+    @Test
+    public void rejects_packets_between_different_clients_and_servers() {
+        Packet.Builder packetBuilder = Packet.builder();
+        packetBuilder.localTime = localTime;
+        packetBuilder.ip = ip;
+        Packet packet1 = packetBuilder.build();
+        packetBuilder.ip = differentServerHost;
+        Packet packet2 = packetBuilder.build();
+        packetBuilder.ip = differentServerPort;
+        Packet packet3 = packetBuilder.build();
+        packetBuilder.ip = differentServerHostAndPort;
+        Packet packet4 = packetBuilder.build();
+        Channel.Builder channelBuilder = Channel.builder();
+        channelBuilder.add(packet1);
+
+        assertFalse(channelBuilder.accepts(packet2));
+        assertFalse(channelBuilder.accepts(packet3));
+        assertFalse(channelBuilder.accepts(packet4));
+    }
+
     Channel of(Packet...packets) {
         return Channel.of(packets);
     }

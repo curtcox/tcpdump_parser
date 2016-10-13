@@ -40,6 +40,10 @@ final class Channel {
             return new Channel(this);
         }
 
+        boolean accepts(Packet packet) {
+            return validForThisChannel(packet.ip);
+        }
+
         void add(Packet packet) {
             LocalTime time = packet.localTime;
             check(time);
