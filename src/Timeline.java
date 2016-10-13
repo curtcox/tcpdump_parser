@@ -39,4 +39,12 @@ final class Timeline {
             return new Timeline(this);
         }
     }
+
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        for (Channel channel : channels) {
+            out.append(channel + System.lineSeparator());
+        }
+        return out.toString();
+    }
 }

@@ -91,4 +91,13 @@ final class Channel {
             return ip.source.equals(server) && ip.destination.host.equals(client);
         }
     }
+
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        out.append("client : " + client + " server : " + server + " begin : " + begin + " end : " + end + System.lineSeparator());
+        for (Packet packet : packets) {
+            out.append(packet + System.lineSeparator());
+        }
+        return out.toString();
+    }
 }
