@@ -13,6 +13,8 @@ public class SocketTest {
     String sample7 = "imap14.mail.vip.bf1.yahoo.com.imaps";
     String sample8 = "fe80::1837:1aaf:ddd3:f7c8.mdns";
     String sample9 = "ff02::fb.mdns:";
+    String sample10 = "fe80::9911:2c5a:d92a:83ea";
+    String sample11 = "ff02::2:";
 
     @Test
     public void toString_includes_host_and_port() {
@@ -25,6 +27,8 @@ public class SocketTest {
         assertToString(sample7,"imap14.mail.vip.bf1.yahoo.com:imaps");
         assertToString(sample8,"fe80::1837:1aaf:ddd3:f7c8:mdns");
         assertToString(sample9,"ff02::fb:mdns");
+        assertToString(sample10,"fe80::9911:2c5a:d92a:83ea");
+        assertToString(sample11,"ff02:::2");
     }
 
     @Test
@@ -38,6 +42,8 @@ public class SocketTest {
         assertEqual(sample7);
         assertEqual(sample8);
         assertEqual(sample9);
+        assertEqual(sample10);
+        assertEqual(sample11);
     }
 
     @Test
@@ -77,6 +83,8 @@ public class SocketTest {
         assertNotNull(parse(sample7));
         assertNotNull(parse(sample8));
         assertNotNull(parse(sample9));
+        assertNotNull(parse(sample10));
+        assertNotNull(parse(sample11));
     }
 
     @Test
@@ -98,6 +106,8 @@ public class SocketTest {
         assertHost(sample7,"imap14.mail.vip.bf1.yahoo.com");
         assertHost(sample8,"fe80::1837:1aaf:ddd3:f7c8");
         assertHost(sample9,"ff02::fb");
+        assertHost(sample10,"fe80::9911:2c5a:d92a");
+        assertHost(sample11,"ff02::");
     }
 
     @Test
@@ -111,6 +121,8 @@ public class SocketTest {
         assertPort(sample7,"imaps");
         assertPort(sample8,"mdns");
         assertPort(sample9,"mdns");
+        assertPort(sample10,"83ea");
+        assertPort(sample11,"2");
     }
 
     void assertHost(String sample, String host) {

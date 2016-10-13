@@ -9,6 +9,7 @@ public class IPTest {
     String sample3 = "IP 132.245.72.114.https > 10.33.44.33.43114:";
     String sample4 = "IPv4 (0x0800): 10.173.119.71.47276 > sb-in-f188.1e100.net.5228:";
     String sample5 = "IPv6 (0x86dd): fe80::1837:1aaf:ddd3:f7c8.mdns > ff02::fb.mdns:";
+    String sample6 = "IPv6 (0x86dd): fe80::9911:2c5a:d92a:83ea > ff02::2:";
 
     @Test
     public void toString_contains_source_and_destination_socket() {
@@ -17,6 +18,7 @@ public class IPTest {
         assertToString(sample3,"IP{132.245.72.114:https > 10.33.44.33:43114}");
         assertToString(sample4,"IP{10.173.119.71:47276 > sb-in-f188.1e100.net:5228}");
         assertToString(sample5,"IP{fe80::1837:1aaf:ddd3:f7c8:mdns > ff02::fb:mdns}");
+        assertToString(sample6,"IP{fe80::9911:2c5a:d92a:83ea > ff02:::2}");
     }
 
     @Test
@@ -26,6 +28,7 @@ public class IPTest {
         assertNotNull(parse(sample3));
         assertNotNull(parse(sample4));
         assertNotNull(parse(sample5));
+        assertNotNull(parse(sample6));
     }
 
     @Test
@@ -43,6 +46,7 @@ public class IPTest {
         assertSource(sample2,"23.44.7.39.80");
         assertSource(sample3,"132.245.72.114.https");
         assertSource(sample5,"fe80::1837:1aaf:ddd3:f7c8.mdns");
+        assertSource(sample6,"fe80::9911:2c5a:d92a:83ea");
     }
 
     @Test
@@ -51,6 +55,7 @@ public class IPTest {
         assertDestination(sample2,"192.168.14.112.61028");
         assertDestination(sample3,"10.33.44.33.43114");
         assertDestination(sample4,"sb-in-f188.1e100.net.5228");
+        assertDestination(sample6,"ff02:::2");
     }
 
     @Test
@@ -60,6 +65,7 @@ public class IPTest {
         assertEqual(sample3);
         assertEqual(sample4);
         assertEqual(sample5);
+        assertEqual(sample6);
     }
 
     @Test
@@ -67,6 +73,7 @@ public class IPTest {
         assertNotEqual(sample1,sample2);
         assertNotEqual(sample1,sample3);
         assertNotEqual(sample2,sample3);
+        assertNotEqual(sample2,sample6);
     }
 
     void assertEqual(String sample) {
