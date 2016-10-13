@@ -20,11 +20,15 @@ final class Timeline {
         private List<Channel.Builder> channelBuilders = new ArrayList<>();
 
         void add(Packet packet) {
-            if (channelBuilders.isEmpty()) {
-                Channel.Builder channel = Channel.builder();
-                channelBuilders.add(channel);
+            for (Channel.Builder channelBuilder : channelBuilders) {
+                if (channelBuilder.accepts(packet)) {
+                    channelBuilder.add(packet);
+                    return;
+                }
             }
-            channelBuilders.get(0).add(packet);
+            Channel.Builder channelBuilder = Channel.builder();
+            channelBuilders.add(channelBuilder);
+            channelBuilder.add(packet);
         }
 
         private List<Channel> channels() {
