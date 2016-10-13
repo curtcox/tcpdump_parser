@@ -8,6 +8,7 @@ public class ChannelTest {
 
     LocalTime localTime = LocalTime.now();
     IP ip = IP.parse("IP 1.2.3.4.43114 > 5.6.7.8.https".split(" "));
+    IP ipBack = IP.parse("IP 5.6.7.8.https > 1.2.3.4.43114".split(" "));
     IP differentClient = IP.parse("IP 1.2.3.5.43114 > 5.6.7.8.https".split(" "));
     IP differentServerHost = IP.parse("IP 1.2.3.4.43114 > 5.6.7.9.https".split(" "));
     IP differentServerPort = IP.parse("IP 1.2.3.4.43114 > 5.6.7.8.http".split(" "));
@@ -94,11 +95,26 @@ public class ChannelTest {
     }
 
     @Test
-    public void channel_of_2_packets_contains_the_packets() {
+    public void channel_of_2_packets_going_the_same_way_contains_the_packets() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = localTime;
         builder.ip = ip;
         Packet packet1 = builder.build();
+        Packet packet2 = builder.build();
+        Channel channel = of(packet1,packet2);
+
+        assertEquals(channel.packets.size(),2);
+        assertSame(channel.packets.get(0),packet1);
+        assertSame(channel.packets.get(1),packet2);
+    }
+
+    @Test
+    public void channel_of_2_packets_going_different_ways_contains_the_packets() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = ip;
+        Packet packet1 = builder.build();
+        builder.ip = ipBack;
         Packet packet2 = builder.build();
         Channel channel = of(packet1,packet2);
 

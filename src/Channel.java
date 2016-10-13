@@ -77,7 +77,15 @@ final class Channel {
             if (client == null) {
                 return true;
             }
+            return clientToServer(ip) || serverToClient(ip);
+        }
+
+        private boolean clientToServer(IP ip) {
             return ip.source.host.equals(client) && ip.destination.equals(server);
+        }
+
+        private boolean serverToClient(IP ip) {
+            return ip.source.equals(server) && ip.destination.host.equals(client);
         }
     }
 }
