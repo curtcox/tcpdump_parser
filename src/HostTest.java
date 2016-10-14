@@ -5,6 +5,30 @@ import static org.junit.Assert.*;
 public class HostTest {
 
     @Test
+    public void is_private_IP() {
+        assertPrivate("192.168.0.1");
+        assertPrivate("192.168.23.42");
+        assertPrivate("10.10.10.10");
+        assertPrivate("172.16.10.10");
+    }
+
+    @Test
+    public void is_public_IP() {
+        assertPublic("92.168.0.1");
+        assertPublic("4.168.23.42");
+        assertPublic("8.10.10.10");
+        assertPublic("199.16.10.10");
+    }
+
+    void assertPrivate(String host) {
+        assert(Host.of(host).privateIP);
+    }
+
+    void assertPublic(String host) {
+        assertFalse(Host.of(host).privateIP);
+    }
+
+    @Test
     public void hosts_compare_like_strings() {
         assertCompare("red","red");
         assertCompare("red","green");

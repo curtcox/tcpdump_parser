@@ -13,6 +13,8 @@ public class ChannelTest {
     IP differentServerHost = ip("IP 1.2.3.4.43114 > 5.6.7.9.https");
     IP differentServerPort = ip("IP 1.2.3.4.43114 > 5.6.7.8.http");
     IP differentServerHostAndPort = ip("IP 1.2.3.4.43114 > 5.6.7.9.http");
+    IP privateToPublic = ip("IP 192.168.3.4.43114 > 5.6.7.9.http");
+    IP publicToPrivate = ip("IP 5.6.7.9.http > 192.168.3.4.43114");
 
     static IP ip(String string) {
         return IP.parse(string.split(" "));
@@ -53,6 +55,25 @@ public class ChannelTest {
     }
 
     @Test
+    public void the_client_is_the_private_address_when_sending_happens_first() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = privateToPublic;
+        Channel channel = of(builder.build());
+        assertEquals(channel.client,privateToPublic.source.host);
+    }
+
+    @Test
+    public void the_client_is_the_private_address_when_receiving_happens_first() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = publicToPrivate;
+        Channel channel = of(builder.build());
+        assertEquals(channel.client,publicToPrivate.destination.host);
+        assertEquals(channel.server,publicToPrivate.source);
+    }
+
+    @Test
     public void channel_of_1_packet_contains_the_client() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = localTime;
@@ -60,6 +81,7 @@ public class ChannelTest {
         Channel channel = of(builder.build());
         Packet packet = channel.packets.get(0);
         assertEquals(channel.client,packet.ip.source.host);
+        assertEquals(channel.server,packet.ip.destination);
     }
 
     @Test

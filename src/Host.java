@@ -1,9 +1,15 @@
 final class Host implements Comparable<Host> {
 
     final String name;
+    final boolean privateIP;
 
     private Host(String name) {
         this.name = name;
+        privateIP = isPrivate(name);
+    }
+
+    private static boolean isPrivate(String name) {
+        return name.startsWith("10.") || name.startsWith("172.") || name.startsWith("192.168.");
     }
 
     static Host of(String name) {

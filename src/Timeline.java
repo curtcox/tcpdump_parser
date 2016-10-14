@@ -32,7 +32,7 @@ final class Timeline {
         }
 
         private List<Channel> channels() {
-            return channelBuilders.stream().map(b -> b.build()).collect(Collectors.toList());
+            return channelBuilders.stream().map(b -> b.build()).sorted().collect(Collectors.toList());
         }
 
         Timeline build() {

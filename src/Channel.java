@@ -54,11 +54,20 @@ final class Channel implements Comparable<Channel> {
             IP ip = packet.ip;
             check(ip);
             if (client==null) {
-                client = ip.source.host;
-                server = ip.destination;
+                if (clientToServer(ip)) {
+                    client = ip.source.host;
+                    server = ip.destination;
+                } else {
+                    client = ip.destination.host;
+                    server = ip.source;
+                }
             }
 
             packets.add(packet);
+        }
+
+        private static boolean clientToServer(IP ip) {
+            return ip.source.host.privateIP || (!ip.source.host.privateIP && !ip.destination.host.privateIP);
         }
 
         private void check(LocalTime time) {
@@ -83,14 +92,14 @@ final class Channel implements Comparable<Channel> {
             if (client == null) {
                 return true;
             }
-            return clientToServer(ip) || serverToClient(ip);
+            return validForclientToServer(ip) || validForserverToClient(ip);
         }
 
-        private boolean clientToServer(IP ip) {
+        private boolean validForclientToServer(IP ip) {
             return ip.source.host.equals(client) && ip.destination.equals(server);
         }
 
-        private boolean serverToClient(IP ip) {
+        private boolean validForserverToClient(IP ip) {
             return ip.source.equals(server) && ip.destination.host.equals(client);
         }
     }
@@ -100,7 +109,7 @@ final class Channel implements Comparable<Channel> {
         StringBuilder out = new StringBuilder();
         out.append("client : " + client + " server : " + server + " begin : " + begin + " end : " + end + System.lineSeparator());
         for (Packet packet : packets) {
-            out.append(line(packet) + System.lineSeparator());
+            //out.append(line(packet) + System.lineSeparator());
         }
         return out.toString();
     }
