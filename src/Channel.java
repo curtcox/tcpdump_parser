@@ -53,8 +53,11 @@ final class Channel {
             end    = time;
             IP ip = packet.ip;
             check(ip);
-            client = ip.source.host;
-            server = ip.destination;
+            if (client==null) {
+                client = ip.source.host;
+                server = ip.destination;
+            }
+
             packets.add(packet);
         }
 
@@ -96,8 +99,20 @@ final class Channel {
         StringBuilder out = new StringBuilder();
         out.append("client : " + client + " server : " + server + " begin : " + begin + " end : " + end + System.lineSeparator());
         for (Packet packet : packets) {
-            out.append(packet + System.lineSeparator());
+            out.append(line(packet) + System.lineSeparator());
         }
         return out.toString();
+    }
+
+    private String line(Packet packet) {
+        return packet.localTime + " " + direction(packet) + " " + http(packet);
+    }
+
+    private String direction(Packet packet) {
+        return packet.ip.destination.equals(server) ? ">" : "<";
+    }
+
+    private static String http(Packet packet) {
+        return packet.http == null ? "" : packet.http.toString();
     }
 }

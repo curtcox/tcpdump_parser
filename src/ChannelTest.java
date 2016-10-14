@@ -124,6 +124,20 @@ public class ChannelTest {
     }
 
     @Test
+    public void channel_of_2_packets_going_different_ways_contains_the_endpoints() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = ip;
+        Packet packet1 = builder.build();
+        builder.ip = ipBack;
+        Packet packet2 = builder.build();
+        Channel channel = of(packet1,packet2);
+
+        assertEquals(channel.client,packet1.ip.source.host);
+        assertEquals(channel.server,packet1.ip.destination);
+    }
+
+    @Test
     public void channel_of_2_packets_contains_the_proper_begin_and_end_time() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = LocalTime.MIN;
