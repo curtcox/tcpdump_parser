@@ -7,17 +7,37 @@ import static org.junit.Assert.*;
 public class ChannelTest {
 
     LocalTime localTime = LocalTime.now();
-    IP ip = IP.parse("IP 1.2.3.4.43114 > 5.6.7.8.https".split(" "));
-    IP ipBack = IP.parse("IP 5.6.7.8.https > 1.2.3.4.43114".split(" "));
-    IP differentClient = IP.parse("IP 1.2.3.5.43114 > 5.6.7.8.https".split(" "));
-    IP differentServerHost = IP.parse("IP 1.2.3.4.43114 > 5.6.7.9.https".split(" "));
-    IP differentServerPort = IP.parse("IP 1.2.3.4.43114 > 5.6.7.8.http".split(" "));
-    IP differentServerHostAndPort = IP.parse("IP 1.2.3.4.43114 > 5.6.7.9.http".split(" "));
+    IP ip = ip("IP 1.2.3.4.43114 > 5.6.7.8.https");
+    IP ipBack = ip("IP 5.6.7.8.https > 1.2.3.4.43114");
+    IP differentClient = ip("IP 1.2.3.5.43114 > 5.6.7.8.https");
+    IP differentServerHost = ip("IP 1.2.3.4.43114 > 5.6.7.9.https");
+    IP differentServerPort = ip("IP 1.2.3.4.43114 > 5.6.7.8.http");
+    IP differentServerHostAndPort = ip("IP 1.2.3.4.43114 > 5.6.7.9.http");
+
+    static IP ip(String string) {
+        return IP.parse(string.split(" "));
+    }
 
     @Test
     public void channel_of_no_packets() {
         Channel channel = Channel.of();
         assertEquals(channel.packets.size(),0);
+    }
+
+    @Test
+    public void channels_compare_like_hosts() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = ip;
+        Packet packet1 = builder.build();
+        builder.ip = differentClient;
+        Packet packet2 = builder.build();
+        Channel channel1 = of(packet1);
+        Channel channel2 = of(packet2);
+
+        assertEquals(ip.source.host.compareTo(ip.source.host),channel1.compareTo(channel1));
+        assertEquals(ip.source.host.compareTo(differentClient.source.host),channel1.compareTo(channel2));
+        assertEquals(differentClient.source.host.compareTo(ip.source.host),channel2.compareTo(channel1));
     }
 
     @Test

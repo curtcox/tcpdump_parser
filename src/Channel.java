@@ -1,7 +1,7 @@
 import java.time.LocalTime;
 import java.util.*;
 
-final class Channel {
+final class Channel implements Comparable<Channel> {
 
     final Socket server;
     final Host client;
@@ -95,6 +95,7 @@ final class Channel {
         }
     }
 
+    @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
         out.append("client : " + client + " server : " + server + " begin : " + begin + " end : " + end + System.lineSeparator());
@@ -115,4 +116,11 @@ final class Channel {
     private static String http(Packet packet) {
         return packet.http == null ? "" : packet.http.toString();
     }
+
+    @Override
+    public int compareTo(Channel that) {
+        return client.compareTo(that.client);
+    }
+
+
 }
