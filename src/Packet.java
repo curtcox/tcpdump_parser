@@ -41,6 +41,19 @@ final class Packet {
         return mac.equals(BSSID) || mac.equals(SA) || mac.equals(RA) || mac.equals(DA) || mac.equals(TA);
     }
 
+    boolean contains(Host host) {
+        return ip != null && host.equals(ip.source.host) || host.equals(ip.destination.host);
+    }
+
+    boolean containsAny(Collection<Host> hosts) {
+        for (Host host : hosts) {
+            if (contains(host)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     Set<Mac> allMacs() {
         Set<Mac> all = new HashSet(Arrays.asList(new Mac[]{BSSID,SA,RA,DA,TA}));
         all.remove(null);

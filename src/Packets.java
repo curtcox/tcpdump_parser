@@ -55,6 +55,10 @@ final class Packets {
         return Packets.of(() -> stream().filter(packet -> packet.contains(mac)));
     }
 
+    Packets contains(Host host) {
+        return Packets.of(() -> stream().filter(packet -> packet.contains(host)));
+    }
+
     void forEach(Consumer<Packet> action) {
         stream().forEach(action);
     }
@@ -68,9 +72,21 @@ final class Packets {
     }
 
     Set<Mac> allMacs() {
-        Set macs = new HashSet();
+        Set<Mac> macs = new HashSet();
         stream().forEach(packet -> macs.addAll(packet.allMacs()) );
         return new TreeSet(macs);
+    }
+
+    Set<Host> allHosts() {
+        Set<Host> hosts = new HashSet();
+        stream().forEach(packet ->  {
+            IP ip = packet.ip;
+            if (ip!=null) {
+                hosts.add(ip.source.host);
+                hosts.add(ip.destination.host);
+            }
+        });
+        return new TreeSet<Host>(hosts);
     }
 
     Set<Mac> allClients() {
