@@ -8,6 +8,7 @@ public class Demo {
 
     final String inputFile = "/tmp/capture.txt";
     final String outputFile = "/tmp/report.txt";
+    final String[] specialHosts = new String[] {"wifi"};
     PrintStream out = System.out;
 
     void writeToFile() {
@@ -99,7 +100,26 @@ public class Demo {
     }
 
     Packets ipPackets() {
-        return packets().IP();
+        Set<Host> hosts = hostsWeCareAbout();
+        return packets().IP().filter(p -> p.containsAny(hosts));
+    }
+
+    Set<Host> hostsWeCareAbout() {
+        return packets().IP().filter(p -> serversWeCareAbout(p)).allHosts();
+    }
+
+    boolean serversWeCareAbout(Packet packet) {
+        IP ip = packet.ip;
+        return serversWeCareAbout(ip.source) || serversWeCareAbout(ip.destination);
+    }
+
+    boolean serversWeCareAbout(Socket socket) {
+        for (String match : specialHosts) {
+            if (socket.host.name.contains(match)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     Packets summarizeIpPackets() {
