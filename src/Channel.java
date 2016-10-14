@@ -107,23 +107,53 @@ final class Channel implements Comparable<Channel> {
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
-        out.append("client : " + client + " server : " + server + " begin : " + begin + " end : " + end + System.lineSeparator());
+        out.append(summaryLine() + System.lineSeparator());
         for (Packet packet : packets) {
-            //out.append(line(packet) + System.lineSeparator());
+            out.append(line(packet) + System.lineSeparator());
         }
         return out.toString();
     }
 
-    private String line(Packet packet) {
-        return packet.localTime + " " + direction(packet) + " " + http(packet);
+    private String summaryLine() {
+        int outgoingPackets = 0;
+        int outgoingBytes = 0;
+        int incomingPackets = 0;
+        int incomingBytes = 0;
+        for (Packet packet : packets) {
+            if (outgoing(packet)) {
+                outgoingPackets++;
+                outgoingBytes += packet.length;
+            } else {
+                incomingPackets++;
+                incomingBytes += packet.length;
+            }
+        }
+        String packets = String.format("-> %s / %s <- %s / %s",outgoingPackets,outgoingBytes,incomingPackets,incomingBytes);
+        return String.format("client: %s server: %s begin: %s end: %s packets: %s", client, server, begin ,end, packets);
     }
 
-    private String direction(Packet packet) {
-        return packet.ip.destination.equals(server) ? ">" : "<";
+    private String line(Packet packet) {
+        return String.format("%s %s %s %s %s",packet.localTime,port(packet),arrow(packet),length(packet),http(packet));
+    }
+
+    private boolean outgoing(Packet packet) {
+        return packet.ip.destination.equals(server);
+    }
+
+    private String arrow(Packet packet) {
+        return outgoing(packet) ? "->" : "<-";
     }
 
     private static String http(Packet packet) {
         return packet.http == null ? "" : packet.http.toString();
+    }
+
+    private String port(Packet packet) {
+        return outgoing(packet) ? packet.ip.source.port : packet.ip.destination.port;
+    }
+
+    private static String length(Packet packet) {
+        return packet.length == null ? "" : packet.length.toString();
     }
 
     @Override
