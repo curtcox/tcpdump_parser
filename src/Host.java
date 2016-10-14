@@ -1,4 +1,4 @@
-final class Host {
+final class Host implements Comparable<Host> {
 
     final String name;
 
@@ -23,5 +23,9 @@ final class Host {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public int compareTo(Host that) {
+        return name.compareTo(that.name);
     }
 }

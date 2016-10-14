@@ -5,6 +5,19 @@ import static org.junit.Assert.*;
 public class HostTest {
 
     @Test
+    public void hosts_compare_like_strings() {
+        assertCompare("red","red");
+        assertCompare("red","green");
+        assertCompare("blue","green");
+    }
+
+    void assertCompare(String string1, String string2) {
+        Host host1 = Host.of(string1);
+        Host host2 = Host.of(string2);
+        assertEquals(string1.compareTo(string2),host1.compareTo(host2));
+    }
+
+    @Test
     public void equal() {
         assertEqual("localhost");
         assertEqual("amazon.com");
