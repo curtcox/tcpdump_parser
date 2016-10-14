@@ -51,5 +51,7 @@ public class MicrosecondsTest {
     @Test
     public void can_not_parse() {
         assertFalse(Microseconds.canParse("Previous"));
+        assertFalse(Microseconds.canParse("10.222.173.125.hp-status"));
+        assertFalse(Microseconds.canParse("123456789012345678ous"));
     }
 }

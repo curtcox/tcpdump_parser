@@ -7,7 +7,16 @@ final class Microseconds {
     }
 
     static boolean canParse(String value) {
-        return value.endsWith("us") && !value.endsWith("ous");
+        return value.endsWith("us") && !value.endsWith("ous") && isValidLong(value);
+    }
+
+    private static boolean isValidLong(String value) {
+        try {
+            Long.parseLong(value.substring(0,value.length() - 2));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     static Microseconds parse(String string) {
