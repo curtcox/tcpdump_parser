@@ -43,7 +43,7 @@ final class Timeline {
     public String toString() {
         StringBuilder out = new StringBuilder();
         for (Channel channel : channels) {
-            out.append(channel + System.lineSeparator());
+            out.append(channel);
         }
         return out.toString();
     }
