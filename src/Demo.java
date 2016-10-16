@@ -1,5 +1,3 @@
-import org.junit.Test;
-
 import java.io.*;
 import java.util.*;
 import java.util.function.*;
@@ -19,7 +17,6 @@ public class Demo {
         }
     }
 
-    @Test
     public void demo() {
         timeline();
     }

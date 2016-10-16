@@ -1,0 +1,19 @@
+apply plugin: 'java'
+apply plugin: 'java-library-distribution'
+
+distZip.shouldRunAfter(build)
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+            exclude '**Test**'
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Parser'
+    }
+}
