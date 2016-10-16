@@ -20,8 +20,12 @@ final class Microseconds {
     }
 
     static Microseconds parse(String string) {
-        String[] parts = string.split("u");
-        return new Microseconds(Long.parseLong(parts[0]));
+        try {
+            String[] parts = string.split("u");
+            return new Microseconds(Long.parseLong(parts[0]));
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     static Microseconds of(long value) {

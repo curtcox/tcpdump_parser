@@ -29,6 +29,7 @@ public class ParserTest  {
     String line12 = "14:38:09.849876 331222059us tsft 1.0 Mb/s 2412 MHz 11g -73dB signal -83dB noise antenna 0 BSSID:ba:ba:ba:ba:67:1b DA:da:da:da:da:69:18 SA:5a:5a:5a:5a:67:1b Probe Response (MyCharterWiFi1b-2G) [1.0* 2.0* 5.5 11.0 18.0 24.0 36.0 54.0 Mbit] CH: 1, PRIVACY";
     String line13 = "13:08:10.022784 2303188775us tsft -54dB signal -95dB noise antenna 0 2412 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC [bit 20] CF +QoS DA:00:08:22:a6:1c:fc (oui Unknown) BSSID:8a:15:04:b6:70:80 (oui Unknown) SA:88:15:44:b6:70:80 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 10.128.128.128.domain > 10.121.114.171.btpp2audctr1: 4351 2/0/0 CNAME scontent.xx.fbcdn.net., A 157.240.2.25 (76)";
     String line14 = "07:16:21.770393 1180213370us tsft -39dB signal -99dB noise antenna 0 2412 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC [bit 20] CF +QoS BSSID:02:18:4a:15:1f:62 (oui Unknown) SA:00:e0:4c:ac:62:23 (oui Unknown) DA:00:18:0a:15:1f:60 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 10.222.173.125.hp-status > 10.128.128.128.domain: 24961+ A? www.googleapis.com. (36)";
+    String line15 = "21:45:29.292557 IP 10.0.1.6.51185 > 10.0.1.70.rfb: Flags [.], ack 4, win 4191, options [nop,nop,TS val 1924602467 ecr 121440208], length 0";
 
     @Test
     public void parse_returns_a_packet() {
@@ -59,6 +60,7 @@ public class ParserTest  {
         assert(canParse(line12));
         assert(canParse(line13));
         assert(canParse(line14));
+        assert(canParse(line15));
     }
 
     @Test
@@ -155,6 +157,7 @@ public class ParserTest  {
         assertOffset(line6, 33575259L);
         assertOffset(line7, 33564956L);
         assertOffset(line8, 3776822007L);
+        assertOffset(line15,null);
     }
 
     @Test

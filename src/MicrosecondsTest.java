@@ -35,6 +35,12 @@ public class MicrosecondsTest {
     }
 
     @Test
+    public void parse_returns_null_when_string_is_invalid() {
+        assertNull(Microseconds.parse("bogus"));
+        assertNull(Microseconds.parse("IP"));
+    }
+
+    @Test
     public void different_microseconds_are_not_equal() {
         assertNotEquals(Microseconds.of(0L),Microseconds.of(10L));
     }
