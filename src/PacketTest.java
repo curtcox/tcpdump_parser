@@ -42,41 +42,41 @@ public class PacketTest {
     @Test
     public void toString_contains_BSSID_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.BSSID = mac("ba:ba:ba:ba");
+        builder.BSSID = mac("ba:ba:ba:ba:ba:ba");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{BSSID=ba:ba:ba:ba}");
+        assertStringIs(packet,"Packet:{BSSID=ba:ba:ba:ba:ba:ba}");
     }
 
     @Test
     public void toString_contains_SA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.SA = mac("5a:5a:5a:5a");
+        builder.SA = mac("5a:5a:5a:5a:5a:5a");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{SA=5a:5a:5a:5a}");
+        assertStringIs(packet,"Packet:{SA=5a:5a:5a:5a:5a:5a}");
     }
 
     @Test
     public void toString_contains_DA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.DA = mac("da:da:da:da");
+        builder.DA = mac("da:da:da:da:da:da");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{DA=da:da:da:da}");
+        assertStringIs(packet,"Packet:{DA=da:da:da:da:da:da}");
     }
 
     @Test
     public void toString_contains_TA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.TA = mac("2a:2a:2a:2a");
+        builder.TA = mac("2a:2a:2a:2a:2a:2a");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{TA=2a:2a:2a:2a}");
+        assertStringIs(packet,"Packet:{TA=2a:2a:2a:2a:2a:2a}");
     }
 
     @Test
     public void toString_contains_RA_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.RA = mac("4a:4a:4a:4a");
+        builder.RA = mac("4a:4a:4a:4a:4a:4a");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{RA=4a:4a:4a:4a}");
+        assertStringIs(packet,"Packet:{RA=4a:4a:4a:4a:4a:4a}");
     }
 
     @Test
@@ -122,13 +122,13 @@ public class PacketTest {
     @Test
     public void toString_contains_all_Macs_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.BSSID = mac("b1:b1:b1:b1");
-        builder.SA = mac("52:52:52:52");
-        builder.RA = mac("43:43:43:43");
-        builder.DA = mac("d4:d4:d4:d4");
-        builder.TA = mac("25:25:25:25");
+        builder.BSSID = mac("b1:b1:b1:b1:b1:b1");
+        builder.SA = mac("52:52:52:52:52:52");
+        builder.RA = mac("43:43:43:43:43:43");
+        builder.DA = mac("d4:d4:d4:d4:d4:d4");
+        builder.TA = mac("25:25:25:25:25:25");
         Packet packet = builder.build();
-        assertStringIs(packet,"Packet:{BSSID=b1:b1:b1:b1, DA=d4:d4:d4:d4, RA=43:43:43:43, SA=52:52:52:52, TA=25:25:25:25}");
+        assertStringIs(packet,"Packet:{BSSID=b1:b1:b1:b1:b1:b1, DA=d4:d4:d4:d4:d4:d4, RA=43:43:43:43:43:43, SA=52:52:52:52:52:52, TA=25:25:25:25:25:25}");
     }
 
     void assertStringIs(Packet packet, String string) {
@@ -146,11 +146,11 @@ public class PacketTest {
     @Test
     public void allMacs_exactly_contains_all_Macs_when_all_specified() {
         Packet.Builder builder = Packet.builder();
-        Mac BSSID = mac("b1:b1:b1:b1");
-        Mac SA = mac("52:52:52:52");
-        Mac RA = mac("43:43:43:43");
-        Mac DA = mac("d4:d4:d4:d4");
-        Mac TA = mac("25:25:25:25");
+        Mac BSSID = mac("b1:b1:b1:b1:b1:b1");
+        Mac SA = mac("52:52:52:52:52:52");
+        Mac RA = mac("43:43:43:43:43:43");
+        Mac DA = mac("d4:d4:d4:d4:d4:d4");
+        Mac TA = mac("25:25:25:25:25:25");
         builder.BSSID = BSSID;
         builder.SA = SA;
         builder.RA = RA;
@@ -164,11 +164,11 @@ public class PacketTest {
     @Test
     public void contains_is_true_for_all_contained_macs() {
         Packet.Builder builder = Packet.builder();
-        Mac BSSID = mac("b1:b1:b1:b1");
-        Mac SA = mac("52:52:52:52");
-        Mac RA = mac("43:43:43:43");
-        Mac DA = mac("d4:d4:d4:d4");
-        Mac TA = mac("25:25:25:25");
+        Mac BSSID = mac("b1:b1:b1:b1:b1:b1");
+        Mac SA = mac("52:52:52:52:52:52");
+        Mac RA = mac("43:43:43:43:43:43");
+        Mac DA = mac("d4:d4:d4:d4:d4:d4");
+        Mac TA = mac("25:25:25:25:25:25");
         builder.BSSID = BSSID;
         builder.SA = SA;
         builder.RA = RA;
@@ -196,14 +196,14 @@ public class PacketTest {
         builder.DA = DA;
         builder.TA = TA;
         Packet packet = builder.build();
-        assertFalse(packet.contains(mac("00:00:00:00")));
+        assertFalse(packet.contains(mac("01:02:03:04:05:06")));
     }
 
     @Test
-    public void contains_is_false_for_null_macs() {
+    public void contains_is_false_for_null_macs_when_Macs_are_null() {
         Packet.Builder builder = Packet.builder();
         Packet packet = builder.build();
-        assertFalse(packet.contains(mac("00:00:00:00")));
+        assertTrue(packet.contains((Mac)null));
     }
 
     @Test
@@ -270,7 +270,7 @@ public class PacketTest {
     public void packets_are_not_equal_when_BSSID_is_different() {
         Packet.Builder builder = Packet.builder();
         Packet without = builder.build();
-        builder.BSSID  = mac("b1:b1:b1:b1");
+        builder.BSSID  = mac("b1:b1:b1:b1:b1:b1");
         Packet with    = builder.build();
         assertNotEqual(with,without);
     }
@@ -279,7 +279,7 @@ public class PacketTest {
     public void packets_are_not_equal_when_SA_is_different() {
         Packet.Builder builder = Packet.builder();
         Packet without = builder.build();
-        builder.SA  = mac("b1:b1:b1:b1");
+        builder.SA  = mac("5a:5a:5a:5a:5a:5a");
         Packet with    = builder.build();
         assertNotEqual(with,without);
     }
@@ -288,7 +288,7 @@ public class PacketTest {
     public void packets_are_not_equal_when_RA_is_different() {
         Packet.Builder builder = Packet.builder();
         Packet without = builder.build();
-        builder.RA  = mac("b1:b1:b1:b1");
+        builder.RA  = mac("b1:b1:b1:b1:b1:b1");
         Packet with    = builder.build();
         assertNotEqual(with,without);
     }
@@ -297,7 +297,7 @@ public class PacketTest {
     public void packets_are_not_equal_when_TA_is_different() {
         Packet.Builder builder = Packet.builder();
         Packet without = builder.build();
-        builder.TA  = mac("b1:b1:b1:b1");
+        builder.TA  = mac("2a:2a:2a:2a:2a:2a");
         Packet with    = builder.build();
         assertNotEqual(with,without);
     }
@@ -306,7 +306,7 @@ public class PacketTest {
     public void packets_are_not_equal_when_DA_is_different() {
         Packet.Builder builder = Packet.builder();
         Packet without = builder.build();
-        builder.DA  = mac("b1:b1:b1:b1");
+        builder.DA  = mac("da:da:da:da:da:da");
         Packet with    = builder.build();
         assertNotEqual(with,without);
     }

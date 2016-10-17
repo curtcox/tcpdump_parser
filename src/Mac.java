@@ -16,6 +16,9 @@ final class Mac implements Comparable {
     }
 
     static Mac of(String value) {
+        if (value.split(":").length != 6) {
+            return null;
+        }
         return new Mac(value);
     }
 

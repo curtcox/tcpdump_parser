@@ -30,6 +30,8 @@ public class ParserTest  {
     String line13 = "13:08:10.022784 2303188775us tsft -54dB signal -95dB noise antenna 0 2412 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC [bit 20] CF +QoS DA:00:08:22:a6:1c:fc (oui Unknown) BSSID:8a:15:04:b6:70:80 (oui Unknown) SA:88:15:44:b6:70:80 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 10.128.128.128.domain > 10.121.114.171.btpp2audctr1: 4351 2/0/0 CNAME scontent.xx.fbcdn.net., A 157.240.2.25 (76)";
     String line14 = "07:16:21.770393 1180213370us tsft -39dB signal -99dB noise antenna 0 2412 MHz 11g ht/20 72.2 Mb/s MCS 7 20 MHz short GI mixed BCC FEC [bit 20] CF +QoS BSSID:02:18:4a:15:1f:62 (oui Unknown) SA:00:e0:4c:ac:62:23 (oui Unknown) DA:00:18:0a:15:1f:60 (oui Unknown) LLC, dsap SNAP (0xaa) Individual, ssap SNAP (0xaa) Command, ctrl 0x03: oui Ethernet (0x000000), ethertype IPv4 (0x0800): 10.222.173.125.hp-status > 10.128.128.128.domain: 24961+ A? www.googleapis.com. (36)";
     String line15 = "21:45:29.292557 IP 10.0.1.6.51185 > 10.0.1.70.rfb: Flags [.], ack 4, win 4191, options [nop,nop,TS val 1924602467 ecr 121440208], length 0";
+    String line16 = "21:53:13.432996 ba:27:eb:05:20:10 (oui Unknown) > b8:27:eb:05:20:10 (oui Unknown), ethertype Unknown (0x886c), length 86: ";
+    String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:de:e4 (oui Unknown), ethertype IPv6 (0x86dd), length 86: bobs-bass-pro.local.55390 > cooper-mini-3.local.ssh: Flags [.], ack 231736, win 4060, options [nop,nop,TS val 1993124491 ecr 622095219], length 0";
 
     @Test
     public void parse_returns_a_packet() {
@@ -61,6 +63,8 @@ public class ParserTest  {
         assert(canParse(line13));
         assert(canParse(line14));
         assert(canParse(line15));
+        assert(canParse(line16));
+        assert(canParse(line17));
     }
 
     @Test
@@ -83,6 +87,7 @@ public class ParserTest  {
     public void localTime() {
         assertEquals(LocalTime.of(07,21,41,535679000),parse(line1).localTime);
         assertEquals(LocalTime.of(11,37,22,811107000),parse(line2).localTime);
+        assertEquals(LocalTime.of(16,50,50,421556000),parse(line17).localTime);
     }
 
     @Test
@@ -96,15 +101,32 @@ public class ParserTest  {
     }
 
     @Test
-    public void IP() {
+    public void no_IP() {
         assert(parse(line8).ip == null);
+    }
 
+    @Test
+    public void IPv4_specified_as_IP() {
         IP ip = parse(line9).ip;
         assertNotNull(ip);
         assertEquals(ip.source.host,Host.of("23.44.7.39"));
         assertEquals(ip.source.port,"80");
         assertEquals(ip.destination.host,Host.of("192.168.14.112"));
         assertEquals(ip.destination.port,"61028");
+    }
+
+    @Test
+    public void IPv6_specified_as_IPv6() {
+        IP ip = parse(line17).ip;
+        assertNotNull(ip);
+        Socket source = ip.source;
+        Socket destination = ip.destination;
+        assertNotNull(source);
+        assertNotNull(destination);
+        assertEquals(source.host,Host.of("bobs-bass-pro.local"));
+        assertEquals(source.port,"55390");
+        assertEquals(destination.host,Host.of("cooper-mini-3.local"));
+        assertEquals(destination.port,"ssh");
     }
 
     @Test
@@ -209,6 +231,8 @@ public class ParserTest  {
         assertSA(line6, "5a:5a:5a:5a:1f:c4");
         assertSA(line7, null);
         assertSA(line8, "5a:5a:5a:5a:76:58");
+        assertSA(line16, "ba:27:eb:05:20:10");
+        assertSA(line17, "00:1f:5b:3b:71:14");
     }
 
     @Test
@@ -221,6 +245,8 @@ public class ParserTest  {
         assertDA(line6, "da:da:da:da:e4:4d");
         assertDA(line7, null);
         assertDA(line8, "da:da:da:da:ee:fd");
+        assertDA(line16, "b8:27:eb:05:20:10");
+        assertDA(line17, "00:16:cb:ac:de:e4");
     }
 
     @Test
@@ -233,6 +259,8 @@ public class ParserTest  {
         assertRA(line6, null);
         assertRA(line7, "4a:4a:4a:4a:d8:7b");
         assertRA(line8, null);
+        assertRA(line16, null);
+        assertRA(line17, null);
     }
 
     @Test
@@ -245,6 +273,8 @@ public class ParserTest  {
         assertTA(line6, null);
         assertTA(line7, "2a:2a:2a:2a:e4:4d");
         assertTA(line8, null);
+        assertTA(line16, null);
+        assertTA(line17, null);
     }
 
     void assertBSSID(String line, String mac) {

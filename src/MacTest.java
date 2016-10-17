@@ -5,6 +5,13 @@ import static org.junit.Assert.*;
 public class MacTest {
 
     @Test
+    public void of_returns_null_when_giben_an_invalid_MAC_string() {
+        assertNull(Mac.of("bogus mac"));
+        assertNull(Mac.of("(oui"));
+        assertNull(Mac.of("Unknown)"));
+    }
+
+    @Test
     public void Macs_with_same_string_are_equal() {
         assertEquals(Mac.of("11:22:33:44:55:66"),Mac.of("11:22:33:44:55:66"));
     }

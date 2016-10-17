@@ -10,6 +10,7 @@ public class IPTest {
     String sample4 = "IPv4 (0x0800): 10.173.119.71.47276 > sb-in-f188.1e100.net.5228:";
     String sample5 = "IPv6 (0x86dd): fe80::1837:1aaf:ddd3:f7c8.mdns > ff02::fb.mdns:";
     String sample6 = "IPv6 (0x86dd): fe80::9911:2c5a:d92a:83ea > ff02::2:";
+    String sample7 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:de:e4 (oui Unknown), ethertype IPv6 (0x86dd), length 86: bobs-bass-pro.local.55390 > cooper-mini-3.local.ssh:";
 
     @Test
     public void toString_contains_source_and_destination_socket() {
@@ -19,6 +20,7 @@ public class IPTest {
         assertToString(sample4,"IP{10.173.119.71:47276 > sb-in-f188.1e100.net:5228}");
         assertToString(sample5,"IP{fe80::1837:1aaf:ddd3:f7c8:mdns > ff02::fb:mdns}");
         assertToString(sample6,"IP{fe80::9911:2c5a:d92a:83ea > ff02:::2}");
+        assertToString(sample7,"IP{bobs-bass-pro.local:55390 > cooper-mini-3.local:ssh}");
     }
 
     @Test
@@ -29,6 +31,7 @@ public class IPTest {
         assertNotNull(parse(sample4));
         assertNotNull(parse(sample5));
         assertNotNull(parse(sample6));
+        assertNotNull(parse(sample7));
     }
 
     @Test
@@ -47,6 +50,7 @@ public class IPTest {
         assertSource(sample3,"132.245.72.114.https");
         assertSource(sample5,"fe80::1837:1aaf:ddd3:f7c8.mdns");
         assertSource(sample6,"fe80::9911:2c5a:d92a:83ea");
+        assertSource(sample7,"bobs-bass-pro.local.55390");
     }
 
     @Test
@@ -56,6 +60,7 @@ public class IPTest {
         assertDestination(sample3,"10.33.44.33.43114");
         assertDestination(sample4,"sb-in-f188.1e100.net.5228");
         assertDestination(sample6,"ff02:::2");
+        assertDestination(sample7,"cooper-mini-3.local.ssh");
     }
 
     @Test
@@ -66,6 +71,7 @@ public class IPTest {
         assertEqual(sample4);
         assertEqual(sample5);
         assertEqual(sample6);
+        assertEqual(sample7);
     }
 
     @Test

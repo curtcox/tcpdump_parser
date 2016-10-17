@@ -38,7 +38,7 @@ final class Packet {
     }
 
     boolean contains(Mac mac) {
-        return mac.equals(BSSID) || mac.equals(SA) || mac.equals(RA) || mac.equals(DA) || mac.equals(TA);
+        return Objects.equals(mac,BSSID) || Objects.equals(mac,SA) || Objects.equals(mac,RA) || Objects.equals(mac,DA) || Objects.equals(mac,TA);
     }
 
     boolean contains(Host host) {

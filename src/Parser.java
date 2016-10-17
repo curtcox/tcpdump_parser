@@ -72,12 +72,27 @@ final class Parser {
     }
 
     private static Mac BSSID(String[] fields)       { return mac("BSSID",fields); }
-    private static Mac DA(String[] fields)          { return mac("DA",fields); }
     private static Mac RA(String[] fields)          { return mac("RA",fields); }
-    private static Mac SA(String[] fields)          { return mac("SA",fields); }
     private static Mac TA(String[] fields)          { return mac("TA",fields); }
     private static String signal(String[] fields)   { return dB("signal",fields); }
     private static String noise(String[] fields)    { return dB("noise",fields); }
+
+    private static Mac SA(String[] fields) {
+        Mac SA = mac("SA",fields);
+        if (SA != null) {
+            return SA;
+        }
+        return macFrom(fields);
+    }
+
+    private static Mac DA(String[] fields) {
+        Mac DA = mac("DA",fields);
+        if (DA != null) {
+            return DA;
+        }
+        return macTo(fields);
+    }
+
     private static Microseconds duration(String[] fields)   {
         for (int i = 2; i<fields.length; i++) {
             if (Microseconds.canParse(fields[i])) {
@@ -117,6 +132,35 @@ final class Parser {
         for (String field : fields) {
             if (field.startsWith(type)) {
                 return Mac.of(field.split(type + ":")[1]);
+            }
+        }
+        return null;
+    }
+
+    private static int arrow(String[] fields) {
+        for (int i = 0; i< fields.length; i++) {
+            if (fields[i].equals(">")) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static Mac macFrom(String[] fields) {
+        for (int i = arrow(fields) - 1; i>0; i--) {
+            Mac mac = Mac.of(fields[i]);
+            if (mac != null) {
+                return mac;
+            }
+        }
+        return null;
+    }
+
+    private static Mac macTo(String[] fields) {
+        for (int i = arrow(fields) + 1; i<fields.length; i++) {
+            Mac mac = Mac.of(fields[i]);
+            if (mac != null) {
+                return mac;
             }
         }
         return null;

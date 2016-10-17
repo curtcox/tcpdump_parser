@@ -26,25 +26,21 @@ final class IP {
     }
 
     static int arrow(String[] parts) {
+        boolean ipFound = false;
         for (int i=0; i<parts.length; i++) {
-            if (parts[i].equals(">")) {
+            String part = parts[i];
+            if (ipFound && part.equals(">")) {
                 return i;
+            }
+            if (part.startsWith("IP")) {
+                ipFound = true;
             }
         }
         return -1;
     }
 
     static boolean isValid(String[] parts) {
-        boolean ipFound = false;
-        for (String part : parts) {
-            if (ipFound && part.equals(">")) {
-                return true;
-            }
-            if (part.startsWith("IP")) {
-                ipFound = true;
-            }
-        }
-        return false;
+        return arrow(parts) > -1;
     }
 
     @Override
