@@ -145,6 +145,77 @@ public class ParserTest  {
     }
 
     @Test
+    public void flags_when_missing() {
+        assertNull(parse(line1).ip);
+        assertNull(parse(line13).ip.flags);
+    }
+
+    @Test
+    public void options_when_missing() {
+        assertNull(parse(line1).ip);
+        assertNull(parse(line8).ip.options);
+        assertNull(parse(line13).ip.options);
+    }
+
+    @Test
+    public void seq_when_missing() {
+        assertNull(parse(line1).ip);
+        assertNull(parse(line13).ip.seq);
+        assertNull(parse(line14).ip.seq);
+    }
+
+    @Test
+    public void ack_when_missing() {
+        assertNull(parse(line1).ip);
+        assertNull(parse(line8).ip.ack);
+        assertNull(parse(line13).ip.ack);
+    }
+
+    @Test
+    public void flags() {
+        assertFlags(parse(line6),"P.");
+        assertFlags(parse(line8),"Command");
+        assertFlags(parse(line15),".");
+    }
+
+    @Test
+    public void options() {
+        assertOptions(parse(line6),"nop,nop,TS val 828748516 ecr 798386358");
+        assertOptions(parse(line9),"nop,nop,TS val 2424555772 ecr 49580065");
+        assertOptions(parse(line15),"nop,nop,TS val 1924602467 ecr 121440208");
+    }
+
+    @Test
+    public void seq() {
+        assertSeq(parse(line6),"0:699");
+        assertSeq(parse(line8),"16");
+        assertSeq(parse(line9),"373279892:373280080");
+    }
+
+    @Test
+    public void ack() {
+        assertAck(parse(line6),"1");
+        assertAck(parse(line9),"3212565907");
+        assertAck(parse(line15),"4");
+    }
+
+    void assertFlags(Packet packet, String flags) {
+        assertEquals(flags,packet.ip.flags);
+    }
+
+    void assertOptions(Packet packet, String options) {
+        assertEquals(options,packet.ip.options);
+    }
+
+    void assertSeq(Packet packet, String seq) {
+        assertEquals(seq,packet.ip.seq);
+    }
+
+    void assertAck(Packet packet, String ack) {
+        assertEquals(ack,packet.ip.ack);
+    }
+
+    @Test
     public void radio_tap_short_preamble() {
         assert(parse(line1).radioTap.shortPreamble);
         assert(parse(line2).radioTap.shortPreamble);

@@ -11,6 +11,31 @@ public class IPTest {
     String sample5 = "IPv6 (0x86dd): fe80::1837:1aaf:ddd3:f7c8.mdns > ff02::fb.mdns:";
     String sample6 = "IPv6 (0x86dd): fe80::9911:2c5a:d92a:83ea > ff02::2:";
     String sample7 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:de:e4 (oui Unknown), ethertype IPv6 (0x86dd), length 86: bobs-bass-pro.local.55390 > cooper-mini-3.local.ssh:";
+    String sample8 = "ethertype IPv4 (0x0800): 17.248.133.169.https > 192.168.14.113.58076: Flags [P.], seq 0:699, ack 1, win 832, options [nop,nop,TS val 828748516 ecr 798386358], length 699";
+
+    @Test
+    public void seq() {
+        assertSeq(sample1,null);
+        assertSeq(sample8,"0:699");
+    }
+
+    @Test
+    public void ack() {
+        assertAck(sample1,null);
+        assertAck(sample8,"1");
+    }
+
+    @Test
+    public void flags() {
+        assertFlags(sample1,null);
+        assertFlags(sample8,"P.");
+    }
+
+    @Test
+    public void options() {
+        assertOptions(sample1,null);
+        assertOptions(sample8,"nop,nop,TS val 828748516 ecr 798386358");
+    }
 
     @Test
     public void toString_contains_source_and_destination_socket() {
@@ -32,6 +57,7 @@ public class IPTest {
         assertNotNull(parse(sample5));
         assertNotNull(parse(sample6));
         assertNotNull(parse(sample7));
+        assertNotNull(parse(sample8));
     }
 
     @Test
@@ -100,6 +126,22 @@ public class IPTest {
 
     void assertToString(String sample, String string) {
         assertEquals(string,parse(sample).toString());
+    }
+
+    void assertFlags(String sample, String flags) {
+        assertEquals(flags,parse(sample).flags);
+    }
+
+    void assertOptions(String sample, String options) {
+        assertEquals(options,parse(sample).options);
+    }
+
+    void assertSeq(String sample, String seq) {
+        assertEquals(seq,parse(sample).seq);
+    }
+
+    void assertAck(String sample, String ack) {
+        assertEquals(ack,parse(sample).ack);
     }
 
     void assertSource(String sample, String source) {
