@@ -13,6 +13,9 @@ public class ParserTest  {
  *
  * The best I have found is this:
  * https://github.com/the-tcpdump-group/tcpdump/blob/master/print-802_11.c
+ * https://github.com/the-tcpdump-group/tcpdump/blob/master/tcp.h
+ * https://github.com/the-tcpdump-group/tcpdump/blob/master/ip.h
+ * https://github.com/the-tcpdump-group/tcpdump/blob/master/udp.h
  */
 
     String line1 = "07:21:41.535679 91423200us tsft short preamble 6.0 Mb/s 5200 MHz 11a -70dB signal -99dB noise antenna 1 BSSID:d8:bb:bb:68:ad:bb (oui Unknown) DA:Broadcast SA:5a:5a:5a:5a:ad:be (oui Unknown) Beacon (acmevisitor) [6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 Mbit] ESS[|802.11]";
@@ -81,6 +84,18 @@ public class ParserTest  {
         assertType(line10,"DeAuthentication");
         assertType(line11,"Probe Request");
         assertType(line12,"Probe Response");
+    }
+
+    @Test
+    public void line() {
+        assertLine(line1);
+        assertLine(line2);
+        assertLine(line3);
+        assertLine(line6);
+    }
+
+    void assertLine(String line) {
+        assertEquals(parse(line).line,line);
     }
 
     @Test

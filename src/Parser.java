@@ -24,6 +24,7 @@ final class Parser {
     private static Packet parse0(String line) {
         String[] fields = line.split(" ");
         Packet.Builder builder = Packet.builder();
+        builder.line      = line;
         builder.localTime = localTime(fields);
         builder.BSSID     = BSSID(fields);
         builder.DA        = DA(fields);

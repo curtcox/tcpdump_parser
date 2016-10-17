@@ -18,8 +18,10 @@ final class Packet {
     final RadioTap radioTap;
     final HTTP http;
     final IP ip;
+    final String line;
 
     private Packet(Builder builder) {
+        line      = builder.line;
         localTime = builder.localTime;
         BSSID     = builder.BSSID;
         DA        = builder.DA;
@@ -61,6 +63,7 @@ final class Packet {
     }
 
     static class Builder {
+        String line;
         LocalTime localTime;
         Mac BSSID;
         Mac DA;
