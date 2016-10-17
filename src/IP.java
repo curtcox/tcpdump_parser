@@ -69,9 +69,17 @@ final class IP {
     static String options(String[] parts) {
         for (int i=0; i<parts.length; i++) {
             String part = parts[i];
-            if (part.equals("Options")) {
-                String options = parts[i + 1];
-                return options.substring(1,options.length() - 2);
+            if (part.equals("options")) {
+                StringBuilder out = new StringBuilder();
+                for (int j = i + 1; j<parts.length; j++) {
+                    String opt = parts[j];
+                    out.append(parts[j] + " ");
+                    if (opt.endsWith("],")) {
+                        break;
+                    }
+                }
+                String options = out.toString();
+                return options.substring(1,options.length() - 3);
             }
         }
         return null;
