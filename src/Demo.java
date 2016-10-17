@@ -17,8 +17,18 @@ public class Demo {
         }
     }
 
-    public void demo() {
-        timeline();
+    public static void main(String[] args) {
+        Demo demo = new Demo();
+        demo.printTimeline();
+    }
+
+    void printTimeline() {
+        Timeline timeline = timeline();
+        for (Channel channel : timeline.channels) {
+            if (serversWeCareAbout(channel.server)) {
+                print(channel);
+            }
+        }
     }
 
     void dumpAllPackets() {
@@ -49,8 +59,8 @@ public class Demo {
         }
     }
 
-    void timeline() {
-        print(Timeline.of(ipPackets()));
+    Timeline timeline() {
+        return Timeline.of(ipPackets());
     }
 
     void summarizeIpConversations() {
