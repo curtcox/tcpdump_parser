@@ -145,35 +145,12 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     @Test
-    public void flags_when_missing() {
-        assertNull(parse(line13).ip.tcp.flags);
-    }
-
-    @Test
-    public void options_when_missing() {
-        Packet packet = parse(line13);
-        assertNotNull(packet.ip.tcp);
-        assertNull(packet.ip.tcp.options);
-    }
-
-    @Test
     public void TCP_when_missing() {
         Packet packet = parse(line13);
         assertNotNull(packet.ip);
         assertNull(packet.ip.tcp);
     }
-
-    @Test
-    public void seq_when_missing() {
-        assertNull(parse(line13).ip.tcp.seq);
-        assertNull(parse(line14).ip.tcp.seq);
-    }
-
-    @Test
-    public void ack_when_missing() {
-        assertNull(parse(line13).ip.tcp.ack);
-    }
-
+    
     @Test
     public void flags() {
         assertFlags(parse(line6),"P.");

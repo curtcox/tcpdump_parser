@@ -18,30 +18,30 @@ public class IPTest {
         assertTCP(sample1,null);
         assertTCP(sample2,null);
         TCP.Builder builder = TCP.builder();
+        builder.flags = "P.";
+        builder.options = "nop,nop,TS val 828748516 ecr 798386358";
+        builder.seq = "0:699";
+        builder.ack = "1";
         assertTCP(sample8,builder.build());
     }
 
     @Test
     public void seq() {
-        assertSeq(sample1,null);
         assertSeq(sample8,"0:699");
     }
 
     @Test
     public void ack() {
-        assertAck(sample1,null);
         assertAck(sample8,"1");
     }
 
     @Test
     public void flags() {
-        assertFlags(sample1,null);
         assertFlags(sample8,"P.");
     }
 
     @Test
     public void options() {
-        assertOptions(sample1,null);
         assertOptions(sample8,"nop,nop,TS val 828748516 ecr 798386358");
     }
 

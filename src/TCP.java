@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 final class TCP {
 
     final String seq;
@@ -13,12 +15,28 @@ final class TCP {
     }
 
     static TCP parse(String[] parts) {
+        if (!validTCP(parts)) {
+            return null;
+        }
+        return parse0(parts);
+    }
+
+    private static TCP parse0(String[] parts) {
         Builder builder = new Builder();
         builder.seq = seq(parts);
         builder.ack = ack(parts);
         builder.flags = flags(parts);
         builder.options = options(parts);
         return builder.build();
+    }
+
+    static boolean validTCP(String[] parts) {
+        for (String part : parts) {
+            if (part.equals("Flags")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static Builder builder() {
@@ -88,4 +106,17 @@ final class TCP {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        TCP that = (TCP) o;
+        return  Objects.equals(flags,that.flags) &&
+                Objects.equals(options,that.options) &&
+                Objects.equals(seq,that.seq) &&
+                Objects.equals(ack,that.ack);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flags,options,seq,ack);
+    }
 }
