@@ -146,35 +146,37 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
 
     @Test
     public void flags_when_missing() {
-        assertNull(parse(line1).ip);
-        assertNull(parse(line13).ip.flags);
+        assertNull(parse(line13).ip.tcp.flags);
     }
 
     @Test
     public void options_when_missing() {
-        assertNull(parse(line1).ip);
-        assertNull(parse(line8).ip.options);
-        assertNull(parse(line13).ip.options);
+        Packet packet = parse(line13);
+        assertNotNull(packet.ip.tcp);
+        assertNull(packet.ip.tcp.options);
+    }
+
+    @Test
+    public void TCP_when_missing() {
+        Packet packet = parse(line13);
+        assertNotNull(packet.ip);
+        assertNull(packet.ip.tcp);
     }
 
     @Test
     public void seq_when_missing() {
-        assertNull(parse(line1).ip);
-        assertNull(parse(line13).ip.seq);
-        assertNull(parse(line14).ip.seq);
+        assertNull(parse(line13).ip.tcp.seq);
+        assertNull(parse(line14).ip.tcp.seq);
     }
 
     @Test
     public void ack_when_missing() {
-        assertNull(parse(line1).ip);
-        assertNull(parse(line8).ip.ack);
-        assertNull(parse(line13).ip.ack);
+        assertNull(parse(line13).ip.tcp.ack);
     }
 
     @Test
     public void flags() {
         assertFlags(parse(line6),"P.");
-        assertFlags(parse(line8),"Command");
         assertFlags(parse(line15),".");
     }
 
@@ -188,7 +190,6 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     @Test
     public void seq() {
         assertSeq(parse(line6),"0:699");
-        assertSeq(parse(line8),"16");
         assertSeq(parse(line9),"373279892:373280080");
     }
 
@@ -200,19 +201,19 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     void assertFlags(Packet packet, String flags) {
-        assertEquals(flags,packet.ip.flags);
+        assertEquals(flags,packet.ip.tcp.flags);
     }
 
     void assertOptions(Packet packet, String options) {
-        assertEquals(options,packet.ip.options);
+        assertEquals(options,packet.ip.tcp.options);
     }
 
     void assertSeq(Packet packet, String seq) {
-        assertEquals(seq,packet.ip.seq);
+        assertEquals(seq,packet.ip.tcp.seq);
     }
 
     void assertAck(Packet packet, String ack) {
-        assertEquals(ack,packet.ip.ack);
+        assertEquals(ack,packet.ip.tcp.ack);
     }
 
     @Test

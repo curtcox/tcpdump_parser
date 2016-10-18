@@ -14,6 +14,14 @@ public class IPTest {
     String sample8 = "ethertype IPv4 (0x0800): 17.248.133.169.https > 192.168.14.113.58076: Flags [P.], seq 0:699, ack 1, win 832, options [nop,nop,TS val 828748516 ecr 798386358], length 699";
 
     @Test
+    public void TCP() {
+        assertTCP(sample1,null);
+        assertTCP(sample2,null);
+        TCP.Builder builder = TCP.builder();
+        assertTCP(sample8,builder.build());
+    }
+
+    @Test
     public void seq() {
         assertSeq(sample1,null);
         assertSeq(sample8,"0:699");
@@ -129,19 +137,23 @@ public class IPTest {
     }
 
     void assertFlags(String sample, String flags) {
-        assertEquals(flags,parse(sample).flags);
+        assertEquals(flags,parse(sample).tcp.flags);
     }
 
     void assertOptions(String sample, String options) {
-        assertEquals(options,parse(sample).options);
+        assertEquals(options,parse(sample).tcp.options);
     }
 
     void assertSeq(String sample, String seq) {
-        assertEquals(seq,parse(sample).seq);
+        assertEquals(seq,parse(sample).tcp.seq);
     }
 
     void assertAck(String sample, String ack) {
-        assertEquals(ack,parse(sample).ack);
+        assertEquals(ack,parse(sample).tcp.ack);
+    }
+
+    void assertTCP(String sample, TCP tcp) {
+        assertEquals(tcp,parse(sample).tcp);
     }
 
     void assertSource(String sample, String source) {
