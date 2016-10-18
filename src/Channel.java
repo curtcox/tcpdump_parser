@@ -107,25 +107,31 @@ final class Channel implements Comparable<Channel> {
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
-        out.append(summaryLine() + System.lineSeparator());
+        out.append(summary() + System.lineSeparator());
+        return out.toString();
+    }
+
+    String transcript() {
+        StringBuilder out = new StringBuilder();
         for (Packet packet : packets) {
             out.append(line(packet) + System.lineSeparator());
         }
         return out.toString();
     }
 
-    private String summaryLine() {
+    String summary() {
         int outgoingPackets = 0;
         int outgoingBytes = 0;
         int incomingPackets = 0;
         int incomingBytes = 0;
         for (Packet packet : packets) {
+            int length = packet.length == null ? 0 : packet.length;
             if (outgoing(packet)) {
                 outgoingPackets++;
-                outgoingBytes += packet.length;
+                outgoingBytes += length;
             } else {
                 incomingPackets++;
-                incomingBytes += packet.length;
+                incomingBytes += length;
             }
         }
         String packets = String.format("-> %s / %s <- %s / %s",outgoingPackets,outgoingBytes,incomingPackets,incomingBytes);
@@ -133,7 +139,8 @@ final class Channel implements Comparable<Channel> {
     }
 
     private String line(Packet packet) {
-        return String.format("%s %s %s %s %s",packet.localTime,port(packet),arrow(packet),length(packet),http(packet));
+        return String.format("%s %s %s %s %s %s",
+                packet.localTime,port(packet),tcp(packet),arrow(packet),length(packet),http(packet));
     }
 
     private boolean outgoing(Packet packet) {
@@ -146,6 +153,14 @@ final class Channel implements Comparable<Channel> {
 
     private static String http(Packet packet) {
         return packet.http == null ? "" : packet.http.toString();
+    }
+
+    private static String tcp(Packet packet) {
+        TCP tcp = packet.ip.tcp;
+        if (tcp == null) {
+            return "";
+        }
+        return tcp.flags + " " + tcp.seq + " " + tcp.ack;
     }
 
     private String port(Packet packet) {
