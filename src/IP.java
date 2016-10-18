@@ -59,6 +59,10 @@ final class IP {
 
     @Override
     public String toString() {
-        return "IP{" + source + " > " + destination + "}";
+        if (tcp==null) {
+            return "IP{" + source + " > " + destination + "}";
+        } else {
+            return "IP{" + source + " > " + destination + " " + tcp +"}";
+        }
     }
 }

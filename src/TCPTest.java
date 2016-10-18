@@ -92,4 +92,21 @@ public class TCPTest {
         assertNotEquals(a.hashCode(),b.hashCode());
     }
 
+    @Test
+    public void toString_does_not_show_null_fields() {
+        TCP tcp = TCP.builder().build();
+        assertEquals("TCP:{}",tcp.toString());
+    }
+
+    @Test
+    public void toString_shows_all_fields_when_supplied() {
+        TCP.Builder builder = TCP.builder();
+        builder.ack     = "a1";
+        builder.seq     = "s2";
+        builder.flags   = "f3";
+        builder.options = "o4";
+        TCP tcp = builder.build();
+        assertEquals("TCP:{ack=a1, flags=f3, options=o4, seq=s2}",tcp.toString());
+    }
+
 }

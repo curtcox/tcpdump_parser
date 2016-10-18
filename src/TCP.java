@@ -1,4 +1,6 @@
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 final class TCP {
 
@@ -119,4 +121,15 @@ final class TCP {
     public int hashCode() {
         return Objects.hash(flags,options,seq,ack);
     }
+
+    @Override
+    public String toString() {
+        Map map = new TreeMap();
+        if (flags != null)   { map.put("flags",flags); }
+        if (options != null) { map.put("options",options); }
+        if (seq != null)     { map.put("seq",seq); }
+        if (ack != null)     { map.put("ack",ack); }
+        return "TCP:" + map;
+    }
+
 }
