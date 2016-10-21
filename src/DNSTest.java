@@ -4,8 +4,14 @@ import static org.junit.Assert.*;
 
 public class DNSTest {
 
-    String sample1 = "4351 2/0/0 CNAME scontent.xx.fbcdn.net., A 157.240.2.25 (76)";
+    String sample1 = "4351 2/0/0 CNAME site.whatever.net., A 157.240.2.25 (76)";
     String sample2 = "24961+ A? www.googleapis.com. (36)";
+
+    @Test
+    public void toString_contains_expected_value() {
+        assertEquals(parse(sample1).toString(),"DNS:{CNAME=site.whatever.net A=157.240.2.25}");
+        assertEquals(parse(sample2).toString(),"DNS:{query CNAME=www.googleapis.com}");
+    }
 
     @Test
     public void can_parse_returns_value_when_valid() {
@@ -27,7 +33,7 @@ public class DNSTest {
 
     @Test
     public void CNAME() {
-        assertEquals(Host.of("scontent.xx.fbcdn.net"),parse(sample1).CNAME);
+        assertEquals(Host.of("site.whatever.net"),parse(sample1).CNAME);
         assertEquals(Host.of("www.googleapis.com"),parse(sample2).CNAME);
     }
 

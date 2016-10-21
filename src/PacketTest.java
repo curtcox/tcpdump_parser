@@ -15,6 +15,13 @@ public class PacketTest {
     }
 
     @Test
+    public void toString_contains_DNS_when_specified() {
+        Packet.Builder builder = Packet.builder();
+        builder.dns = DNS.parse("24961+ A? google.com. (36)".split(" "));
+        assertStringIs(builder.build(),"Packet:{dns=DNS:{query CNAME=google.com}}");
+    }
+
+    @Test
     public void toString_contains_IP_when_specified() {
         Packet.Builder builder = Packet.builder();
         builder.ip = IP.parse("IP 132.245.72.114.https > 10.33.44.33.43114:".split(" "));

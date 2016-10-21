@@ -108,6 +108,7 @@ final class Packet {
         if (offset != null)    { map.put("offset",offset); }
         if (http != null)      { map.put("http",http); }
         if (ip != null)        { map.put("ip",ip); }
+        if (dns != null)       { map.put("dns",dns); }
         return "Packet:" + map;
     }
 

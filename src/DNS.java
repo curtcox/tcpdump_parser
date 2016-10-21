@@ -55,4 +55,9 @@ final class DNS {
         return null;
     }
 
+    public String toString() {
+        return query
+                ? String.format("DNS:{query CNAME=%s}",CNAME)
+                : String.format("DNS:{CNAME=%s A=%s}", CNAME, A);
+    }
 }
