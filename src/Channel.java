@@ -9,6 +9,10 @@ final class Channel implements Comparable<Channel> {
     final List<Conversation> conversations;
     final LocalTime begin;
     final LocalTime end;
+    final int outgoingPackets;
+    final int outgoingBytes;
+    final int incomingPackets = 0;
+    final int incomingBytes = 0;
 
     private Channel(Builder builder) {
         server  = builder.server;
@@ -16,6 +20,8 @@ final class Channel implements Comparable<Channel> {
         begin   = builder.begin;
         end     = builder.end;
         conversations = Collections.unmodifiableList(builder.conversations.stream().map(b->b.build()).collect(Collectors.toList()));
+        outgoingPackets = outgoingPackets(conversations);
+        outgoingBytes   = outgoingBytes(conversations);
     }
 
     static Channel of(Packet...packets) {
@@ -108,6 +114,20 @@ final class Channel implements Comparable<Channel> {
         }
     }
 
+
+    private int outgoingBytes(List<Conversation> conversations) {
+        for (Conversation conversation : conversations) {
+            for (Packet packet : conversation.packets) {
+                return packet.length == null ? 0 : packet.length;
+            }
+        }
+        return 0;
+    }
+
+    private int outgoingPackets(List<Conversation> conversations) {
+        return conversations.size();
+    }
+
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
@@ -124,16 +144,6 @@ final class Channel implements Comparable<Channel> {
     }
 
     String summary() {
-        int outgoingPackets = 0;
-        int outgoingBytes = 0;
-        int incomingPackets = 0;
-        int incomingBytes = 0;
-        for (Conversation conversation : conversations) {
-            outgoingPackets += conversation.outgoingPackets;
-            incomingPackets += conversation.incomingPackets;
-            incomingBytes   += conversation.outgoingBytes;
-            outgoingBytes   += conversation.incomingBytes;
-        }
         String packets = String.format("-> %s / %s <- %s / %s",outgoingPackets,outgoingBytes,incomingPackets,incomingBytes);
         return String.format("client: %s server: %s begin: %s end: %s conversations: %s", client, server, begin ,end, packets);
     }

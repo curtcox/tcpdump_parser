@@ -26,6 +26,10 @@ public class ChannelTest {
     public void channel_of_no_packets() {
         Channel channel = Channel.of();
         assertEquals(channel.conversations.size(),0);
+        assertEquals(channel.incomingBytes,0);
+        assertEquals(channel.incomingPackets,0);
+        assertEquals(channel.outgoingBytes,0);
+        assertEquals(channel.outgoingPackets,0);
     }
 
     @Test
@@ -54,6 +58,21 @@ public class ChannelTest {
 
         assertEquals(channel.conversations.size(),1);
         assertSame(channel.conversations.get(0).packets.get(0),packet);
+    }
+
+    @Test
+    public void channel_of_1_outgoing_packet_has_the_proper_counts() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.length = hashCode();
+        builder.ip = ip;
+        Packet packet = builder.build();
+        Channel channel = of(packet);
+
+        assertEquals(channel.incomingPackets,0);
+        assertEquals(channel.incomingBytes,0);
+        assertEquals(channel.outgoingPackets,1);
+        assert(channel.outgoingBytes == packet.length);
     }
 
     @Test

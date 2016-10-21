@@ -21,6 +21,10 @@ public class ConversationTest {
     public void conversation_of_no_packets() {
         Conversation conversation = Conversation.of();
         assertEquals(conversation.packets.size(),0);
+        assertEquals(conversation.incomingBytes,0);
+        assertEquals(conversation.outgoingBytes,0);
+        assertEquals(conversation.incomingPackets,0);
+        assertEquals(conversation.outgoingPackets,0);
     }
 
     @Test
