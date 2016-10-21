@@ -19,6 +19,7 @@ final class Packet {
     final HTTP http;
     final IP ip;
     final String line;
+    final DNS dns;
 
     private Packet(Builder builder) {
         line      = builder.line;
@@ -36,6 +37,7 @@ final class Packet {
         radioTap  = builder.radioTap;
         http      = builder.http;
         ip        = builder.ip;
+        dns       = builder.dns;
         type      = builder.type;
     }
 
@@ -78,6 +80,7 @@ final class Packet {
         Integer length;
         HTTP http;
         IP ip;
+        DNS dns;
         String type;
 
         Packet build() {

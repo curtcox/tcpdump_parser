@@ -71,6 +71,30 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     @Test
+    public void DNS_is_null_when_not_DNS() {
+        assertNull(parse(line1).dns);
+        assertNull(parse(line2).dns);
+    }
+
+    @Test
+    public void DNS_query() {
+        DNS dns = parse(line14).dns;
+        assert(dns.query);
+        assertNotNull(dns);
+        assertEquals(Host.of("www.googleapis.com"),dns.CNAME);
+        assertNull(dns.A);
+    }
+
+    @Test
+    public void DNS_response() {
+        DNS dns = parse(line13).dns;
+        assertFalse(dns.query);
+        assertNotNull(dns);
+        assertEquals(Host.of("scontent.xx.fbcdn.net"),dns.CNAME);
+        assertEquals(Host.of("157.240.2.25"),dns.A);
+    }
+
+    @Test
     public void type() {
         assertType(line1,"Beacon");
         assertType(line2,null);
