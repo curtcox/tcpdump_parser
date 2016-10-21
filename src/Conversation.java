@@ -39,12 +39,9 @@ final class Conversation {
 
     static Direction directionOf(Packet packet) {
         IP ip = packet.ip;
-        if (clientToServer(ip)) {
-            return new Direction(ip.source,ip.destination);
-        } else {
-            return new Direction(ip.destination,ip.source);
-        }
-
+        return clientToServer(ip)
+            ? new Direction(ip.source,ip.destination)
+            : new Direction(ip.destination,ip.source);
     }
 
     static Builder builder() {
@@ -68,7 +65,7 @@ final class Conversation {
         List<Packet> packets = new ArrayList<>();
 
         boolean accepts(Packet packet) {
-            return true;
+            return validForThisConversation(packet.ip);
         }
 
         void add(Packet packet) {
@@ -86,6 +83,22 @@ final class Conversation {
         Conversation build() {
             return new Conversation(this);
         }
+
+        private boolean validForThisConversation(IP ip) {
+            if (client == null) {
+                return true;
+            }
+            return validForClientToServer(ip) || validForServerToClient(ip);
+        }
+
+        private boolean validForClientToServer(IP ip) {
+            return ip.source.equals(client) && ip.destination.equals(server);
+        }
+
+        private boolean validForServerToClient(IP ip) {
+            return ip.source.equals(server) && ip.destination.equals(client);
+        }
+
     }
 
     private String line(Packet packet) {

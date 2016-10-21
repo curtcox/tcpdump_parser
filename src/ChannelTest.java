@@ -149,9 +149,9 @@ public class ChannelTest {
 
         assertEquals(channel.conversations.size(),1);
         List<Packet> packets = channel.conversations.get(0).packets;
-        assertEquals(packets.size(),1);
+        assertEquals(packets.size(),2);
         assertSame(packets.get(0),packet1);
-        assertSame(packets.get(0),packet2);
+        assertSame(packets.get(1),packet2);
     }
 
     @Test
@@ -166,9 +166,9 @@ public class ChannelTest {
 
         assertEquals(channel.conversations.size(),1);
         List<Packet> packets = channel.conversations.get(0).packets;
-        assertEquals(packets.size(),1);
+        assertEquals(packets.size(),2);
         assertSame(packets.get(0),packet1);
-        assertSame(packets.get(0),packet2);
+        assertSame(packets.get(1),packet2);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class ChannelTest {
         assertEquals(channel.conversations.get(0).packets.size(),1);
         assertEquals(channel.conversations.get(1).packets.size(),1);
         assertSame(channel.conversations.get(0).packets.get(0),packet1);
-        assertSame(channel.conversations.get(0).packets.get(0),packet2);
+        assertSame(channel.conversations.get(1).packets.get(0),packet2);
     }
 
     @Test

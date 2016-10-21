@@ -63,9 +63,15 @@ final class Channel implements Comparable<Channel> {
         }
 
         private void addPacketToConversations(Packet packet) {
-            Conversation.Builder builder = Conversation.builder();
-            builder.add(packet);
-            conversations.add(builder);
+            for (Conversation.Builder conversation : conversations) {
+                if (conversation.accepts(packet)) {
+                    conversation.add(packet);
+                    return;
+                }
+            }
+            Conversation.Builder conversation = Conversation.builder();
+            conversation.add(packet);
+            conversations.add(conversation);
         }
 
         private void check(LocalTime time) {
@@ -90,14 +96,14 @@ final class Channel implements Comparable<Channel> {
             if (client == null) {
                 return true;
             }
-            return validForclientToServer(ip) || validForserverToClient(ip);
+            return validForClientToServer(ip) || validForServerToClient(ip);
         }
 
-        private boolean validForclientToServer(IP ip) {
+        private boolean validForClientToServer(IP ip) {
             return ip.source.host.equals(client) && ip.destination.equals(server);
         }
 
-        private boolean validForserverToClient(IP ip) {
+        private boolean validForServerToClient(IP ip) {
             return ip.source.equals(server) && ip.destination.host.equals(client);
         }
     }

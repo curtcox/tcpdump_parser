@@ -33,20 +33,22 @@ public class TimelineTest {
         assertEquals(timeline.channels.size(),1);
         Channel channel = timeline.channels.get(0);
         assertEquals(channel.conversations.size(),1);
-        assertSame(channel.conversations.get(0).packets.get(0), ch1_conv1_p1);
-        assertSame(channel.conversations.get(0).packets.get(0), ch1_conv1_p2);
+        List<Packet> packets = channel.conversations.get(0).packets;
+        assertSame(packets.get(0), ch1_conv1_p1);
+        assertSame(packets.get(1), ch1_conv1_p2);
     }
 
     @Test
     public void timeline_of_2_packets_on_the_same_channel_from_different_conversations() {
-        Timeline timeline = timeline(ch1_conv1_p1, ch1_conv2_p2);
+        Timeline timeline = timeline(ch1_conv1_p1, ch1_conv2_p1);
         assertEquals(timeline.channels.size(),1);
         Channel channel = timeline.channels.get(0);
-        assertEquals(channel.conversations.size(),2);
-        assertEquals(channel.conversations.get(0).packets.size(),1);
-        assertEquals(channel.conversations.get(1).packets.size(),1);
-        assertSame(channel.conversations.get(0).packets.get(0), ch1_conv1_p1);
-        assertSame(channel.conversations.get(1).packets.get(0), ch1_conv2_p1);
+        List<Conversation> conversations = channel.conversations;
+        assertEquals(conversations.size(),2);
+        assertEquals(conversations.get(0).packets.size(),1);
+        assertEquals(conversations.get(1).packets.size(),1);
+        assertSame(conversations.get(0).packets.get(0), ch1_conv1_p1);
+        assertSame(conversations.get(1).packets.get(0), ch1_conv2_p1);
     }
 
     @Test

@@ -9,11 +9,7 @@ public class ConversationTest {
     LocalTime localTime = LocalTime.now();
     IP ip = ip("IP 1.2.3.4.43114 > 5.6.7.8.https");
     IP ipBack = ip("IP 5.6.7.8.https > 1.2.3.4.43114");
-    IP differentClient = ip("IP 1.2.3.5.43114 > 5.6.7.8.https");
     IP differentClientPort = ip("IP 1.2.3.4.42960 > 5.6.7.8.https");
-    IP differentServerHost = ip("IP 1.2.3.4.43114 > 5.6.7.9.https");
-    IP differentServerPort = ip("IP 1.2.3.4.43114 > 5.6.7.8.http");
-    IP differentServerHostAndPort = ip("IP 1.2.3.4.43114 > 5.6.7.9.http");
     IP privateToPublic = ip("IP 192.168.3.4.43114 > 5.6.7.9.http");
     IP publicToPrivate = ip("IP 5.6.7.9.http > 192.168.3.4.43114");
 
@@ -112,6 +108,36 @@ public class ConversationTest {
 
         assertSame(conversation.begin,LocalTime.MIN);
         assertSame(conversation.end,LocalTime.MAX);
+    }
+
+    @Test
+    public void accepts_packets_between_same_client_and_server_on_the_same_port() {
+        Packet.Builder packetBuilder = Packet.builder();
+        packetBuilder.localTime = localTime;
+        packetBuilder.ip = ip;
+        Packet packet1 = packetBuilder.build();
+        Packet packet2 = packetBuilder.build();
+        packetBuilder.ip = ipBack;
+        Packet packet3 = packetBuilder.build();
+        Conversation.Builder conversationBuilder = Conversation.builder();
+        conversationBuilder.add(packet1);
+
+        assert(conversationBuilder.accepts(packet2));
+        assert(conversationBuilder.accepts(packet3));
+    }
+
+    @Test
+    public void rejects_packets_between_the_same_client_and_server_on_different_ports() {
+        Packet.Builder packetBuilder = Packet.builder();
+        packetBuilder.localTime = localTime;
+        packetBuilder.ip = ip;
+        Packet packet1 = packetBuilder.build();
+        packetBuilder.ip = differentClientPort;
+        Packet packet2 = packetBuilder.build();
+        Conversation.Builder conversationBuilder = Conversation.builder();
+        conversationBuilder.add(packet1);
+
+        assertFalse(conversationBuilder.accepts(packet2));
     }
 
 }
