@@ -1,11 +1,12 @@
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 final class Channel implements Comparable<Channel> {
 
     final Socket server;
     final Host client;
-    final List<Packet> packets;
+    final List<Conversation> conversations;
     final LocalTime begin;
     final LocalTime end;
 
@@ -14,7 +15,7 @@ final class Channel implements Comparable<Channel> {
         client  = builder.client;
         begin   = builder.begin;
         end     = builder.end;
-        packets = Collections.unmodifiableList(builder.packets);
+        conversations = Collections.unmodifiableList(builder.conversations.stream().map(b->b.build()).collect(Collectors.toList()));
     }
 
     static Channel of(Packet...packets) {
@@ -34,7 +35,7 @@ final class Channel implements Comparable<Channel> {
         private Host client;
         private LocalTime begin;
         private LocalTime end;
-        private List<Packet> packets = new ArrayList<>();
+        private List<Conversation.Builder> conversations = new ArrayList<>();
 
         Channel build() {
             return new Channel(this);
@@ -62,8 +63,13 @@ final class Channel implements Comparable<Channel> {
                     server = ip.source;
                 }
             }
+            addPacketToConversations(packet);
+        }
 
-            packets.add(packet);
+        private void addPacketToConversations(Packet packet) {
+            Conversation.Builder builder = Conversation.builder();
+            builder.add(packet);
+            conversations.add(builder);
         }
 
         private static boolean clientToServer(IP ip) {
@@ -72,7 +78,7 @@ final class Channel implements Comparable<Channel> {
 
         private void check(LocalTime time) {
             if (time==null) {
-                throw new IllegalArgumentException("Time missing, but required for timeline packets.");
+                throw new IllegalArgumentException("Time missing, but required for timeline conversations.");
             }
             if (begin !=null && time.isBefore(begin)) {
                 throw new IllegalArgumentException("Packets must be added in chronological order.");
@@ -81,7 +87,7 @@ final class Channel implements Comparable<Channel> {
 
         private void check(IP ip) {
             if (ip==null) {
-                throw new IllegalArgumentException("IP missing, but required for timeline packets.");
+                throw new IllegalArgumentException("IP missing, but required for timeline conversations.");
             }
             if (!validForThisChannel(ip)) {
                 throw new IllegalArgumentException("Packets in this channel must be between " + client + " and " + server);
@@ -113,8 +119,8 @@ final class Channel implements Comparable<Channel> {
 
     String transcript() {
         StringBuilder out = new StringBuilder();
-        for (Packet packet : packets) {
-            out.append(line(packet) + System.lineSeparator());
+        for (Conversation conversation : conversations) {
+            out.append(conversation.toString() + System.lineSeparator());
         }
         return out.toString();
     }
@@ -124,52 +130,16 @@ final class Channel implements Comparable<Channel> {
         int outgoingBytes = 0;
         int incomingPackets = 0;
         int incomingBytes = 0;
-        for (Packet packet : packets) {
-            int length = packet.length == null ? 0 : packet.length;
-            if (outgoing(packet)) {
-                outgoingPackets++;
-                outgoingBytes += length;
-            } else {
-                incomingPackets++;
-                incomingBytes += length;
-            }
+        for (Conversation conversation : conversations) {
+            outgoingPackets += conversation.outgoingPackets;
+            incomingPackets += conversation.incomingPackets;
+            incomingBytes   += conversation.outgoingBytes;
+            outgoingBytes   += conversation.incomingBytes;
         }
         String packets = String.format("-> %s / %s <- %s / %s",outgoingPackets,outgoingBytes,incomingPackets,incomingBytes);
-        return String.format("client: %s server: %s begin: %s end: %s packets: %s", client, server, begin ,end, packets);
+        return String.format("client: %s server: %s begin: %s end: %s conversations: %s", client, server, begin ,end, packets);
     }
 
-    private String line(Packet packet) {
-        return String.format("%s %s %s %s %s %s",
-                packet.localTime,port(packet),tcp(packet),arrow(packet),length(packet),http(packet));
-    }
-
-    private boolean outgoing(Packet packet) {
-        return packet.ip.destination.equals(server);
-    }
-
-    private String arrow(Packet packet) {
-        return outgoing(packet) ? "->" : "<-";
-    }
-
-    private static String http(Packet packet) {
-        return packet.http == null ? "" : packet.http.toString();
-    }
-
-    private static String tcp(Packet packet) {
-        TCP tcp = packet.ip.tcp;
-        if (tcp == null) {
-            return "";
-        }
-        return tcp.flags + " " + tcp.seq + " " + tcp.ack;
-    }
-
-    private String port(Packet packet) {
-        return outgoing(packet) ? packet.ip.source.port : packet.ip.destination.port;
-    }
-
-    private static String length(Packet packet) {
-        return packet.length == null ? "" : packet.length.toString();
-    }
 
     @Override
     public int compareTo(Channel that) {

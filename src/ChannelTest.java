@@ -23,7 +23,7 @@ public class ChannelTest {
     @Test
     public void channel_of_no_packets() {
         Channel channel = Channel.of();
-        assertEquals(channel.packets.size(),0);
+        assertEquals(channel.conversations.size(),0);
     }
 
     @Test
@@ -50,8 +50,8 @@ public class ChannelTest {
         Packet packet = builder.build();
         Channel channel = of(packet);
 
-        assertEquals(channel.packets.size(),1);
-        assertSame(channel.packets.get(0),packet);
+        assertEquals(channel.conversations.size(),1);
+        assertSame(channel.conversations.get(0).packets.get(0),packet);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ChannelTest {
         builder.localTime = localTime;
         builder.ip = ip;
         Channel channel = of(builder.build());
-        Packet packet = channel.packets.get(0);
+        Packet packet = channel.conversations.get(0).packets.get(0);
         assertEquals(channel.client,packet.ip.source.host);
         assertEquals(channel.server,packet.ip.destination);
     }
@@ -90,7 +90,7 @@ public class ChannelTest {
         builder.localTime = localTime;
         builder.ip = ip;
         Channel channel = of(builder.build());
-        Packet packet = channel.packets.get(0);
+        Packet packet = channel.conversations.get(0).packets.get(0);
         assertEquals(channel.server,packet.ip.destination);
     }
 
@@ -100,7 +100,7 @@ public class ChannelTest {
         builder.ip = ip;
         builder.localTime = localTime;
         Channel channel = of(builder.build());
-        Packet packet = channel.packets.get(0);
+        Packet packet = channel.conversations.get(0).packets.get(0);
         assertSame(channel.begin,packet.localTime);
     }
 
@@ -110,7 +110,7 @@ public class ChannelTest {
         builder.ip = ip;
         builder.localTime = localTime;
         Channel channel = of(builder.build());
-        Packet packet = channel.packets.get(0);
+        Packet packet = channel.conversations.get(0).packets.get(0);
         assertSame(channel.end,packet.localTime);
     }
 
@@ -122,7 +122,7 @@ public class ChannelTest {
             of(builder.build());
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(),"IP missing, but required for timeline packets.");
+            assertEquals(e.getMessage(),"IP missing, but required for timeline conversations.");
         }
     }
 
@@ -132,7 +132,7 @@ public class ChannelTest {
             of(Packet.builder().build());
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(),"Time missing, but required for timeline packets.");
+            assertEquals(e.getMessage(),"Time missing, but required for timeline conversations.");
         }
     }
 
@@ -145,9 +145,9 @@ public class ChannelTest {
         Packet packet2 = builder.build();
         Channel channel = of(packet1,packet2);
 
-        assertEquals(channel.packets.size(),2);
-        assertSame(channel.packets.get(0),packet1);
-        assertSame(channel.packets.get(1),packet2);
+        assertEquals(channel.conversations.size(),2);
+        assertSame(channel.conversations.get(0).packets.get(0),packet1);
+        assertSame(channel.conversations.get(1).packets.get(0),packet2);
     }
 
     @Test
@@ -160,9 +160,9 @@ public class ChannelTest {
         Packet packet2 = builder.build();
         Channel channel = of(packet1,packet2);
 
-        assertEquals(channel.packets.size(),2);
-        assertSame(channel.packets.get(0),packet1);
-        assertSame(channel.packets.get(1),packet2);
+        assertEquals(channel.conversations.size(),2);
+        assertSame(channel.conversations.get(0).packets.get(0),packet1);
+        assertSame(channel.conversations.get(1).packets.get(0),packet2);
     }
 
     @Test
