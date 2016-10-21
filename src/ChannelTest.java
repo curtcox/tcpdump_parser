@@ -1,6 +1,7 @@
 import org.junit.Test;
 
-import java.time.LocalTime;
+import java.time.*;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +11,7 @@ public class ChannelTest {
     IP ip = ip("IP 1.2.3.4.43114 > 5.6.7.8.https");
     IP ipBack = ip("IP 5.6.7.8.https > 1.2.3.4.43114");
     IP differentClient = ip("IP 1.2.3.5.43114 > 5.6.7.8.https");
+    IP differentClientPort = ip("IP 1.2.3.4.42960 > 5.6.7.8.https");
     IP differentServerHost = ip("IP 1.2.3.4.43114 > 5.6.7.9.https");
     IP differentServerPort = ip("IP 1.2.3.4.43114 > 5.6.7.8.http");
     IP differentServerHostAndPort = ip("IP 1.2.3.4.43114 > 5.6.7.9.http");
@@ -145,9 +147,11 @@ public class ChannelTest {
         Packet packet2 = builder.build();
         Channel channel = of(packet1,packet2);
 
-        assertEquals(channel.conversations.size(),2);
-        assertSame(channel.conversations.get(0).packets.get(0),packet1);
-        assertSame(channel.conversations.get(1).packets.get(0),packet2);
+        assertEquals(channel.conversations.size(),1);
+        List<Packet> packets = channel.conversations.get(0).packets;
+        assertEquals(packets.size(),1);
+        assertSame(packets.get(0),packet1);
+        assertSame(packets.get(0),packet2);
     }
 
     @Test
@@ -160,9 +164,28 @@ public class ChannelTest {
         Packet packet2 = builder.build();
         Channel channel = of(packet1,packet2);
 
+        assertEquals(channel.conversations.size(),1);
+        List<Packet> packets = channel.conversations.get(0).packets;
+        assertEquals(packets.size(),1);
+        assertSame(packets.get(0),packet1);
+        assertSame(packets.get(0),packet2);
+    }
+
+    @Test
+    public void channel_of_2_packets_in_different_conversations_contains_the_packets() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.ip = ip;
+        Packet packet1 = builder.build();
+        builder.ip = differentClientPort;
+        Packet packet2 = builder.build();
+        Channel channel = of(packet1,packet2);
+
         assertEquals(channel.conversations.size(),2);
+        assertEquals(channel.conversations.get(0).packets.size(),1);
+        assertEquals(channel.conversations.get(1).packets.size(),1);
         assertSame(channel.conversations.get(0).packets.get(0),packet1);
-        assertSame(channel.conversations.get(1).packets.get(0),packet2);
+        assertSame(channel.conversations.get(0).packets.get(0),packet2);
     }
 
     @Test

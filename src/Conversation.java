@@ -4,11 +4,11 @@ import java.util.List;
 
 final class Conversation {
 
-    Socket server;
-    Socket client;
+    final Socket server;
+    final Socket client;
     final List<Packet> packets;
-    LocalTime begin;
-    LocalTime end;
+    final LocalTime begin;
+    final LocalTime end;
     int length;
     int outgoingPackets = 0;
     int outgoingBytes = 0;
@@ -17,13 +17,54 @@ final class Conversation {
 
     private Conversation(Builder builder) {
         this.packets = builder.packets;
+        this.client = builder.client;
+        this.server = builder.server;
+        this.begin  = builder.begin;
+        this.end    = builder.end;
+    }
+
+    static class Direction {
+        final Socket server;
+        final Socket client;
+        private Direction(Socket client, Socket server) {
+            this.client = client;
+            this.server = server;
+        }
+    }
+
+    private static boolean clientToServer(IP ip) {
+        return ip.source.host.privateIP || (!ip.source.host.privateIP && !ip.destination.host.privateIP);
+    }
+
+
+    static Direction directionOf(Packet packet) {
+        IP ip = packet.ip;
+        if (clientToServer(ip)) {
+            return new Direction(ip.source,ip.destination);
+        } else {
+            return new Direction(ip.destination,ip.source);
+        }
+
     }
 
     static Builder builder() {
         return new Builder();
     }
 
+    static Conversation of(Packet...packets) {
+        Conversation.Builder builder = builder();
+        for (Packet packet :packets) {
+            builder.add(packet);
+        }
+        return builder.build();
+    }
+
     static class Builder {
+        private Socket server;
+        private Socket client;
+        private LocalTime begin;
+        private LocalTime end;
+
         List<Packet> packets = new ArrayList<>();
 
         boolean accepts(Packet packet) {
@@ -31,7 +72,15 @@ final class Conversation {
         }
 
         void add(Packet packet) {
+            LocalTime time = packet.localTime;
+            if (begin==null) {
+                begin = time;
+            }
+            end   = time;
             packets.add(packet);
+            Direction direction = directionOf(packet);
+            client = direction.client;
+            server = direction.server;
         }
 
         Conversation build() {

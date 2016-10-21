@@ -51,17 +51,13 @@ final class Channel implements Comparable<Channel> {
             if (begin==null) {
                 begin = time;
             }
-            end    = time;
+            end   = time;
             IP ip = packet.ip;
             check(ip);
             if (client==null) {
-                if (clientToServer(ip)) {
-                    client = ip.source.host;
-                    server = ip.destination;
-                } else {
-                    client = ip.destination.host;
-                    server = ip.source;
-                }
+                Conversation.Direction direction = Conversation.directionOf(packet);
+                client = direction.client.host;
+                server = direction.server;
             }
             addPacketToConversations(packet);
         }
@@ -70,10 +66,6 @@ final class Channel implements Comparable<Channel> {
             Conversation.Builder builder = Conversation.builder();
             builder.add(packet);
             conversations.add(builder);
-        }
-
-        private static boolean clientToServer(IP ip) {
-            return ip.source.host.privateIP || (!ip.source.host.privateIP && !ip.destination.host.privateIP);
         }
 
         private void check(LocalTime time) {
