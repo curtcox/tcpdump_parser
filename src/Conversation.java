@@ -1,6 +1,7 @@
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 final class Conversation {
 
@@ -10,17 +11,17 @@ final class Conversation {
     final LocalTime begin;
     final LocalTime end;
     int length;
-    int outgoingPackets = 0;
-    int outgoingBytes = 0;
-    int incomingPackets = 0;
-    int incomingBytes = 0;
+    final PacketStats incoming;
+    final PacketStats outgoing;
 
     private Conversation(Builder builder) {
-        this.packets = builder.packets;
-        this.client = builder.client;
-        this.server = builder.server;
-        this.begin  = builder.begin;
-        this.end    = builder.end;
+        packets  = builder.packets;
+        client   = builder.client;
+        server   = builder.server;
+        begin    = builder.begin;
+        end      = builder.end;
+        incoming = incomingStats(packets);
+        outgoing = outgoingStats(packets);
     }
 
     static class Direction {
@@ -32,14 +33,9 @@ final class Conversation {
         }
     }
 
-    private static boolean clientToServer(IP ip) {
-        return ip.source.host.privateIP || (!ip.source.host.privateIP && !ip.destination.host.privateIP);
-    }
-
-
     static Direction directionOf(Packet packet) {
         IP ip = packet.ip;
-        return clientToServer(ip)
+        return ip.clientToServer()
             ? new Direction(ip.source,ip.destination)
             : new Direction(ip.destination,ip.source);
     }
@@ -99,6 +95,14 @@ final class Conversation {
             return ip.source.equals(server) && ip.destination.equals(client);
         }
 
+    }
+
+    private static PacketStats incomingStats(List<Packet> packets) {
+        return PacketStats.fromPackets(packets.stream().filter(p -> !p.ip.clientToServer()));
+    }
+
+    private static PacketStats outgoingStats(List<Packet> packets) {
+        return PacketStats.fromPackets(packets.stream().filter(p -> p.ip.clientToServer()));
     }
 
     private String line(Packet packet) {

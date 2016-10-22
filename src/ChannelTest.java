@@ -26,10 +26,10 @@ public class ChannelTest {
     public void channel_of_no_packets() {
         Channel channel = Channel.of();
         assertEquals(channel.conversations.size(),0);
-        assertEquals(channel.incomingBytes,0);
-        assertEquals(channel.incomingPackets,0);
-        assertEquals(channel.outgoingBytes,0);
-        assertEquals(channel.outgoingPackets,0);
+        assertEquals(channel.incoming.bytes,0);
+        assertEquals(channel.incoming.packets,0);
+        assertEquals(channel.outgoing.bytes,0);
+        assertEquals(channel.outgoing.packets,0);
     }
 
     @Test
@@ -69,10 +69,25 @@ public class ChannelTest {
         Packet packet = builder.build();
         Channel channel = of(packet);
 
-        assertEquals(channel.incomingPackets,0);
-        assertEquals(channel.incomingBytes,0);
-        assertEquals(channel.outgoingPackets,1);
-        assert(channel.outgoingBytes == packet.length);
+        assertEquals(0,channel.incoming.packets);
+        assertEquals(0,channel.incoming.bytes);
+        assertEquals(1,channel.outgoing.packets);
+        assert(channel.outgoing.bytes == packet.length);
+    }
+
+    @Test
+    public void channel_of_1_incoming_packet_has_the_proper_counts() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.length = hashCode();
+        builder.ip = publicToPrivate;
+        Packet packet = builder.build();
+        Channel channel = of(packet);
+
+        assertEquals(1,channel.incoming.packets);
+        assert(channel.incoming.bytes == packet.length);
+        assertEquals(0,channel.outgoing.packets);
+        assertEquals(0,channel.outgoing.bytes);
     }
 
     @Test

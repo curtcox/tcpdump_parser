@@ -27,7 +27,6 @@ final class IP {
         return Socket.parse(parts[arrow(parts)+1]);
     }
 
-
     static int arrow(String[] parts) {
         boolean ipFound = false;
         for (int i=0; i<parts.length; i++) {
@@ -40,6 +39,10 @@ final class IP {
             }
         }
         return -1;
+    }
+
+    boolean clientToServer() {
+        return source.host.privateIP || (!source.host.privateIP && !destination.host.privateIP);
     }
 
     static boolean isValid(String[] parts) {

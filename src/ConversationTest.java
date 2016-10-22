@@ -21,10 +21,40 @@ public class ConversationTest {
     public void conversation_of_no_packets() {
         Conversation conversation = Conversation.of();
         assertEquals(conversation.packets.size(),0);
-        assertEquals(conversation.incomingBytes,0);
-        assertEquals(conversation.outgoingBytes,0);
-        assertEquals(conversation.incomingPackets,0);
-        assertEquals(conversation.outgoingPackets,0);
+        assertEquals(conversation.incoming.bytes,0);
+        assertEquals(conversation.outgoing.bytes,0);
+        assertEquals(conversation.incoming.packets,0);
+        assertEquals(conversation.outgoing.packets,0);
+    }
+
+    @Test
+    public void conversation_of_1_outgoing_packet_has_the_proper_counts() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.length = hashCode();
+        builder.ip = ip;
+        Packet packet = builder.build();
+        Conversation conversation = Conversation.of(packet);
+
+        assertEquals(0,conversation.incoming.packets);
+        assertEquals(0,conversation.incoming.bytes);
+        assertEquals(1,conversation.outgoing.packets);
+        assert(conversation.outgoing.bytes == packet.length);
+    }
+
+    @Test
+    public void conversation_of_1_incoming_packet_has_the_proper_counts() {
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = localTime;
+        builder.length = hashCode();
+        builder.ip = publicToPrivate;
+        Packet packet = builder.build();
+        Conversation conversation = Conversation.of(packet);
+
+        assertEquals(1,conversation.incoming.packets);
+        assert(conversation.incoming.bytes == packet.length);
+        assertEquals(0,conversation.outgoing.packets);
+        assertEquals(0,conversation.outgoing.bytes);
     }
 
     @Test

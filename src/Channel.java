@@ -1,6 +1,7 @@
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 final class Channel implements Comparable<Channel> {
 
@@ -9,10 +10,8 @@ final class Channel implements Comparable<Channel> {
     final List<Conversation> conversations;
     final LocalTime begin;
     final LocalTime end;
-    final int outgoingPackets;
-    final int outgoingBytes;
-    final int incomingPackets = 0;
-    final int incomingBytes = 0;
+    final PacketStats incoming;
+    final PacketStats outgoing;
 
     private Channel(Builder builder) {
         server  = builder.server;
@@ -20,13 +19,13 @@ final class Channel implements Comparable<Channel> {
         begin   = builder.begin;
         end     = builder.end;
         conversations = Collections.unmodifiableList(builder.conversations.stream().map(b->b.build()).collect(Collectors.toList()));
-        outgoingPackets = outgoingPackets(conversations);
-        outgoingBytes   = outgoingBytes(conversations);
+        incoming = incomingStats(conversations);
+        outgoing = outgoingStats(conversations);
     }
 
     static Channel of(Packet...packets) {
         Builder builder = builder();
-        for (Packet packet :packets) {
+        for (Packet packet : packets) {
             builder.add(packet);
         }
         return builder.build();
@@ -114,18 +113,16 @@ final class Channel implements Comparable<Channel> {
         }
     }
 
-
-    private int outgoingBytes(List<Conversation> conversations) {
-        for (Conversation conversation : conversations) {
-            for (Packet packet : conversation.packets) {
-                return packet.length == null ? 0 : packet.length;
-            }
-        }
-        return 0;
+    private static PacketStats incomingStats(List<Conversation> conversations) {
+        return PacketStats.fromPackets(packets(conversations).filter(p -> !p.ip.clientToServer()));
     }
 
-    private int outgoingPackets(List<Conversation> conversations) {
-        return conversations.size();
+    private static PacketStats outgoingStats(List<Conversation> conversations) {
+        return PacketStats.fromPackets(packets(conversations).filter(p -> p.ip.clientToServer()));
+    }
+
+    private static Stream<Packet> packets(List<Conversation> conversations) {
+        return conversations.stream().flatMap(c -> c.packets.stream());
     }
 
     @Override
@@ -144,10 +141,9 @@ final class Channel implements Comparable<Channel> {
     }
 
     String summary() {
-        String packets = String.format("-> %s / %s <- %s / %s",outgoingPackets,outgoingBytes,incomingPackets,incomingBytes);
+        String packets = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
         return String.format("client: %s server: %s begin: %s end: %s conversations: %s", client, server, begin ,end, packets);
     }
-
 
     @Override
     public int compareTo(Channel that) {
