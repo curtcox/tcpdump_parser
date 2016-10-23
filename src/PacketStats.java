@@ -6,6 +6,7 @@ final class PacketStats {
     final int packets;
     final int bytes;
 
+
     private PacketStats(int packets, int bytes) {
         this.packets = packets;
         this.bytes = bytes;

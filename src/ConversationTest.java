@@ -116,7 +116,7 @@ public class ConversationTest {
         builder.localTime = localTime;
         Conversation conversation = Conversation.of(builder.build());
         Packet packet = conversation.packets.get(0);
-        assertSame(conversation.begin,packet.localTime);
+        assertSame(conversation.begin,localTime);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ConversationTest {
         builder.localTime = localTime;
         Conversation conversation = Conversation.of(builder.build());
         Packet packet = conversation.packets.get(0);
-        assertSame(conversation.end,packet.localTime);
+        assertSame(conversation.end,localTime);
     }
 
     @Test

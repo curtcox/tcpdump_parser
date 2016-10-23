@@ -1,7 +1,6 @@
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+import java.time.*;
+import java.util.*;
+import java.util.stream.*;
 
 final class Conversation {
 
@@ -10,9 +9,9 @@ final class Conversation {
     final List<Packet> packets;
     final LocalTime begin;
     final LocalTime end;
-    int length;
     final PacketStats incoming;
     final PacketStats outgoing;
+    final List<Message> messages;
 
     private Conversation(Builder builder) {
         packets  = builder.packets;
@@ -22,6 +21,7 @@ final class Conversation {
         end      = builder.end;
         incoming = incomingStats(packets);
         outgoing = outgoingStats(packets);
+        messages = Message.messagesFromPackets(packets);
     }
 
     static class Direction {
