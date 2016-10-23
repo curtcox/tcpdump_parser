@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.util.function.*;
 
-public class Demo {
+public class Reports {
 
     final String inputFile = "/tmp/capture.txt";
     final String outputFile = "/tmp/report.txt";
@@ -18,8 +18,8 @@ public class Demo {
     }
 
     public static void main(String[] args) {
-        Demo demo = new Demo();
-        demo.printTimeline();
+        Reports reports = new Reports();
+        reports.printTimeline();
     }
 
     void printTimeline() {
