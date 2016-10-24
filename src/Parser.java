@@ -168,7 +168,4 @@ final class Parser {
         return null;
     }
 
-    public static void main(String[] args) {
-        parse(() -> System.in).forEach(packet -> System.out.println(packet));
-    }
 }
