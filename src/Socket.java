@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 final class Socket {
 
     final Host host;
@@ -40,7 +42,8 @@ final class Socket {
     }
 
     public boolean equals(Object o) {
-        return toString().equals(o.toString());
+        Socket that = (Socket) o;
+        return Objects.equals(port,that.port) && Objects.equals(host,that.host);
     }
 
     public int hashCode() {
