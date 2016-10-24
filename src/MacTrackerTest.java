@@ -3,13 +3,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
-public class MacPresenceDetectorTest {
+public class MacTrackerTest {
 
     Mac mac = Mac.of("01:02:03:04:05:06");
     Listener listener = new Listener();
-    MacPresenceDetector detector = new MacPresenceDetector(mac,listener);
+    MacTracker detector = new MacTracker(mac,listener);
 
-    static class Listener implements MacPresenceDetector.Listener {
+    static class Listener implements MacTracker.Listener {
 
         boolean triggered;
         Mac mac;
