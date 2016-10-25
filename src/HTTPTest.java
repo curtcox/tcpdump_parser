@@ -95,7 +95,7 @@ public class HTTPTest {
     }
 
     HTTP parse(String sample) {
-        return HTTP.parse(sample.split(" "));
+        return HTTP.parse(Fields.of(sample));
     }
 
     @Test

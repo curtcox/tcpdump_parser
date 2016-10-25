@@ -10,14 +10,14 @@ final class DNS {
         this.CNAME = CNAME;
     }
 
-    static DNS parse(String[] parts) {
+    static DNS parse(Fields parts) {
         if (valid(parts)) {
             return new DNS(query(parts),A(parts),CNAME(parts));
         }
         return null;
     }
 
-    static boolean valid(String[] parts) {
+    static boolean valid(Fields parts) {
         for (String part : parts) {
             if (part.equals("A?") || part.equals("CNAME")) {
                 return true;
@@ -26,7 +26,7 @@ final class DNS {
         return false;
     }
 
-    private static boolean query(String[] parts) {
+    private static boolean query(Fields parts) {
         for (String part : parts) {
             if (part.equals("A?")) {
                 return true;
@@ -35,19 +35,19 @@ final class DNS {
         return false;
     }
 
-    private static Host A(String[] parts) {
-        for (int i = 0; i<parts.length; i++) {
-            if (parts[i].equals("A")) {
-                return Host.of(parts[i + 1]);
+    private static Host A(Fields parts) {
+        for (int i = 0; i<parts.length(); i++) {
+            if (parts.at(i).equals("A")) {
+                return Host.of(parts.at(i + 1));
             }
         }
         return null;
     }
 
-    private static Host CNAME(String[] parts) {
-        for (int i = 0; i<parts.length; i++) {
-            if (parts[i].equals("A?") || parts[i].equals("CNAME")) {
-                String name = parts[i +1];
+    private static Host CNAME(Fields parts) {
+        for (int i = 0; i<parts.length(); i++) {
+            if (parts.at(i).equals("A?") || parts.at(i).equals("CNAME")) {
+                String name = parts.at(i +1);
                 name = name.substring(0,name.lastIndexOf("."));
                 return Host.of(name);
             }

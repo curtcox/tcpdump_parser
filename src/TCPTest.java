@@ -59,7 +59,7 @@ public class TCPTest {
     }
 
     TCP parse(String sample) {
-        return TCP.parse(sample.split(" "));
+        return TCP.parse(Fields.of(sample));
     }
 
     @Test

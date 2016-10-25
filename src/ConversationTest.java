@@ -14,7 +14,7 @@ public class ConversationTest {
     IP publicToPrivate = ip("IP 5.6.7.9.http > 192.168.3.4.43114");
 
     static IP ip(String string) {
-        return IP.parse(string.split(" "));
+        return IP.parse(Fields.of(string));
     }
 
     @Test

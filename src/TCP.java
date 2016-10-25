@@ -16,14 +16,14 @@ final class TCP {
         this.options = builder.options;
     }
 
-    static TCP parse(String[] parts) {
+    static TCP parse(Fields parts) {
         if (!validTCP(parts)) {
             return null;
         }
         return parse0(parts);
     }
 
-    private static TCP parse0(String[] parts) {
+    private static TCP parse0(Fields parts) {
         Builder builder = new Builder();
         builder.seq = seq(parts);
         builder.ack = ack(parts);
@@ -32,7 +32,7 @@ final class TCP {
         return builder.build();
     }
 
-    static boolean validTCP(String[] parts) {
+    static boolean validTCP(Fields parts) {
         for (String part : parts) {
             if (part.equals("Flags")) {
                 return true;
@@ -56,47 +56,47 @@ final class TCP {
         }
     }
 
-    static String seq(String[] parts) {
-        for (int i=0; i<parts.length; i++) {
-            String part = parts[i];
+    static String seq(Fields parts) {
+        for (int i=0; i<parts.length(); i++) {
+            String part = parts.at(i);
             if (part.equals("seq")) {
-                String seq = parts[i + 1];
+                String seq = parts.at(i + 1);
                 return seq.substring(0,seq.length() - 1);
             }
         }
         return null;
     }
 
-    static String ack(String[] parts) {
-        for (int i=0; i<parts.length; i++) {
-            String part = parts[i];
+    static String ack(Fields parts) {
+        for (int i=0; i<parts.length(); i++) {
+            String part = parts.at(i);
             if (part.equals("ack")) {
-                String ack = parts[i + 1];
+                String ack = parts.at(i + 1);
                 return ack.substring(0,ack.length() - 1);
             }
         }
         return null;
     }
 
-    static String flags(String[] parts) {
-        for (int i=0; i<parts.length; i++) {
-            String part = parts[i];
+    static String flags(Fields parts) {
+        for (int i=0; i<parts.length(); i++) {
+            String part = parts.at(i);
             if (part.equals("Flags")) {
-                String flags = parts[i + 1];
+                String flags = parts.at(i + 1);
                 return flags.substring(1,flags.length() - 2);
             }
         }
         return null;
     }
 
-    static String options(String[] parts) {
-        for (int i=0; i<parts.length; i++) {
-            String part = parts[i];
+    static String options(Fields parts) {
+        for (int i=0; i<parts.length(); i++) {
+            String part = parts.at(i);
             if (part.equals("options")) {
                 StringBuilder out = new StringBuilder();
-                for (int j = i + 1; j<parts.length; j++) {
-                    String opt = parts[j];
-                    out.append(parts[j] + " ");
+                for (int j = i + 1; j<parts.length(); j++) {
+                    String opt = parts.at(j);
+                    out.append(parts.at(j) + " ");
                     if (opt.endsWith("],")) {
                         break;
                     }

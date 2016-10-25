@@ -22,7 +22,7 @@ final class Parser {
     }
 
     private static Packet parse0(String line) {
-        String[] fields = line.split(" ");
+        Fields fields     = Fields.of(line);
         Packet.Builder builder = Packet.builder();
         builder.line      = line;
         builder.localTime = localTime(fields);
@@ -64,8 +64,8 @@ final class Parser {
         });
     }
 
-    private static LocalTime localTime(String[] fields) {
-        String[] parts = fields[0].split(":");
+    private static LocalTime localTime(Fields fields) {
+        String[] parts = fields.at(0).split(":");
         int hour   = Integer.parseInt(parts[0]);
         int minute = Integer.parseInt(parts[1]);
         int second = Integer.parseInt(parts[2].split("\\.")[0]);
@@ -73,13 +73,13 @@ final class Parser {
         return LocalTime.of(hour,minute,second,nano);
     }
 
-    private static Mac BSSID(String[] fields)       { return mac("BSSID",fields); }
-    private static Mac RA(String[] fields)          { return mac("RA",fields); }
-    private static Mac TA(String[] fields)          { return mac("TA",fields); }
-    private static String signal(String[] fields)   { return dB("signal",fields); }
-    private static String noise(String[] fields)    { return dB("noise",fields); }
+    private static Mac BSSID(Fields fields)       { return mac("BSSID",fields); }
+    private static Mac RA(Fields fields)          { return mac("RA",fields); }
+    private static Mac TA(Fields fields)          { return mac("TA",fields); }
+    private static String signal(Fields fields)   { return dB("signal",fields); }
+    private static String noise(Fields fields)    { return dB("noise",fields); }
 
-    private static Mac SA(String[] fields) {
+    private static Mac SA(Fields fields) {
         Mac SA = mac("SA",fields);
         if (SA != null) {
             return SA;
@@ -87,7 +87,7 @@ final class Parser {
         return macFrom(fields);
     }
 
-    private static Mac DA(String[] fields) {
+    private static Mac DA(Fields fields) {
         Mac DA = mac("DA",fields);
         if (DA != null) {
             return DA;
@@ -95,32 +95,32 @@ final class Parser {
         return macTo(fields);
     }
 
-    private static Microseconds duration(String[] fields)   {
-        for (int i = 2; i<fields.length; i++) {
-            if (Microseconds.canParse(fields[i])) {
-                return Microseconds.parse(fields[i]);
+    private static Microseconds duration(Fields fields)   {
+        for (int i = 2; i<fields.length(); i++) {
+            if (Microseconds.canParse(fields.at(i))) {
+                return Microseconds.parse(fields.at(i));
             }
         }
         return null;
     }
 
-    private static Microseconds offset(String[] fields)     {
-        return Microseconds.parse(fields[1]);
+    private static Microseconds offset(Fields fields)     {
+        return Microseconds.parse(fields.at(1));
     }
 
-    private static String dB(String type, String[] fields)  {
-        for (int i = 0; i<fields.length; i++) {
-            if (fields[i].equals(type)) {
-                return fields[i-1];
+    private static String dB(String type, Fields fields)  {
+        for (int i = 0; i<fields.length(); i++) {
+            if (fields.at(i).equals(type)) {
+                return fields.at(i-1);
             }
         }
         return null;
     }
 
-    private static Integer length(String[] fields)  {
-        for (int i = 0; i<fields.length; i++) {
-            if (fields[i].equals("length")) {
-                String value = fields[i + 1];
+    private static Integer length(Fields fields)  {
+        for (int i = 0; i<fields.length(); i++) {
+            if (fields.at(i).equals("length")) {
+                String value = fields.at(i + 1);
                 if (value.endsWith(":")) {
                     value = value.substring(0,value.length() - 1);
                 }
@@ -130,7 +130,7 @@ final class Parser {
         return null;
     }
 
-    private static Mac mac(String type,String[] fields) {
+    private static Mac mac(String type,Fields fields) {
         for (String field : fields) {
             if (field.startsWith(type)) {
                 return Mac.of(field.split(type + ":")[1]);
@@ -139,18 +139,18 @@ final class Parser {
         return null;
     }
 
-    private static int arrow(String[] fields) {
-        for (int i = 0; i< fields.length; i++) {
-            if (fields[i].equals(">")) {
+    private static int arrow(Fields fields) {
+        for (int i = 0; i< fields.length(); i++) {
+            if (fields.at(i).equals(">")) {
                 return i;
             }
         }
         return -1;
     }
 
-    private static Mac macFrom(String[] fields) {
+    private static Mac macFrom(Fields fields) {
         for (int i = arrow(fields) - 1; i>0; i--) {
-            Mac mac = Mac.of(fields[i]);
+            Mac mac = Mac.of(fields.at(i));
             if (mac != null) {
                 return mac;
             }
@@ -158,9 +158,9 @@ final class Parser {
         return null;
     }
 
-    private static Mac macTo(String[] fields) {
-        for (int i = arrow(fields) + 1; i<fields.length; i++) {
-            Mac mac = Mac.of(fields[i]);
+    private static Mac macTo(Fields fields) {
+        for (int i = arrow(fields) + 1; i<fields.length(); i++) {
+            Mac mac = Mac.of(fields.at(i));
             if (mac != null) {
                 return mac;
             }

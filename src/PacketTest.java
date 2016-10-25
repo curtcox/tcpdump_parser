@@ -17,28 +17,32 @@ public class PacketTest {
     @Test
     public void toString_contains_DNS_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.dns = DNS.parse("24961+ A? google.com. (36)".split(" "));
+        builder.dns = DNS.parse(fields("24961+ A? google.com. (36)"));
         assertStringIs(builder.build(),"Packet:{dns=DNS:{query CNAME=google.com}}");
+    }
+
+    private Fields fields(String line) {
+        return Fields.of(line);
     }
 
     @Test
     public void toString_contains_IP_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.ip = IP.parse("IP 132.245.72.114.https > 10.33.44.33.43114:".split(" "));
+        builder.ip = IP.parse(fields("IP 132.245.72.114.https > 10.33.44.33.43114:"));
         assertStringIs(builder.build(),"Packet:{ip=IP{132.245.72.114:https > 10.33.44.33:43114}}");
     }
 
     @Test
     public void toString_contains_TCP_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.ip = IP.parse("IP 132.245.72.114.https > 10.33.44.33.43114: Flags [P.],".split(" "));
+        builder.ip = IP.parse(fields("IP 132.245.72.114.https > 10.33.44.33.43114: Flags [P.],"));
         assertStringIs(builder.build(),"Packet:{ip=IP{132.245.72.114:https > 10.33.44.33:43114 TCP:{flags=P.}}}");
     }
 
     @Test
     public void toString_contains_HTTP_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.http = HTTP.parse("length 188: HTTP: HTTP/1.0 200 OK".split(" "));
+        builder.http = HTTP.parse(fields("length 188: HTTP: HTTP/1.0 200 OK"));
         assertStringIs(builder.build(),"Packet:{http=HTTP:{length=188, status=200}}");
     }
 
@@ -154,7 +158,7 @@ public class PacketTest {
     }
 
     IP ip(String ip) {
-        return IP.parse(ip.split(" "));
+        return IP.parse(fields(ip));
     }
 
     @Test

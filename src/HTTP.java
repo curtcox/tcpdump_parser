@@ -16,7 +16,7 @@ final class HTTP {
         request = verb != null;
     }
 
-    static HTTP parse(String[] parts) {
+    static HTTP parse(Fields parts) {
         if (!isHTTP(parts)) {
             return null;
         }
@@ -27,7 +27,7 @@ final class HTTP {
         }
     }
 
-    static boolean isHTTP(String[] parts) {
+    static boolean isHTTP(Fields parts) {
         boolean lengthFound = false;
         for (String part : parts) {
             if (lengthFound && part.startsWith("HTTP")) {
@@ -40,19 +40,19 @@ final class HTTP {
         return false;
     }
 
-    private static HTTP parse0(String[] parts) {
+    private static HTTP parse0(Fields parts) {
         Builder builder = new Builder();
         int start = startIndex(parts);
-        builder.length = parseLength(parts[start + 1]);
+        builder.length = parseLength(parts.at(start + 1));
         builder.verb = parseVerb(parts,start);
         builder.url = parseUrl(parts,start);
         builder.status = parseStatus(parts,start);
         return builder.build();
     }
 
-    static int startIndex(String[] parts) {
-        for (int i=0; i<parts.length; i++) {
-            if (parts[i].equals("length")) {
+    static int startIndex(Fields parts) {
+        for (int i=0; i<parts.length(); i++) {
+            if (parts.at(i).equals("length")) {
                 return i;
             }
         }
@@ -63,19 +63,19 @@ final class HTTP {
         return Integer.parseInt(length.substring(0,length.length() - 1));
     }
 
-    static String parseVerb(String[] parts, int start) {
-        for (int i = start; i < parts.length; i++) {
-            if (parts[i].equals("HTTP:") && !parts[i + 1].startsWith("HTTP")) {
-                return parts[i+1];
+    static String parseVerb(Fields parts, int start) {
+        for (int i = start; i < parts.length(); i++) {
+            if (parts.at(i).equals("HTTP:") && !parts.at(i + 1).startsWith("HTTP")) {
+                return parts.at(i+1);
             }
         }
         return null;
     }
 
-    static Integer parseStatus(String[] parts, int start) {
-        for (int i = start; i < parts.length; i++) {
-            if (parts[i].startsWith("HTTP/")) {
-                return parts.length > i + 1 ? parseInt(parts[i + 1]) : null;
+    static Integer parseStatus(Fields parts, int start) {
+        for (int i = start; i < parts.length(); i++) {
+            if (parts.at(i).startsWith("HTTP/")) {
+                return parts.length() > i + 1 ? parseInt(parts.at(i + 1)) : null;
             }
         }
         return null;
@@ -89,10 +89,10 @@ final class HTTP {
         }
     }
 
-    static String parseUrl(String[] parts, int start) {
-        for (int i = start; i < parts.length; i++) {
-            if (parts[i].equals("HTTP:") && !parts[i + 1].startsWith("HTTP")) {
-                return parts[i+2];
+    static String parseUrl(Fields parts, int start) {
+        for (int i = start; i < parts.length(); i++) {
+            if (parts.at(i).equals("HTTP:") && !parts.at(i + 1).startsWith("HTTP")) {
+                return parts.at(i+2);
             }
         }
         return null;

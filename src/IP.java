@@ -12,25 +12,25 @@ final class IP {
         this.tcp = tcp;
     }
 
-    static IP parse(String[] parts) {
+    static IP parse(Fields parts) {
         if (!isValid(parts)) {
             return null;
         }
         return new IP(source(parts),destination(parts),TCP.parse(parts));
     }
 
-    static Socket source(String[] parts) {
-        return Socket.parse(parts[arrow(parts)-1]);
+    static Socket source(Fields parts) {
+        return Socket.parse(parts.at(arrow(parts)-1));
     }
 
-    static Socket destination(String[] parts) {
-        return Socket.parse(parts[arrow(parts)+1]);
+    static Socket destination(Fields parts) {
+        return Socket.parse(parts.at(arrow(parts)+1));
     }
 
-    static int arrow(String[] parts) {
+    static int arrow(Fields parts) {
         boolean ipFound = false;
-        for (int i=0; i<parts.length; i++) {
-            String part = parts[i];
+        for (int i=0; i<parts.length(); i++) {
+            String part = parts.at(i);
             if (ipFound && part.equals(">")) {
                 return i;
             }
@@ -45,7 +45,7 @@ final class IP {
         return source.host.privateIP || (!source.host.privateIP && !destination.host.privateIP);
     }
 
-    static boolean isValid(String[] parts) {
+    static boolean isValid(Fields parts) {
         return arrow(parts) > -1;
     }
 

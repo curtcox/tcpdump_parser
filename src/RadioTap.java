@@ -30,7 +30,7 @@ final class RadioTap {
         }
     }
 
-    static RadioTap parse(String[] fields) {
+    static RadioTap parse(Fields fields) {
         Builder builder = builder();
         for (String field : fields) {
             if (field.equals("bad-fcs")) { builder.badFcs = true;}

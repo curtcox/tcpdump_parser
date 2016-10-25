@@ -67,7 +67,7 @@ public class RadioTapTest {
 
     @Test
     public void parse_recognizes_short_preamble_key() {
-        RadioTap tap = parse("short","preamble");
+        RadioTap tap = parse("short preamble");
         assert(tap.shortPreamble);
         assertFalse(tap.fragmented);
         assertFalse(tap.badFcs);
@@ -117,7 +117,7 @@ public class RadioTapTest {
 
     @Test
     public void parse_sets_flags_true_if_all_present() {
-        RadioTap tap = parse("fragmented","short","preamble","bad-fcs","cfp","wep");
+        RadioTap tap = parse("fragmented short preamble bad-fcs cfp wep");
         assert(tap.fragmented);
         assert(tap.shortPreamble);
         assert(tap.badFcs);
@@ -125,7 +125,7 @@ public class RadioTapTest {
         assert(tap.wep);
     }
 
-    RadioTap parse(String... fields) {
-        return RadioTap.parse(fields);
+    RadioTap parse(String fields) {
+        return RadioTap.parse(Fields.of(fields));
     }
 }

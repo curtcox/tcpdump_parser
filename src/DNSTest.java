@@ -44,6 +44,6 @@ public class DNSTest {
     }
 
     DNS parse(String sample) {
-        return DNS.parse(sample.split(" "));
+        return DNS.parse(Fields.of(sample));
     }
 }

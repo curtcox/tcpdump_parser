@@ -165,6 +165,6 @@ public class IPTest {
     }
 
     IP parse(String sample) {
-        return IP.parse(sample.split(" "));
+        return IP.parse(Fields.of(sample));
     }
 }
