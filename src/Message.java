@@ -107,9 +107,25 @@ final class Message {
         return out.toString();
     }
 
+    String http() {
+        for (Packet packet : packets) {
+            if (packet.http != null) {
+                HTTP http = packet.http;
+                if (http.request) {
+                    return String.format("%s %s",http.verb,http.url);
+                } else {
+                    if (http.status != null) {
+                        return Integer.toString(http.status);
+                    }
+                }
+            }
+        }
+        return "";
+    }
+
     String summary() {
-        String packetSummary = String.format("%s %s / %s",direction.arrow,stats.packets,stats.bytes);
-        return String.format("%s - %s packets: %s", begin ,end, packetSummary);
+        String packetSummary = String.format("%s %s",direction.arrow,stats.bytes);
+        return String.format("%s - %s %s %s packets: %s", begin ,end, http(), packets.size(), packetSummary);
     }
 
     @Override

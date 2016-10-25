@@ -143,7 +143,7 @@ final class Channel implements Comparable<Channel> {
 
     String summary() {
         String conversationSummary = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
-        return String.format("client: %s server: %s begin: %s end: %s conversations: %s", client, server, begin ,end, conversationSummary);
+        return String.format("client: %s server: %s begin: %s end: %s %s conversations: %s", client, server, begin ,end, conversations.size(),conversationSummary);
     }
 
     @Override

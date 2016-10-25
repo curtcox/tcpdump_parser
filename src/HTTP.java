@@ -6,12 +6,14 @@ final class HTTP {
     final String verb;
     final String url;
     final Integer status;
+    final boolean request;
 
     public HTTP(Builder builder) {
-        length = builder.length;
-        verb = builder.verb;
-        url = builder.url;
-        status = builder.status;
+        length  = builder.length;
+        verb    = builder.verb;
+        url     = builder.url;
+        status  = builder.status;
+        request = verb != null;
     }
 
     static HTTP parse(String[] parts) {
