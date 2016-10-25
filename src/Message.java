@@ -68,4 +68,15 @@ final class Message {
         }
     }
 
+    String summary() {
+        String packetSummary = String.format("-> %s / %s <- %s / %s",stats.packets,stats.bytes,stats.packets,stats.bytes);
+        return String.format("%s - %s packets: %s", begin ,end, packetSummary);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        out.append(summary() + System.lineSeparator());
+        return out.toString();
+    }
 }

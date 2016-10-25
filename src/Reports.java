@@ -27,6 +27,7 @@ public class Reports {
         for (Channel channel : timeline.channels) {
             if (serversWeCareAbout(channel.server)) {
                 print(channel);
+                print(channel.transcript());
             }
         }
     }

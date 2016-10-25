@@ -138,4 +138,23 @@ final class Conversation {
         return packet.length == null ? "" : packet.length.toString();
     }
 
+    String summary() {
+        String messageSummary = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
+        return String.format("%s - %s messages: %s", begin ,end, messageSummary);
+    }
+
+    String transcript() {
+        StringBuilder out = new StringBuilder();
+        for (Message message : messages) {
+            out.append(message.toString() + System.lineSeparator());
+        }
+        return out.toString();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        out.append(summary() + System.lineSeparator());
+        return out.toString();
+    }
 }

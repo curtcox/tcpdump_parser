@@ -136,13 +136,14 @@ final class Channel implements Comparable<Channel> {
         StringBuilder out = new StringBuilder();
         for (Conversation conversation : conversations) {
             out.append(conversation.toString() + System.lineSeparator());
+            out.append(conversation.transcript() + System.lineSeparator());
         }
         return out.toString();
     }
 
     String summary() {
-        String packets = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
-        return String.format("client: %s server: %s begin: %s end: %s conversations: %s", client, server, begin ,end, packets);
+        String conversationSummary = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
+        return String.format("client: %s server: %s begin: %s end: %s conversations: %s", client, server, begin ,end, conversationSummary);
     }
 
     @Override
