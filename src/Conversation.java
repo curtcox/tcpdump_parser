@@ -24,22 +24,6 @@ final class Conversation {
         messages = Message.messagesFromPackets(packets);
     }
 
-    static class Direction {
-        final Socket server;
-        final Socket client;
-        private Direction(Socket client, Socket server) {
-            this.client = client;
-            this.server = server;
-        }
-    }
-
-    static Direction directionOf(Packet packet) {
-        IP ip = packet.ip;
-        return ip.clientToServer()
-            ? new Direction(ip.source,ip.destination)
-            : new Direction(ip.destination,ip.source);
-    }
-
     static Builder builder() {
         return new Builder();
     }
@@ -71,7 +55,7 @@ final class Conversation {
             }
             end   = time;
             packets.add(packet);
-            Direction direction = directionOf(packet);
+            PacketDirection direction = PacketDirection.of(packet);
             client = direction.client;
             server = direction.server;
         }
@@ -105,40 +89,7 @@ final class Conversation {
         return PacketStats.fromPackets(packets.stream().filter(p -> p.ip.clientToServer()));
     }
 
-    private String line(Packet packet) {
-        return String.format("%s %s %s %s %s %s",
-                packet.localTime,port(packet),tcp(packet),arrow(packet),length(packet),http(packet));
-    }
-
-    private boolean outgoing(Packet packet) {
-        return packet.ip.destination.equals(server);
-    }
-
-    private String arrow(Packet packet) {
-        return outgoing(packet) ? "->" : "<-";
-    }
-
-    private static String http(Packet packet) {
-        return packet.http == null ? "" : packet.http.toString();
-    }
-
-    private static String tcp(Packet packet) {
-        TCP tcp = packet.ip.tcp;
-        if (tcp == null) {
-            return "";
-        }
-        return tcp.flags + " " + tcp.seq + " " + tcp.ack;
-    }
-
-    private String port(Packet packet) {
-        return outgoing(packet) ? packet.ip.source.port : packet.ip.destination.port;
-    }
-
-    private static String length(Packet packet) {
-        return packet.length == null ? "" : packet.length.toString();
-    }
-
-    String summary() {
+   String summary() {
         String messageSummary = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
         return String.format("%s - %s messages: %s", begin ,end, messageSummary);
     }

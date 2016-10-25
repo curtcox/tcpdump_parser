@@ -10,14 +10,16 @@ final class Message {
     final LocalTime begin;
     final LocalTime end;
     final PacketStats stats;
+    final PacketDirection direction;
 
     private Message(Builder builder) {
-        this.client = builder.client;
-        this.server = builder.server;
-        this.request = builder.request;
-        this.packets = builder.packets;
-        this.begin = builder.begin;
-        this.end = builder.end;
+        this.client    = builder.client;
+        this.server    = builder.server;
+        this.request   = builder.request;
+        this.packets   = builder.packets;
+        this.begin     = builder.begin;
+        this.end       = builder.end;
+        this.direction = builder.direction;
         stats = PacketStats.fromPackets(packets.stream());
     }
 
@@ -47,6 +49,7 @@ final class Message {
         LocalTime begin = null;
         LocalTime end;
         List<Packet> packets = new ArrayList<>();
+        PacketDirection direction;
 
         void add(Packet packet) {
             packets.add(packet);
@@ -54,9 +57,11 @@ final class Message {
                 begin = packet.localTime;
             }
             end = packet.localTime;
-            Conversation.Direction direction = Conversation.directionOf(packet);
-            server = direction.server;
-            client = direction.client;
+            if (direction==null) {
+                direction = PacketDirection.of(packet);
+                server = direction.server;
+                client = direction.client;
+            }
         }
 
         boolean isThisPacketPartOfMessageBeingBuilt(Packet packet) {
@@ -68,15 +73,47 @@ final class Message {
         }
     }
 
+    private static String http(Packet packet) {
+        return packet.http == null ? "" : packet.http.toString();
+    }
+
+    private static String tcp(Packet packet) {
+        TCP tcp = packet.ip.tcp;
+        if (tcp == null) {
+            return "";
+        }
+        return tcp.flags + " " + tcp.seq + " " + tcp.ack;
+    }
+
+    private String port(Packet packet) {
+        return PacketDirection.of(packet).outgoing ? packet.ip.source.port : packet.ip.destination.port;
+    }
+
+    private String line(Packet packet) {
+        String arrow = PacketDirection.of(packet).arrow;
+        return String.format("%s %s %s %s %s %s",
+                packet.localTime,port(packet),tcp(packet),arrow,length(packet),http(packet));
+    }
+
+    private static String length(Packet packet) {
+        return packet.length == null ? "" : packet.length.toString();
+    }
+
+    String transcript() {
+        StringBuilder out = new StringBuilder();
+        for (Packet packet : packets) {
+            out.append(line(packet) + System.lineSeparator());
+        }
+        return out.toString();
+    }
+
     String summary() {
-        String packetSummary = String.format("-> %s / %s <- %s / %s",stats.packets,stats.bytes,stats.packets,stats.bytes);
+        String packetSummary = String.format("%s %s / %s",direction.arrow,stats.packets,stats.bytes);
         return String.format("%s - %s packets: %s", begin ,end, packetSummary);
     }
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder();
-        out.append(summary() + System.lineSeparator());
-        return out.toString();
+        return summary();
     }
 }

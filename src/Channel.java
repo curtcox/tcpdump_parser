@@ -60,7 +60,7 @@ final class Channel implements Comparable<Channel> {
             IP ip = packet.ip;
             check(ip);
             if (client==null) {
-                Conversation.Direction direction = Conversation.directionOf(packet);
+                PacketDirection direction = PacketDirection.of(packet);
                 client = direction.client.host;
                 server = direction.server;
             }
