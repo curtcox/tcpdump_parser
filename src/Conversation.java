@@ -90,7 +90,7 @@ final class Conversation {
     }
 
    String summary() {
-        String messageSummary = String.format("-> %s / %s <- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
+        String messageSummary = String.format("%s / %s -><- %s / %s",outgoing.packets,outgoing.bytes,incoming.packets,incoming.bytes);
         return String.format("%s - %s %s messages: %s", begin ,end, messages.size(), messageSummary);
     }
 
