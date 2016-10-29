@@ -113,16 +113,14 @@ final class Parser {
     }
 
     private static Integer length(Fields fields)  {
-        for (int i = 0; i<fields.length(); i++) {
-            if (fields.at(i).equals("length")) {
-                String value = fields.at(i + 1);
-                if (value.endsWith(":")) {
-                    value = value.substring(0,value.length() - 1);
-                }
-                return Integer.parseInt(value);
-            }
+        String value = fields.directlyAfter("length");
+        if (value==null) {
+            return null;
         }
-        return null;
+        if (value.endsWith(":")) {
+            value = value.substring(0,value.length() - 1);
+        }
+        return Integer.parseInt(value);
     }
 
     private static Mac mac(String type,Fields fields) {

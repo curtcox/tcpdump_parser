@@ -1,5 +1,6 @@
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
+import java.util.function.Predicate;
+
 
 final class Fields implements Iterable<String> {
 
@@ -58,6 +59,14 @@ final class Fields implements Iterable<String> {
         return -1;
     }
 
+    int indexOfAfter(String name, int start) {
+        for (int i=start; i<length(); i++) {
+            if (at(i).equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     @Override
     public Iterator<String> iterator() {

@@ -59,12 +59,11 @@ final class HTTP {
     }
 
     static String parseVerb(Fields parts, int start) {
-        for (int i = start; i < parts.length(); i++) {
-            if (parts.at(i).equals("HTTP:") && !parts.at(i + 1).startsWith("HTTP")) {
-                return parts.at(i+1);
-            }
+        int i = parts.indexOfAfter("HTTP:",start);
+        if (i <0 || parts.at(i + 1).startsWith("HTTP")) {
+            return null;
         }
-        return null;
+        return parts.at(i+1);
     }
 
     static Integer parseStatus(Fields parts, int start) {
@@ -85,12 +84,11 @@ final class HTTP {
     }
 
     static String parseUrl(Fields parts, int start) {
-        for (int i = start; i < parts.length(); i++) {
-            if (parts.at(i).equals("HTTP:") && !parts.at(i + 1).startsWith("HTTP")) {
-                return parts.at(i+2);
-            }
+        int i = parts.indexOfAfter("HTTP:",start);
+        if (i <0 || parts.at(i + 1).startsWith("HTTP")) {
+            return null;
         }
-        return null;
+        return parts.at(i+2);
     }
 
     static class Builder {
