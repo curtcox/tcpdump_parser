@@ -15,10 +15,10 @@ public class MacTrackerTest {
         Packet packet;
 
         @Override
-        public void onMacDetected(Mac mac, Packet packet) {
+        public void onMacDetected(MacDetectedEvent event) {
             triggered = true;
-            this.mac = mac;
-            this.packet = packet;
+            this.mac = event.mac;
+            this.packet = event.packet;
         }
     }
 

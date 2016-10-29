@@ -6,7 +6,7 @@ final class MacTracker implements Consumer<Packet> {
     private final Listener listener;
 
     interface Listener {
-        void onMacDetected(Mac mac, Packet packet);
+        void onMacDetected(MacDetectedEvent event);
     }
 
     MacTracker(Mac mac, Listener listener) {
@@ -17,7 +17,7 @@ final class MacTracker implements Consumer<Packet> {
     @Override
     public void accept(Packet packet) {
         if (packet.contains(mac)) {
-            listener.onMacDetected(mac,packet);
+            listener.onMacDetected(new MacDetectedEvent(mac,packet));
         }
     }
 }
