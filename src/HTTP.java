@@ -51,12 +51,7 @@ final class HTTP {
     }
 
     static int startIndex(Fields parts) {
-        for (int i=0; i<parts.length(); i++) {
-            if (parts.at(i).equals("length")) {
-                return i;
-            }
-        }
-        return -1;
+        return parts.indexOf("length");
     }
 
     static int parseLength(String length) {

@@ -57,36 +57,18 @@ final class TCP {
     }
 
     static String seq(Fields parts) {
-        for (int i=0; i<parts.length(); i++) {
-            String part = parts.at(i);
-            if (part.equals("seq")) {
-                String seq = parts.at(i + 1);
-                return seq.substring(0,seq.length() - 1);
-            }
-        }
-        return null;
+        String seq = parts.directlyAfter("seq");
+        return seq==null ? null : seq.substring(0,seq.length() - 1);
     }
 
     static String ack(Fields parts) {
-        for (int i=0; i<parts.length(); i++) {
-            String part = parts.at(i);
-            if (part.equals("ack")) {
-                String ack = parts.at(i + 1);
-                return ack.substring(0,ack.length() - 1);
-            }
-        }
-        return null;
+        String ack = parts.directlyAfter("ack");
+        return ack==null ? null : ack.substring(0,ack.length() - 1);
     }
 
     static String flags(Fields parts) {
-        for (int i=0; i<parts.length(); i++) {
-            String part = parts.at(i);
-            if (part.equals("Flags")) {
-                String flags = parts.at(i + 1);
-                return flags.substring(1,flags.length() - 2);
-            }
-        }
-        return null;
+        String flags = parts.directlyAfter("Flags");
+        return flags==null ? null : flags.substring(1,flags.length() - 2);
     }
 
     static String options(Fields parts) {

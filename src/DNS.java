@@ -36,23 +36,13 @@ final class DNS {
     }
 
     private static Host A(Fields parts) {
-        for (int i = 0; i<parts.length(); i++) {
-            if (parts.at(i).equals("A")) {
-                return Host.of(parts.at(i + 1));
-            }
-        }
-        return null;
+        String name = parts.directlyAfter("A");
+        return name == null ? null : Host.of(name);
     }
 
     private static Host CNAME(Fields parts) {
-        for (int i = 0; i<parts.length(); i++) {
-            if (parts.at(i).equals("A?") || parts.at(i).equals("CNAME")) {
-                String name = parts.at(i +1);
-                name = name.substring(0,name.lastIndexOf("."));
-                return Host.of(name);
-            }
-        }
-        return null;
+        String name = parts.directlyAfterEither("A?","CNAME");
+        return name == null ? null : Host.of(name.substring(0,name.lastIndexOf(".")));
     }
 
     public String toString() {

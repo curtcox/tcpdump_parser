@@ -109,12 +109,7 @@ final class Parser {
     }
 
     private static String dB(String type, Fields fields)  {
-        for (int i = 0; i<fields.length(); i++) {
-            if (fields.at(i).equals(type)) {
-                return fields.at(i-1);
-            }
-        }
-        return null;
+        return fields.directlyBefore(type);
     }
 
     private static Integer length(Fields fields)  {
@@ -140,12 +135,7 @@ final class Parser {
     }
 
     private static int arrow(Fields fields) {
-        for (int i = 0; i< fields.length(); i++) {
-            if (fields.at(i).equals(">")) {
-                return i;
-            }
-        }
-        return -1;
+        return fields.indexOf(">");
     }
 
     private static Mac macFrom(Fields fields) {
