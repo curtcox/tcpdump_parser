@@ -1,8 +1,11 @@
 final class MacDetectedEvent {
     final Mac mac;
-    final Packet packet;
-    MacDetectedEvent(Mac mac, Packet packet) {
+    final Packet current;
+    final Packet previous;
+
+    MacDetectedEvent(Mac mac, Packet current, Packet previous) {
         this.mac = mac;
-        this.packet = packet;
+        this.current = current;
+        this.previous = previous;
     }
 }
