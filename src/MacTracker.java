@@ -34,8 +34,8 @@ final class MacTracker implements Consumer<Packet> {
             if (gapDetector.isGapBetween(previousTime(),packet.localTime)) {
                 listener.onNewMacPresence(detectedEvent(packet));
             }
+            previous = packet;
         }
-        previous = packet;
     }
 
     LocalTime previousTime() {
