@@ -1,3 +1,4 @@
+import java.time.LocalTime;
 import java.util.function.Consumer;
 
 final class MacTracker implements Consumer<Packet> {
@@ -5,6 +6,7 @@ final class MacTracker implements Consumer<Packet> {
     private final Mac mac;
     private final Listener listener;
     private final GapDetector gapDetector;
+    private Packet previous;
 
     interface Listener {
         void onNewMacPresence(MacDetectedEvent event);
@@ -29,10 +31,15 @@ final class MacTracker implements Consumer<Packet> {
     public void accept(Packet packet) {
         if (packet.contains(mac)) {
             listener.onMacDetected(detectedEvent(packet));
-            if (gapDetector.isGapBetween(null,packet.localTime)) {
+            if (gapDetector.isGapBetween(previousTime(),packet.localTime)) {
                 listener.onNewMacPresence(detectedEvent(packet));
             }
         }
+        previous = packet;
+    }
+
+    LocalTime previousTime() {
+        return previous == null ? null : previous.localTime;
     }
 
     MacDetectedEvent detectedEvent(Packet current) {
