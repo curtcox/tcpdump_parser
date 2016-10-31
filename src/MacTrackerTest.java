@@ -14,7 +14,14 @@ public class MacTrackerTest {
 
         boolean onNewMacPresence;
         boolean onMacDetected;
+        boolean onNewMacAbsence;
         MacDetectedEvent event;
+
+        @Override
+        public void onNewMacAbsence(MacDetectedEvent event) {
+            onNewMacAbsence = true;
+            this.event = event;
+        }
 
         @Override
         public void onNewMacPresence(MacDetectedEvent event) {
@@ -154,6 +161,51 @@ public class MacTrackerTest {
 
         assertSame(t1,gapDetector.t1);
         assertSame(t2,gapDetector.t2);
+    }
+
+    @Test
+    public void on_1st_NON_matching_after_matching_packet_gap_detector_is_given_current_and_time_and_previous() {
+        LocalTime t1 = LocalTime.MIN;
+        LocalTime t2 = LocalTime.MAX;
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = t1;
+        builder.DA = mac;
+        Packet packet1 = builder.build();
+        builder.localTime = t2;
+        builder.DA = null;
+        Packet packet2 = builder.build();
+        FakeGapDetector gapDetector = new FakeGapDetector();
+
+        MacTracker detector = MacTracker.of(mac,listener,gapDetector);
+
+        detector.accept(packet1);
+        detector.accept(packet2);
+
+        assertSame(t1,gapDetector.t1);
+        assertSame(t2,gapDetector.t2);
+    }
+
+    @Test
+    public void on_1st_NON_matching_after_matching_packet_triggers_absence() {
+        LocalTime t1 = LocalTime.MIN;
+        LocalTime t2 = LocalTime.MAX;
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = t1;
+        builder.DA = mac;
+        Packet packet1 = builder.build();
+        builder.localTime = t2;
+        builder.DA = null;
+        Packet packet2 = builder.build();
+
+        MacTracker detector = MacTracker.of(mac,listener,(ta,tb) -> true);
+
+        detector.accept(packet1);
+        detector.accept(packet2);
+
+        assert(listener.onNewMacPresence);
+        assertSame(mac,listener.event.mac);
+        assertSame(packet1,listener.event.previous);
+        assertNull(listener.event.current);
     }
 
 }

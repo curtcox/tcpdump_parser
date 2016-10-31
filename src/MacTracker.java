@@ -9,6 +9,7 @@ final class MacTracker implements Consumer<Packet> {
     private Packet previous;
 
     interface Listener {
+        void onNewMacAbsence(MacDetectedEvent event);
         void onNewMacPresence(MacDetectedEvent event);
         void onMacDetected(MacDetectedEvent event);
     }
@@ -35,6 +36,10 @@ final class MacTracker implements Consumer<Packet> {
                 listener.onNewMacPresence(detectedEvent(packet));
             }
             previous = packet;
+        } else {
+            if (gapDetector.isGapBetween(previousTime(),packet.localTime)) {
+                listener.onNewMacAbsence(detectedEvent(null));
+            }
         }
     }
 
@@ -43,6 +48,6 @@ final class MacTracker implements Consumer<Packet> {
     }
 
     MacDetectedEvent detectedEvent(Packet current) {
-        return new MacDetectedEvent(mac,current,null);
+        return new MacDetectedEvent(mac,current,previous);
     }
 }
