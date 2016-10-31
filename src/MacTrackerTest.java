@@ -35,20 +35,48 @@ public class MacTrackerTest {
             this.event = event;
         }
 
+        void reset() {
+            onMacDetected = false;
+            onNewMacPresence = false;
+            onNewMacAbsence = false;
+            event = null;
+        }
     }
 
     @Test
     public void listener_not_triggered_when_no_packets_examined() {
-        assertFalse(listener.onNewMacPresence);
-        assertFalse(listener.onMacDetected);
+        assertNoEvent();
     }
 
     @Test
     public void listener_not_triggered_by_packet_without_MAC() {
         Packet packet = Packet.builder().build();
         detector.accept(packet);
+        assertNoEvent();
+    }
+
+    void assertNoEvent() {
         assertFalse(listener.onMacDetected);
         assertFalse(listener.onNewMacPresence);
+        assertFalse(listener.onNewMacAbsence);
+    }
+
+    void assertOnlyDetectedEvent() {
+        assert(listener.onMacDetected);
+        assertFalse(listener.onNewMacPresence);
+        assertFalse(listener.onNewMacAbsence);
+    }
+
+    void assertPresenceEvent() {
+        assert(listener.onMacDetected);
+        assert(listener.onNewMacPresence);
+        assertFalse(listener.onNewMacAbsence);
+    }
+
+    void assertAbsenceEvent() {
+        assertFalse(listener.onMacDetected);
+        assertFalse(listener.onNewMacPresence);
+        assert(listener.onNewMacAbsence);
     }
 
     @Test
@@ -59,10 +87,21 @@ public class MacTrackerTest {
         Packet packet = builder.build();
         detector.accept(packet);
         detector.accept(packet);
-        assert(listener.onMacDetected);
-        assert(listener.onNewMacPresence);
-        assertSame(mac,listener.event.mac);
-        assertSame(packet,listener.event.current);
+
+        assertPresenceEvent();
+        assertCurrentEvent(packet);
+    }
+
+    void assertCurrentEvent(Packet packet) {
+        MacDetectedEvent event = listener.event;
+        assertSame(mac,    event.mac);
+        assertSame(packet, event.current);
+    }
+
+    void assertPreviousEvent(Packet packet) {
+        MacDetectedEvent event = listener.event;
+        assertSame(mac,    event.mac);
+        assertSame(packet, event.previous);
     }
 
     @Test
@@ -74,10 +113,8 @@ public class MacTrackerTest {
         MacTracker detector = MacTracker.of(mac,listener,(t1,t2) -> false);
         detector.accept(packet);
 
-        assert(listener.onMacDetected);
-        assertFalse(listener.onNewMacPresence);
-        assertSame(mac,listener.event.mac);
-        assertSame(packet,listener.event.current);
+        assertOnlyDetectedEvent();
+        assertCurrentEvent(packet);
     }
 
     @Test
@@ -89,10 +126,8 @@ public class MacTrackerTest {
         MacTracker detector = MacTracker.of(mac,listener,(t1,t2) -> true);
         detector.accept(packet);
 
-        assert(listener.onMacDetected);
-        assert(listener.onNewMacPresence);
-        assertSame(mac,listener.event.mac);
-        assertSame(packet,listener.event.current);
+        assertPresenceEvent();
+        assertCurrentEvent(packet);
     }
 
     static class FakeGapDetector implements GapDetector {
@@ -200,12 +235,12 @@ public class MacTrackerTest {
         MacTracker detector = MacTracker.of(mac,listener,(ta,tb) -> true);
 
         detector.accept(packet1);
+        listener.reset();
         detector.accept(packet2);
 
-        assert(listener.onNewMacPresence);
-        assertSame(mac,listener.event.mac);
-        assertSame(packet1,listener.event.previous);
-        assertNull(listener.event.current);
+        assertAbsenceEvent();
+        assertCurrentEvent(null);
+        assertPreviousEvent(packet1);
     }
 
 }
