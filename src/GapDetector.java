@@ -1,5 +1,3 @@
-import java.time.LocalTime;
-
 interface GapDetector {
-    boolean isGapBetween(LocalTime t1, LocalTime t2);
+    boolean isGapBetween(Timestamp t1, Timestamp t2);
 }

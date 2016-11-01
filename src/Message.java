@@ -1,4 +1,3 @@
-import java.time.*;
 import java.util.*;
 
 final class Message {
@@ -7,8 +6,8 @@ final class Message {
     final Socket client;
     final boolean request;
     final List<Packet> packets;
-    final LocalTime begin;
-    final LocalTime end;
+    final Timestamp begin;
+    final Timestamp end;
     final PacketStats stats;
     final PacketDirection direction;
 
@@ -46,8 +45,8 @@ final class Message {
         Socket server;
         Socket client;
         boolean request = false;
-        LocalTime begin = null;
-        LocalTime end;
+        Timestamp begin = null;
+        Timestamp end;
         List<Packet> packets = new ArrayList<>();
         PacketDirection direction;
 

@@ -42,7 +42,7 @@ final class Packets {
                     builder.DA = packet.DA;
                     builder.SA = packet.SA;
                     builder.ip = packet.ip;
-                    builder.localTime = packet.localTime.truncatedTo(ChronoUnit.SECONDS);
+                    builder.localTime = packet.localTime.truncatedToSeconds();
                     return builder.build();
                 }).distinct());
     }

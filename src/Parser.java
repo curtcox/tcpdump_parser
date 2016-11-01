@@ -25,7 +25,7 @@ final class Parser {
         Fields fields     = Fields.of(line);
         Packet.Builder builder = Packet.builder();
         builder.line      = line;
-        builder.localTime = localTime(fields);
+        builder.localTime = Timestamp.parse(fields);
         builder.BSSID     = BSSID(fields);
         builder.DA        = DA(fields);
         builder.RA        = RA(fields);
@@ -62,15 +62,6 @@ final class Parser {
                     .filter(line -> Parser.canParse(line))
                     .map(line -> parse(line));
         });
-    }
-
-    private static LocalTime localTime(Fields fields) {
-        String[] parts = fields.at(0).split(":");
-        int hour   = Integer.parseInt(parts[0]);
-        int minute = Integer.parseInt(parts[1]);
-        int second = Integer.parseInt(parts[2].split("\\.")[0]);
-        int nano   = Integer.parseInt(parts[2].split("\\.")[1]) * 1000;
-        return LocalTime.of(hour,minute,second,nano);
     }
 
     private static Mac BSSID(Fields fields)       { return mac("BSSID",fields); }

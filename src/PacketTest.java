@@ -1,6 +1,5 @@
-import org.junit.Test;
+import org.junit.*;
 
-import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -49,11 +48,11 @@ public class PacketTest {
     @Test
     public void toString_contains_localTime_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.localTime = LocalTime.NOON;
+        builder.localTime = Timestamp.NOON;
         assertStringIs(builder.build(),"Packet:{localTime=12:00}");
-        builder.localTime = LocalTime.MIDNIGHT;
+        builder.localTime = Timestamp.MIDNIGHT;
         assertStringIs(builder.build(),"Packet:{localTime=00:00}");
-        builder.localTime = LocalTime.MAX;
+        builder.localTime = Timestamp.MAX;
         assertStringIs(builder.build(),"Packet:{localTime=23:59:59.999999999}");
     }
 
@@ -259,16 +258,16 @@ public class PacketTest {
     @Test
     public void packets_are_equal_when_all_they_have_is_times_but_the_time_are_the_same() {
         Packet.Builder builder = Packet.builder();
-        builder.localTime = LocalTime.NOON;
+        builder.localTime = Timestamp.NOON;
         assertEqual(builder.build(),builder.build());
     }
 
     @Test
     public void packets_are_not_equal_when_they_have_different_times() {
         Packet.Builder builder = Packet.builder();
-        builder.localTime = LocalTime.NOON;
+        builder.localTime = Timestamp.NOON;
         Packet noon = builder.build();
-        builder.localTime = LocalTime.MIDNIGHT;
+        builder.localTime = Timestamp.MIDNIGHT;
         Packet midnight = builder.build();
         assertNotEqual(noon,midnight);
     }

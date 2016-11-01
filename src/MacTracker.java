@@ -1,5 +1,4 @@
-import java.time.LocalTime;
-import java.util.function.Consumer;
+import java.util.function.*;
 
 final class MacTracker implements Consumer<Packet> {
 
@@ -64,7 +63,7 @@ final class MacTracker implements Consumer<Packet> {
         return gapDetector.isGapBetween(previousTime(),packet.localTime);
     }
 
-    LocalTime previousTime() {
+    Timestamp previousTime() {
         return previous == null ? null : previous.localTime;
     }
 
