@@ -8,8 +8,8 @@ final class Channel implements Comparable<Channel> {
     final Socket server;
     final Host client;
     final List<Conversation> conversations;
-    final LocalTime begin;
-    final LocalTime end;
+    final Timestamp begin;
+    final Timestamp end;
     final PacketStats incoming;
     final PacketStats outgoing;
 
@@ -38,8 +38,8 @@ final class Channel implements Comparable<Channel> {
     static class Builder {
         private Socket server;
         private Host client;
-        private LocalTime begin;
-        private LocalTime end;
+        private Timestamp begin;
+        private Timestamp end;
         private List<Conversation.Builder> conversations = new ArrayList<>();
 
         Channel build() {
@@ -51,7 +51,7 @@ final class Channel implements Comparable<Channel> {
         }
 
         void add(Packet packet) {
-            LocalTime time = packet.localTime;
+            Timestamp time = packet.localTime;
             check(time);
             if (begin==null) {
                 begin = time;
@@ -79,7 +79,7 @@ final class Channel implements Comparable<Channel> {
             conversations.add(conversation);
         }
 
-        private void check(LocalTime time) {
+        private void check(Timestamp time) {
             if (time==null) {
                 throw new IllegalArgumentException("Time missing, but required for timeline conversations.");
             }

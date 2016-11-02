@@ -1,13 +1,12 @@
-import org.junit.Test;
+import org.junit.*;
 
-import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
 
 public class MessageTest {
 
-    LocalTime localTime = LocalTime.now();
+    Timestamp localTime = Timestamp.now();
     IP ip = ip("IP 1.2.3.4.43114 > 5.6.7.8.https");
     IP publicToPrivate = ip("IP 5.6.7.9.http > 192.168.3.4.43114");
 
@@ -112,18 +111,18 @@ public class MessageTest {
     @Test
     public void message_of_2_packets_contains_the_proper_begin_and_end_time() {
         Packet.Builder builder = Packet.builder();
-        builder.localTime = LocalTime.MIN;
+        builder.localTime = Timestamp.MIN;
         builder.ip = ip;
         Packet packet1 = builder.build();
-        builder.localTime = LocalTime.MAX;
+        builder.localTime = Timestamp.MAX;
         Packet packet2 = builder.build();
 
         Conversation conversation = Conversation.of(packet1,packet2);
         List<Message> messages = conversation.messages;
         Message message = messages.get(0);
 
-        assertSame(message.begin,LocalTime.MIN);
-        assertSame(message.end,LocalTime.MAX);
+        assertSame(message.begin,Timestamp.MIN);
+        assertSame(message.end,  Timestamp.MAX);
     }
 
     Message oneMessageFrom(Packet.Builder builder) {

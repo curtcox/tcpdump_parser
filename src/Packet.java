@@ -1,10 +1,8 @@
-import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Stream;
 
 final class Packet {
 
-    final LocalTime localTime;
+    final Timestamp localTime;
     final Mac BSSID;
     final Mac DA;
     final Mac RA;
@@ -67,7 +65,7 @@ final class Packet {
 
     static class Builder {
         String line;
-        LocalTime localTime;
+        Timestamp localTime;
         Mac BSSID;
         Mac DA;
         Mac RA;

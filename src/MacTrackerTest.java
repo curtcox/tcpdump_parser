@@ -1,6 +1,4 @@
-import org.junit.Test;
-
-import java.time.LocalTime;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
@@ -83,7 +81,7 @@ public class MacTrackerTest {
     public void listener_triggered_by_packet_with_MAC() {
         Packet.Builder builder = Packet.builder();
         builder.DA = mac;
-        builder.localTime = LocalTime.NOON;
+        builder.localTime = Timestamp.now();
         Packet packet = builder.build();
         detector.accept(packet);
         detector.accept(packet);
@@ -131,10 +129,10 @@ public class MacTrackerTest {
     }
 
     static class FakeGapDetector implements GapDetector {
-        LocalTime t1;
-        LocalTime t2;
+        Timestamp t1;
+        Timestamp t2;
         @Override
-        public boolean isGapBetween(LocalTime t1, LocalTime t2) {
+        public boolean isGapBetween(Timestamp t1, Timestamp t2) {
             this.t1 = t1;
             this.t2 = t2;
             return false;
@@ -143,7 +141,7 @@ public class MacTrackerTest {
 
     @Test
     public void on_1st_matching_packet_gap_detector_is_given_current_and_time_and_null() {
-        LocalTime t2 = LocalTime.MAX;
+        Timestamp t2 = Timestamp.now();
         Packet.Builder builder = Packet.builder();
         builder.DA = mac;
         builder.localTime = t2;
@@ -160,7 +158,7 @@ public class MacTrackerTest {
 
     @Test
     public void on_1st_matching_after_other_non_matching_packet_gap_detector_is_given_current_and_time_and_null() {
-        LocalTime t2 = LocalTime.MAX;
+        Timestamp t2 = Timestamp.now();
         Packet.Builder builder = Packet.builder();
         builder.localTime = t2;
         Packet packet1 = builder.build();
@@ -179,8 +177,8 @@ public class MacTrackerTest {
 
     @Test
     public void on_2nd_matching_packet_gap_detector_is_given_current_and_time_and_previous() {
-        LocalTime t1 = LocalTime.NOON;
-        LocalTime t2 = LocalTime.MAX;
+        Timestamp t1 = Timestamp.now();
+        Timestamp t2 = Timestamp.now();
         Packet.Builder builder = Packet.builder();
         builder.DA = mac;
         builder.localTime = t1;
@@ -200,8 +198,8 @@ public class MacTrackerTest {
 
     @Test
     public void on_1st_NON_matching_after_matching_packet_gap_detector_is_given_current_and_time_and_previous() {
-        LocalTime t1 = LocalTime.MIN;
-        LocalTime t2 = LocalTime.MAX;
+        Timestamp t1 = Timestamp.now();
+        Timestamp t2 = Timestamp.now();
         Packet.Builder builder = Packet.builder();
         builder.localTime = t1;
         builder.DA = mac;
@@ -222,8 +220,8 @@ public class MacTrackerTest {
 
     @Test
     public void on_1st_NON_matching_after_matching_packet_triggers_absence() {
-        LocalTime t1 = LocalTime.MIN;
-        LocalTime t2 = LocalTime.MAX;
+        Timestamp t1 = Timestamp.now();
+        Timestamp t2 = Timestamp.now();
         Packet.Builder builder = Packet.builder();
         builder.localTime = t1;
         builder.DA = mac;

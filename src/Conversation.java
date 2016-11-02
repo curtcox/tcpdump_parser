@@ -1,4 +1,3 @@
-import java.time.*;
 import java.util.*;
 
 final class Conversation {
@@ -6,8 +5,8 @@ final class Conversation {
     final Socket server;
     final Socket client;
     final List<Packet> packets;
-    final LocalTime begin;
-    final LocalTime end;
+    final Timestamp begin;
+    final Timestamp end;
     final PacketStats incoming;
     final PacketStats outgoing;
     final List<Message> messages;
@@ -38,8 +37,8 @@ final class Conversation {
     static class Builder {
         private Socket server;
         private Socket client;
-        private LocalTime begin;
-        private LocalTime end;
+        private Timestamp begin;
+        private Timestamp end;
 
         List<Packet> packets = new ArrayList<>();
 
@@ -48,7 +47,7 @@ final class Conversation {
         }
 
         void add(Packet packet) {
-            LocalTime time = packet.localTime;
+            Timestamp time = packet.localTime;
             if (begin==null) {
                 begin = time;
             }

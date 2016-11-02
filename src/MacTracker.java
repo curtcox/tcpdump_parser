@@ -1,5 +1,4 @@
-import java.time.LocalTime;
-import java.util.function.Consumer;
+import java.util.function.*;
 
 final class MacTracker implements Consumer<Packet> {
 
@@ -30,20 +29,41 @@ final class MacTracker implements Consumer<Packet> {
 
     @Override
     public void accept(Packet packet) {
-        if (packet.contains(mac)) {
-            listener.onMacDetected(detectedEvent(packet));
-            if (gapDetector.isGapBetween(previousTime(),packet.localTime)) {
-                listener.onNewMacPresence(detectedEvent(packet));
-            }
-            previous = packet;
-        } else if (previous != null) {
-            if (gapDetector.isGapBetween(previousTime(),packet.localTime)) {
-                listener.onNewMacAbsence(detectedEvent(null));
-            }
+        checkMacDetected(packet);
+        checkNewMacPresence(packet);
+        checkNewMacAbsence(packet);
+        updateLastSeen(packet);
+    }
+
+    void checkNewMacPresence(Packet packet) {
+        if (packet.contains(mac) && lastSeenLongEnoughAgo(packet)) {
+            listener.onNewMacPresence(detectedEvent(packet));
         }
     }
 
-    LocalTime previousTime() {
+    void checkNewMacAbsence(Packet packet) {
+        if (!packet.contains(mac) && previous != null && lastSeenLongEnoughAgo(packet)) {
+            listener.onNewMacAbsence(detectedEvent(null));
+        }
+    }
+
+    void checkMacDetected(Packet packet) {
+        if (packet.contains(mac)) {
+            listener.onMacDetected(detectedEvent(packet));
+        }
+    }
+
+    void updateLastSeen(Packet packet) {
+        if (packet.contains(mac)) {
+            previous = packet;
+        }
+    }
+
+    boolean lastSeenLongEnoughAgo(Packet packet) {
+        return gapDetector.isGapBetween(previousTime(),packet.localTime);
+    }
+
+    Timestamp previousTime() {
         return previous == null ? null : previous.localTime;
     }
 

@@ -1,13 +1,12 @@
-import org.junit.Test;
+import org.junit.*;
 
-import java.time.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
 
 public class ChannelTest {
 
-    LocalTime localTime = LocalTime.now();
+    Timestamp localTime = Timestamp.now();
     IP ip = ip("IP 1.2.3.4.43114 > 5.6.7.8.https");
     IP ipBack = ip("IP 5.6.7.8.https > 1.2.3.4.43114");
     IP differentClient = ip("IP 1.2.3.5.43114 > 5.6.7.8.https");
@@ -239,26 +238,26 @@ public class ChannelTest {
     @Test
     public void channel_of_2_packets_contains_the_proper_begin_and_end_time() {
         Packet.Builder builder = Packet.builder();
-        builder.localTime = LocalTime.MIN;
+        builder.localTime = Timestamp.MIN;
         builder.ip = ip;
         Packet packet1 = builder.build();
-        builder.localTime = LocalTime.MAX;
+        builder.localTime = Timestamp.MAX;
         Packet packet2 = builder.build();
 
         Channel channel = of(packet1,packet2);
 
-        assertSame(channel.begin,LocalTime.MIN);
-        assertSame(channel.end,LocalTime.MAX);
+        assertSame(channel.begin,Timestamp.MIN);
+        assertSame(channel.end,  Timestamp.MAX);
     }
 
     @Test
     public void throws_helpful_exception_when_packets_added_out_of_order() {
         try {
             Packet.Builder builder = Packet.builder();
-            builder.localTime = LocalTime.MAX;
+            builder.localTime = Timestamp.MAX;
             builder.ip = ip;
             Packet packet1 = builder.build();
-            builder.localTime = LocalTime.MIN;
+            builder.localTime = Timestamp.MIN;
             Packet packet2 = builder.build();
             of(packet1,packet2);
             fail();
