@@ -1,4 +1,6 @@
 import javafx.application.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -6,6 +8,8 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 
 public class TimelineViewer extends Application {
+
+    Label label = new Label();
 
     public static void main(String[] args) {
         launch(args);
@@ -20,7 +24,7 @@ public class TimelineViewer extends Application {
 
     SplitPane splitter() {
         SplitPane splitter = new SplitPane();
-        splitter.getItems().addAll(root(), new StackPane());
+        splitter.getItems().addAll(root(), new StackPane(label));
         splitter.setOrientation(Orientation.VERTICAL);
         splitter.setDividerPositions(0.95f);
         return splitter;
@@ -35,8 +39,17 @@ public class TimelineViewer extends Application {
     TreeView treeView() {
         TreeItem<String> root = rootItem();
         TreeView tree = new TreeView(root);
+        addSelectionListener(tree);
         tree.setShowRoot(true);
         return tree;
+    }
+
+    void addSelectionListener(TreeView tree) {
+        tree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            TreeItem<String> selectedItem = (TreeItem<String>) newValue;
+            System.out.println("Selected Text : " + selectedItem.getValue());
+            label.setText(selectedItem.getValue());
+        });
     }
 
     TreeItem<String> rootItem() {
