@@ -1,4 +1,5 @@
 import javafx.application.*;
+import javafx.geometry.Orientation;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -13,8 +14,16 @@ public class TimelineViewer extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Timeline");
-        primaryStage.setScene(new Scene(root(), 500, 550));
+        primaryStage.setScene(new Scene(splitter(), 1000, 800));
         primaryStage.show();
+    }
+
+    SplitPane splitter() {
+        SplitPane splitter = new SplitPane();
+        splitter.getItems().addAll(root(), new StackPane());
+        splitter.setOrientation(Orientation.VERTICAL);
+        splitter.setDividerPositions(0.95f);
+        return splitter;
     }
 
     StackPane root() {
