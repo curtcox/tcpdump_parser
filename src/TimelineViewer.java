@@ -1,6 +1,4 @@
 import javafx.application.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -9,7 +7,7 @@ import javafx.stage.*;
 
 public class TimelineViewer extends Application {
 
-    Label label = new Label();
+    TextArea details = new TextArea();
 
     public static void main(String[] args) {
         launch(args);
@@ -20,11 +18,13 @@ public class TimelineViewer extends Application {
         primaryStage.setTitle("Timeline");
         primaryStage.setScene(new Scene(splitter(), 1000, 800));
         primaryStage.show();
+        details.setWrapText(true);
+        details.setEditable(false);
     }
 
     SplitPane splitter() {
         SplitPane splitter = new SplitPane();
-        splitter.getItems().addAll(root(), new StackPane(label));
+        splitter.getItems().addAll(root(), new StackPane(details));
         splitter.setOrientation(Orientation.VERTICAL);
         splitter.setDividerPositions(0.95f);
         return splitter;
@@ -46,14 +46,23 @@ public class TimelineViewer extends Application {
 
     void addSelectionListener(TreeView tree) {
         tree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            TreeItem<String> selectedItem = (TreeItem<String>) newValue;
-            System.out.println("Selected Text : " + selectedItem.getValue());
-            label.setText(selectedItem.getValue());
+            TreeValue selectedItem = (TreeValue) newValue;
+            details.setText(selectedItem.detail);
         });
     }
 
+    static class TreeValue extends TreeItem<String> {
+        final String detail;
+
+        TreeValue(String text, String detail) {
+            super(text);
+            this.detail = detail;
+        }
+
+    }
+
     TreeItem<String> rootItem() {
-        TreeItem<String> root = new TreeItem<>("Timeline");
+        TreeValue root = new TreeValue("Timeline","Root");
         root.setExpanded(true);
         for (Channel channel : timeline().channels) {
             root.getChildren().add(channelItem(channel));
@@ -62,7 +71,7 @@ public class TimelineViewer extends Application {
     }
 
     TreeItem<String> channelItem(Channel channel) {
-        TreeItem<String> channelItem = new TreeItem<>(channel.summary());
+        TreeValue channelItem = new TreeValue(channel.summary(),"Channel " + channel.summary());
         for (Conversation conversation : channel.conversations) {
             channelItem.getChildren().add(conversationItem(conversation));
         }
@@ -70,7 +79,7 @@ public class TimelineViewer extends Application {
     }
 
     TreeItem<String> conversationItem(Conversation conversation) {
-        TreeItem<String> conversationItem = new TreeItem<>(conversation.summary());
+        TreeValue conversationItem = new TreeValue(conversation.summary(),"Conversation " + conversation.summary());
         for (Message message : conversation.messages) {
             conversationItem.getChildren().add(messageItem(message));
         }
@@ -78,7 +87,7 @@ public class TimelineViewer extends Application {
     }
 
     TreeItem<String> messageItem(Message message) {
-        TreeItem<String> messageItem = new TreeItem<>(message.summary());
+        TreeValue messageItem = new TreeValue(message.summary(),"Message " + message.summary());
         for (Packet packet : message.packets) {
             messageItem.getChildren().add(packetItem(packet));
         }
@@ -86,7 +95,7 @@ public class TimelineViewer extends Application {
     }
 
     TreeItem<String> packetItem(Packet packet) {
-        return new TreeItem<>(packet.toString());
+        return new TreeValue(packet.toString(),packet.line);
     }
 
     Timeline timeline() {
