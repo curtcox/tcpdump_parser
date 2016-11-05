@@ -2,7 +2,7 @@ import static java.lang.Math.*;
 
 final class DefaultGapDetector implements GapDetector {
 
-    static final long gap = 1_000_000_000L * 60;
+    static final long gap        = 1_000_000_000L * 60;
     static final long full_cycle = 1_000_000_000L * 60 * 60 * 24;
 
     @Override
@@ -17,8 +17,8 @@ final class DefaultGapDetector implements GapDetector {
         long n2 = t2.toTotalNanos();
         long first = min(n1,n2);
         long last  = max(n1,n2);
-        return diff(first,last)              > gap &&
-               diff(first + full_cycle,last) > gap;
+        return diff(first,last)              >= gap &&
+               diff(first + full_cycle,last) >= gap;
     }
 
     long diff(long n1, long n2) {
