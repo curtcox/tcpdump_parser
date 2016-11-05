@@ -1,6 +1,4 @@
-import java.util.function.*;
-
-final class SingleMacTracker implements Consumer<Packet> {
+final class SingleMacTracker implements MacTracker {
 
     private final Mac mac;
     private final MacTracker.Listener listener;

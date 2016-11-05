@@ -1,13 +1,16 @@
-import java.util.function.*;
+final class MultipleMacTracker implements MacTracker {
 
-final class MultipleMacTracker implements Consumer<Packet> {
+    final Listener listener;
 
-    static MultipleMacTracker of(MultipleMacTrackerTest.Listener listener) {
-        return new MultipleMacTracker();
+    private MultipleMacTracker(Listener listener) {
+        this.listener = listener;
+    }
+    static MultipleMacTracker of(Listener listener) {
+        return new MultipleMacTracker(listener);
     }
 
     @Override
     public void accept(Packet packet) {
-
+        SingleMacTracker.of(packet.DA,listener).accept(packet);
     }
 }
