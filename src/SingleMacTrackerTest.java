@@ -84,7 +84,6 @@ public class SingleMacTrackerTest {
         builder.localTime = Timestamp.now();
         Packet packet = builder.build();
         detector.accept(packet);
-        detector.accept(packet);
 
         assertPresenceEvent();
         assertCurrentEvent(packet);

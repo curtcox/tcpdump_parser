@@ -59,10 +59,31 @@ public class MultipleMacTrackerTest {
         builder.localTime = Timestamp.now();
         Packet packet = builder.build();
         detector.accept(packet);
-        detector.accept(packet);
 
         assertPresenceEvent();
         assertCurrentEvent(packet);
+    }
+
+    @Test
+    public void absence_triggered_after_gap() {
+        Packet.Builder builder = Packet.builder();
+        builder.DA = mac;
+        builder.localTime = Timestamp.NOON;
+        Packet packet1 = builder.build();
+        builder.localTime = Timestamp.MIDNIGHT;
+        builder.DA = null;
+        Packet packet2 = builder.build();
+        detector.accept(packet1);
+        listener.reset();
+        detector.accept(packet2);
+
+        assertAbsenceEvent();
+    }
+
+    void assertAbsenceEvent() {
+        assertFalse(listener.onMacDetected);
+        assertFalse(listener.onNewMacPresence);
+        assert(listener.onNewMacAbsence);
     }
 
     void assertCurrentEvent(Packet packet) {

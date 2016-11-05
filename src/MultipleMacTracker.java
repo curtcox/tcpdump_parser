@@ -1,6 +1,7 @@
 final class MultipleMacTracker implements MacTracker {
 
     final Listener listener;
+    MacTracker tracker;
 
     private MultipleMacTracker(Listener listener) {
         this.listener = listener;
@@ -11,6 +12,9 @@ final class MultipleMacTracker implements MacTracker {
 
     @Override
     public void accept(Packet packet) {
-        SingleMacTracker.of(packet.DA,listener).accept(packet);
+        if (tracker==null) {
+            tracker = SingleMacTracker.of(packet.DA,listener);
+        }
+        tracker.accept(packet);
     }
 }
