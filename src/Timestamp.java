@@ -34,9 +34,14 @@ final class Timestamp {
         return localTime.isBefore(other.localTime);
     }
 
-    public Timestamp truncatedToSeconds() {
+    Timestamp truncatedToSeconds() {
         return new Timestamp(localTime.truncatedTo(ChronoUnit.SECONDS));
     }
+
+    long toTotalNanos()   { return localTime.getNano()   + toTotalSeconds() * 1_000_000_000; }
+    long toTotalSeconds() { return localTime.getSecond() + toTotalMinutes() * 60; }
+    long toTotalMinutes() { return localTime.getMinute() + toTotalHours()   * 60; }
+    long toTotalHours()   { return localTime.getHour(); }
 
     @Override
     public boolean equals(Object o) {
