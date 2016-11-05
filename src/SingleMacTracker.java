@@ -1,6 +1,6 @@
 import java.util.function.*;
 
-final class MacTracker implements Consumer<Packet> {
+final class SingleMacTracker implements Consumer<Packet> {
 
     private final Mac mac;
     private final Listener listener;
@@ -13,18 +13,18 @@ final class MacTracker implements Consumer<Packet> {
         void onMacDetected(MacDetectedEvent event);
     }
 
-    private MacTracker(Mac mac, Listener listener, GapDetector gapDetector) {
+    private SingleMacTracker(Mac mac, Listener listener, GapDetector gapDetector) {
         this.mac = mac;
         this.listener = listener;
         this.gapDetector = gapDetector;
     }
 
-    static MacTracker of(Mac mac, Listener listener) {
-        return new MacTracker(mac,listener, new DefaultGapDetector());
+    static SingleMacTracker of(Mac mac, Listener listener) {
+        return new SingleMacTracker(mac,listener, new DefaultGapDetector());
     }
 
-    static MacTracker of(Mac mac, Listener listener, GapDetector gapDetector) {
-        return new MacTracker(mac,listener, gapDetector);
+    static SingleMacTracker of(Mac mac, Listener listener, GapDetector gapDetector) {
+        return new SingleMacTracker(mac,listener, gapDetector);
     }
 
     @Override
