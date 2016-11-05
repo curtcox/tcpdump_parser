@@ -35,26 +35,30 @@ final class MacTracker implements Consumer<Packet> {
         updateLastSeen(packet);
     }
 
+    boolean matching(Packet packet) {
+        return packet.contains(mac);
+    }
+
     void checkNewMacPresence(Packet packet) {
-        if (packet.contains(mac) && lastSeenLongEnoughAgo(packet)) {
+        if (matching(packet) && lastSeenLongEnoughAgo(packet)) {
             listener.onNewMacPresence(detectedEvent(packet));
         }
     }
 
     void checkNewMacAbsence(Packet packet) {
-        if (!packet.contains(mac) && previous != null && lastSeenLongEnoughAgo(packet)) {
+        if (!matching(packet) && previous != null && lastSeenLongEnoughAgo(packet)) {
             listener.onNewMacAbsence(detectedEvent(null));
         }
     }
 
     void checkMacDetected(Packet packet) {
-        if (packet.contains(mac)) {
+        if (matching(packet)) {
             listener.onMacDetected(detectedEvent(packet));
         }
     }
 
     void updateLastSeen(Packet packet) {
-        if (packet.contains(mac)) {
+        if (matching(packet)) {
             previous = packet;
         }
     }
