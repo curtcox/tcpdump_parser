@@ -8,7 +8,7 @@ public class SingleMacTrackerTest {
     Listener listener = new Listener();
     SingleMacTracker detector = SingleMacTracker.of(mac,listener);
 
-    static class Listener implements SingleMacTracker.Listener {
+    static class Listener implements MacTracker.Listener {
 
         boolean onNewMacPresence;
         boolean onMacDetected;

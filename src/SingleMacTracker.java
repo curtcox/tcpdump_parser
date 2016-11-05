@@ -3,27 +3,23 @@ import java.util.function.*;
 final class SingleMacTracker implements Consumer<Packet> {
 
     private final Mac mac;
-    private final Listener listener;
+    private final MacTracker.Listener listener;
     private final GapDetector gapDetector;
     private Packet previous;
 
-    interface Listener {
-        void onNewMacAbsence(MacDetectedEvent event);
-        void onNewMacPresence(MacDetectedEvent event);
-        void onMacDetected(MacDetectedEvent event);
-    }
 
-    private SingleMacTracker(Mac mac, Listener listener, GapDetector gapDetector) {
+
+    private SingleMacTracker(Mac mac, MacTracker.Listener listener, GapDetector gapDetector) {
         this.mac = mac;
         this.listener = listener;
         this.gapDetector = gapDetector;
     }
 
-    static SingleMacTracker of(Mac mac, Listener listener) {
+    static SingleMacTracker of(Mac mac, MacTracker.Listener listener) {
         return new SingleMacTracker(mac,listener, new DefaultGapDetector());
     }
 
-    static SingleMacTracker of(Mac mac, Listener listener, GapDetector gapDetector) {
+    static SingleMacTracker of(Mac mac, MacTracker.Listener listener, GapDetector gapDetector) {
         return new SingleMacTracker(mac,listener, gapDetector);
     }
 
