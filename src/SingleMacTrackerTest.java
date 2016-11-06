@@ -130,11 +130,16 @@ public class SingleMacTrackerTest {
     static class FakeGapDetector implements GapDetector {
         Timestamp t1;
         Timestamp t2;
+        boolean gap;
+
+        FakeGapDetector(boolean gap) {
+            this.gap = gap;
+        }
         @Override
         public boolean isGapBetween(Timestamp t1, Timestamp t2) {
             this.t1 = t1;
             this.t2 = t2;
-            return false;
+            return gap;
         }
     }
 
@@ -145,7 +150,7 @@ public class SingleMacTrackerTest {
         builder.DA = mac;
         builder.localTime = t2;
         Packet packet = builder.build();
-        FakeGapDetector gapDetector = new FakeGapDetector();
+        FakeGapDetector gapDetector = new FakeGapDetector(false);
 
         SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
 
@@ -163,7 +168,7 @@ public class SingleMacTrackerTest {
         Packet packet1 = builder.build();
         builder.DA = mac;
         Packet packet2 = builder.build();
-        FakeGapDetector gapDetector = new FakeGapDetector();
+        FakeGapDetector gapDetector = new FakeGapDetector(false);
 
         SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
 
@@ -184,7 +189,7 @@ public class SingleMacTrackerTest {
         Packet packet1 = builder.build();
         builder.localTime = t2;
         Packet packet2 = builder.build();
-        FakeGapDetector gapDetector = new FakeGapDetector();
+        FakeGapDetector gapDetector = new FakeGapDetector(false);
 
         SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
 
@@ -193,6 +198,26 @@ public class SingleMacTrackerTest {
 
         assertSame(t1,gapDetector.t1);
         assertSame(t2,gapDetector.t2);
+    }
+
+    @Test
+    public void on_2nd_matching_packet_only_detection_is_reported() {
+        Timestamp t1 = Timestamp.now();
+        Timestamp t2 = Timestamp.now();
+        Packet.Builder builder = Packet.builder();
+        builder.DA = mac;
+        builder.localTime = t1;
+        Packet packet1 = builder.build();
+        builder.localTime = t2;
+        Packet packet2 = builder.build();
+
+        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(ta, tb) -> true);
+
+        detector.accept(packet1);
+        listener.reset();
+        detector.accept(packet2);
+
+        assertOnlyDetectedEvent();
     }
 
     @Test
@@ -206,7 +231,7 @@ public class SingleMacTrackerTest {
         builder.localTime = t2;
         builder.DA = null;
         Packet packet2 = builder.build();
-        FakeGapDetector gapDetector = new FakeGapDetector();
+        FakeGapDetector gapDetector = new FakeGapDetector(true);
 
         SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
 
@@ -238,6 +263,29 @@ public class SingleMacTrackerTest {
         assertAbsenceEvent();
         assertCurrentEvent(null);
         assertPreviousEvent(packet1);
+    }
+
+    @Test
+    public void on_2nd_NON_matching_after_matching_packet_triggers_nothing() {
+        Timestamp t1 = Timestamp.now();
+        Timestamp t2 = Timestamp.now();
+        Packet.Builder builder = Packet.builder();
+        builder.localTime = t1;
+        builder.DA = mac;
+        Packet packet1 = builder.build();
+        builder.localTime = t2;
+        builder.DA = null;
+        Packet packet2 = builder.build();
+        Packet packet3 = builder.build();
+
+        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(ta, tb) -> true);
+
+        detector.accept(packet1);
+        detector.accept(packet2);
+        listener.reset();
+        detector.accept(packet3);
+
+        assertNoEvent();
     }
 
 }

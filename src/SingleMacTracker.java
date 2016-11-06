@@ -3,9 +3,8 @@ final class SingleMacTracker implements MacTracker {
     private final Mac mac;
     private final MacTracker.Listener listener;
     private final GapDetector gapDetector;
-    private Packet previous;
-
-
+    private Packet lastSeenPacketWithMAC;
+    private boolean present;
 
     private SingleMacTracker(Mac mac, MacTracker.Listener listener, GapDetector gapDetector) {
         this.mac = mac;
@@ -34,13 +33,15 @@ final class SingleMacTracker implements MacTracker {
     }
 
     void checkNewMacPresence(Packet packet) {
-        if (matching(packet) && lastSeenLongEnoughAgo(packet)) {
+        if (!present && matching(packet) && lastSeenLongEnoughAgo(packet)) {
+            present = true;
             listener.onNewMacPresence(detectedEvent(packet));
         }
     }
 
     void checkNewMacAbsence(Packet packet) {
-        if (!matching(packet) && previous != null && lastSeenLongEnoughAgo(packet)) {
+        if (present && !matching(packet) && lastSeenPacketWithMAC != null && lastSeenLongEnoughAgo(packet)) {
+            present = false;
             listener.onNewMacAbsence(detectedEvent(null));
         }
     }
@@ -53,7 +54,7 @@ final class SingleMacTracker implements MacTracker {
 
     void updateLastSeen(Packet packet) {
         if (matching(packet)) {
-            previous = packet;
+            lastSeenPacketWithMAC = packet;
         }
     }
 
@@ -62,10 +63,10 @@ final class SingleMacTracker implements MacTracker {
     }
 
     Timestamp previousTime() {
-        return previous == null ? null : previous.localTime;
+        return lastSeenPacketWithMAC == null ? null : lastSeenPacketWithMAC.localTime;
     }
 
     MacDetectedEvent detectedEvent(Packet current) {
-        return new MacDetectedEvent(mac,current,previous);
+        return new MacDetectedEvent(mac,current, lastSeenPacketWithMAC);
     }
 }
