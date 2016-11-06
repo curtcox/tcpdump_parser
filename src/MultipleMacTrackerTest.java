@@ -1,56 +1,85 @@
 import org.junit.*;
 
+import java.util.*;
+
 import static org.junit.Assert.*;
 
 public class MultipleMacTrackerTest {
 
     Mac mac = Mac.of("01:02:03:04:05:06");
+    Mac mac1 = Mac.of("00:02:03:04:05:07");
+    Mac mac2 = Mac.of("00:02:03:04:05:08");
+    Mac mac3 = Mac.of("00:02:03:04:05:09");
+    Mac mac4 = Mac.of("00:02:03:04:05:0a");
+    Mac mac5 = Mac.of("00:02:03:04:05:0b");
     Listener listener = new Listener();
     MultipleMacTracker detector = MultipleMacTracker.of(listener);
 
     static class Listener implements MacTracker.Listener {
-
-        boolean onNewMacPresence;
-        boolean onMacDetected;
-        boolean onNewMacAbsence;
-        MacDetectedEvent event;
+        Map<Mac,MacDetectedEvent> presence = new HashMap<>();
+        Map<Mac,MacDetectedEvent> detected = new HashMap<>();
+        Map<Mac,MacDetectedEvent> absence = new HashMap<>();
 
         @Override
         public void onNewMacAbsence(MacDetectedEvent event) {
-            onNewMacAbsence = true;
-            this.event = event;
+            absence.put(event.mac,event);
         }
 
         @Override
         public void onNewMacPresence(MacDetectedEvent event) {
-            onNewMacPresence = true;
-            this.event = event;
+            presence.put(event.mac,event);
         }
 
         @Override
         public void onMacDetected(MacDetectedEvent event) {
-            onMacDetected = true;
-            this.event = event;
+            detected.put(event.mac,event);
         }
 
         void reset() {
-            onMacDetected = false;
-            onNewMacPresence = false;
-            onNewMacAbsence = false;
-            event = null;
+            presence.clear();
+            detected.clear();
+            absence.clear();
         }
+
+        void assertAbsenceEvent(Mac... macs) {
+            for (Mac mac : macs) {
+                MacDetectedEvent event = absence.get(mac);
+                assertNotNull(event);
+                assertSame(mac,    event.mac);
+            }
+        }
+
+        void assertDetectedEvent(Packet packet, Mac... macs) {
+            for (Mac mac : macs) {
+                MacDetectedEvent event = detected.get(mac);
+                assertNotNull(event);
+                assertSame(mac,    event.mac);
+                assertSame(packet, event.current);
+            }
+        }
+
+        void assertPresenceEvent(Packet packet, Mac... macs) {
+            for (Mac mac : macs) {
+                MacDetectedEvent event = presence.get(mac);
+                assertNotNull(event);
+                assertSame(mac,    event.mac);
+                assertSame(packet, event.current);
+            }
+        }
+
+        void assertNoEvents() {
+            assert(detected.isEmpty());
+            assert(presence.isEmpty());
+            assert(absence.isEmpty());
+        }
+
     }
 
     @Test
     public void listener_not_triggered_when_no_packets_examined() {
-        assertNoEvent();
+        listener.assertNoEvents();
     }
 
-    void assertNoEvent() {
-        assertFalse(listener.onMacDetected);
-        assertFalse(listener.onNewMacPresence);
-        assertFalse(listener.onNewMacAbsence);
-    }
 
     @Test
     public void listener_triggered_by_packet_with_MAC() {
@@ -60,8 +89,23 @@ public class MultipleMacTrackerTest {
         Packet packet = builder.build();
         detector.accept(packet);
 
-        assertPresenceEvent();
-        assertCurrentEvent(packet);
+        listener.assertPresenceEvent(packet,mac);
+        listener.assertDetectedEvent(packet,mac);
+    }
+
+    @Test
+    public void listener_triggered_for_every_MAC_in_packet() {
+        Packet.Builder builder = Packet.builder();
+        builder.DA = mac1;
+        builder.SA = mac2;
+        builder.RA = mac3;
+        builder.TA = mac4;
+        builder.BSSID = mac5;
+        builder.localTime = Timestamp.now();
+        Packet packet = builder.build();
+        detector.accept(packet);
+        listener.assertPresenceEvent(packet,mac1,mac2,mac3,mac4,mac5);
+        listener.assertDetectedEvent(packet,mac1,mac2,mac3,mac4,mac5);
     }
 
     @Test
@@ -77,24 +121,7 @@ public class MultipleMacTrackerTest {
         listener.reset();
         detector.accept(packet2);
 
-        assertAbsenceEvent();
+        listener.assertAbsenceEvent(mac);
     }
 
-    void assertAbsenceEvent() {
-        assertFalse(listener.onMacDetected);
-        assertFalse(listener.onNewMacPresence);
-        assert(listener.onNewMacAbsence);
-    }
-
-    void assertCurrentEvent(Packet packet) {
-        MacDetectedEvent event = listener.event;
-        assertSame(mac,    event.mac);
-        assertSame(packet, event.current);
-    }
-
-    void assertPresenceEvent() {
-        assert(listener.onMacDetected);
-        assert(listener.onNewMacPresence);
-        assertFalse(listener.onNewMacAbsence);
-    }
 }

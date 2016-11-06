@@ -1,7 +1,9 @@
+import java.util.*;
+
 final class MultipleMacTracker implements MacTracker {
 
     final Listener listener;
-    MacTracker tracker;
+    final Map<Mac,MacTracker> trackers = new HashMap<>();
 
     private MultipleMacTracker(Listener listener) {
         this.listener = listener;
@@ -12,9 +14,26 @@ final class MultipleMacTracker implements MacTracker {
 
     @Override
     public void accept(Packet packet) {
-        if (tracker==null) {
-            tracker = SingleMacTracker.of(packet.DA,listener);
+        createAnyMissingTrackers(packet);
+        notifyAllTrackers(packet);
+    }
+
+    void notifyAllTrackers(Packet packet) {
+        for (MacTracker tracker : trackers.values()) {
+            tracker.accept(packet);
         }
-        tracker.accept(packet);
+    }
+
+    void createAnyMissingTrackers(Packet packet) {
+        for (Mac mac : packet.allMacs()) {
+            ensureTrackerExistsFor(mac);
+        }
+    }
+
+    void ensureTrackerExistsFor(Mac mac) {
+        if (!trackers.containsKey(mac)) {
+            MacTracker tracker = SingleMacTracker.of(mac,listener);
+            trackers.put(mac,tracker);
+        }
     }
 }
