@@ -8,4 +8,13 @@ final class MacDetectedEvent {
         this.current = current;
         this.previous = previous;
     }
+
+    String time(Packet packet) {
+        return packet==null ? "" : packet.localTime.toString();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s current=%s previous=%s",mac,time(current),time(previous));
+    }
 }
