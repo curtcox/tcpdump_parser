@@ -22,39 +22,23 @@ final class SingleMacTracker implements MacTracker {
 
     @Override
     public void accept(Packet packet) {
-        checkMacDetected(packet);
-        checkNewMacPresence(packet);
-        checkNewMacAbsence(packet);
-        updateLastSeen(packet);
-    }
-
-    boolean matching(Packet packet) {
-        return packet.contains(mac);
-    }
-
-    void checkNewMacPresence(Packet packet) {
-        if (!present && matching(packet) && lastSeenLongEnoughAgo(packet)) {
-            present = true;
-            listener.onNewMacPresence(detectedEvent(packet));
-        }
-    }
-
-    void checkNewMacAbsence(Packet packet) {
-        if (present && !matching(packet) && lastSeenPacketWithMAC != null && lastSeenLongEnoughAgo(packet)) {
-            present = false;
-            listener.onNewMacAbsence(detectedEvent(null));
-        }
-    }
-
-    void checkMacDetected(Packet packet) {
-        if (matching(packet)) {
-            listener.onMacDetected(detectedEvent(packet));
-        }
-    }
-
-    void updateLastSeen(Packet packet) {
-        if (matching(packet)) {
+        // This method was profiled and optimized, since replacing it with a NOP showed it accounts
+        // for more than half of (typical?) execution time in running packets through a
+        // MultipleMacTracker. Inlining the methods and caching results as done below, roughly
+        // cuts the execution time of this method in half.
+        if (packet.contains(mac)) {
+            final MacDetectedEvent event = detectedEvent(packet);
+            listener.onMacDetected(event);
+            if (!present && lastSeenLongEnoughAgo(packet)) {
+                present = true;
+                listener.onNewMacPresence(event);
+            }
             lastSeenPacketWithMAC = packet;
+        } else {
+            if (present && lastSeenPacketWithMAC != null && lastSeenLongEnoughAgo(packet)) {
+                present = false;
+                listener.onNewMacAbsence(detectedEvent(null));
+            }
         }
     }
 
