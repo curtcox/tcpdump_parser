@@ -3,7 +3,7 @@ import java.util.*;
 final class MultipleMacTracker implements MacTracker {
 
     final Listener listener;
-    final Map<Mac,MacTracker> trackers = new HashMap<>();
+    final Map<Mac,SingleMacTracker> trackers = new HashMap<>();
 
     private MultipleMacTracker(Listener listener) {
         this.listener = listener;
@@ -32,8 +32,7 @@ final class MultipleMacTracker implements MacTracker {
 
     void ensureTrackerExistsFor(Mac mac) {
         if (!trackers.containsKey(mac)) {
-            MacTracker tracker = SingleMacTracker.of(mac,listener);
-            trackers.put(mac,tracker);
+            trackers.put(mac,SingleMacTracker.of(mac,listener));
         }
     }
 }
