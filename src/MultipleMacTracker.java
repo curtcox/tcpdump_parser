@@ -25,18 +25,18 @@ final class MultipleMacTracker implements MacTracker {
         }
 
         @Override
-        public void onNewMacAbsence(MacDetectedEvent event) {
+        public void onNewMacAbsence(MacPresenceEvent event) {
             listener.onNewMacAbsence(event);
             trackers.removeTrackerFor(event.mac);
         }
 
         @Override
-        public void onNewMacPresence(MacDetectedEvent event) {
+        public void onNewMacPresence(MacPresenceEvent event) {
             listener.onNewMacPresence(event);
         }
 
         @Override
-        public void onMacDetected(MacDetectedEvent event) {
+        public void onMacDetected(MacPresenceEvent event) {
             listener.onMacDetected(event);
         }
     }

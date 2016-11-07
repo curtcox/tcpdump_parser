@@ -13,22 +13,22 @@ public class SingleMacTrackerTest {
         boolean onNewMacPresence;
         boolean onMacDetected;
         boolean onNewMacAbsence;
-        MacDetectedEvent event;
+        MacPresenceEvent event;
 
         @Override
-        public void onNewMacAbsence(MacDetectedEvent event) {
+        public void onNewMacAbsence(MacPresenceEvent event) {
             onNewMacAbsence = true;
             this.event = event;
         }
 
         @Override
-        public void onNewMacPresence(MacDetectedEvent event) {
+        public void onNewMacPresence(MacPresenceEvent event) {
             onNewMacPresence = true;
             this.event = event;
         }
 
         @Override
-        public void onMacDetected(MacDetectedEvent event) {
+        public void onMacDetected(MacPresenceEvent event) {
             onMacDetected = true;
             this.event = event;
         }
@@ -90,13 +90,13 @@ public class SingleMacTrackerTest {
     }
 
     void assertCurrentEvent(Packet packet) {
-        MacDetectedEvent event = listener.event;
+        MacPresenceEvent event = listener.event;
         assertSame(mac,    event.mac);
         assertSame(packet, event.current);
     }
 
     void assertPreviousEvent(Packet packet) {
-        MacDetectedEvent event = listener.event;
+        MacPresenceEvent event = listener.event;
         assertSame(mac,    event.mac);
         assertSame(packet, event.previous);
     }

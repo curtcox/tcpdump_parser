@@ -16,22 +16,22 @@ public class MultipleMacTrackerTest {
     MultipleMacTracker detector = MultipleMacTracker.of(listener);
 
     static class Listener implements MacTracker.Listener {
-        Map<Mac,MacDetectedEvent> presence = new HashMap<>();
-        Map<Mac,MacDetectedEvent> detected = new HashMap<>();
-        Map<Mac,MacDetectedEvent> absence = new HashMap<>();
+        Map<Mac, MacPresenceEvent> presence = new HashMap<>();
+        Map<Mac, MacPresenceEvent> detected = new HashMap<>();
+        Map<Mac, MacPresenceEvent> absence = new HashMap<>();
 
         @Override
-        public void onNewMacAbsence(MacDetectedEvent event) {
+        public void onNewMacAbsence(MacPresenceEvent event) {
             absence.put(event.mac,event);
         }
 
         @Override
-        public void onNewMacPresence(MacDetectedEvent event) {
+        public void onNewMacPresence(MacPresenceEvent event) {
             presence.put(event.mac,event);
         }
 
         @Override
-        public void onMacDetected(MacDetectedEvent event) {
+        public void onMacDetected(MacPresenceEvent event) {
             detected.put(event.mac,event);
         }
 
@@ -43,7 +43,7 @@ public class MultipleMacTrackerTest {
 
         void assertAbsenceEvent(Mac... macs) {
             for (Mac mac : macs) {
-                MacDetectedEvent event = absence.get(mac);
+                MacPresenceEvent event = absence.get(mac);
                 assertNotNull(event);
                 assertSame(mac,    event.mac);
             }
@@ -51,7 +51,7 @@ public class MultipleMacTrackerTest {
 
         void assertDetectedEvent(Packet packet, Mac... macs) {
             for (Mac mac : macs) {
-                MacDetectedEvent event = detected.get(mac);
+                MacPresenceEvent event = detected.get(mac);
                 assertNotNull(event);
                 assertSame(mac,    event.mac);
                 assertSame(packet, event.current);
@@ -60,7 +60,7 @@ public class MultipleMacTrackerTest {
 
         void assertPresenceEvent(Packet packet, Mac... macs) {
             for (Mac mac : macs) {
-                MacDetectedEvent event = presence.get(mac);
+                MacPresenceEvent event = presence.get(mac);
                 assertNotNull(event);
                 assertSame(mac,    event.mac);
                 assertSame(packet, event.current);
