@@ -3,18 +3,42 @@ import java.util.*;
 final class MultipleMacTracker implements MacTracker {
 
     final Listener listener;
-    // A HashMap is the obvious choice instead of the set, array, count combo below.
-    // However, notifyAllTrackers is a profiled hot-spot and the implementation below is
-    // considerably faster.
-    private final Set<Mac> macs = new HashSet<>();
-    private int count = 0;
-    private final SingleMacTracker[] trackers = new SingleMacTracker[10_000];
+    private final Map<Mac,SingleMacTracker> macs = new HashMap<>();
+    private SingleMacTracker[] trackers = new SingleMacTracker[0];
 
     private MultipleMacTracker(Listener listener) {
         this.listener = listener;
     }
     static MultipleMacTracker of(Listener listener) {
-        return new MultipleMacTracker(listener);
+        ListenerWrapper wrapper = new ListenerWrapper(listener);
+        MultipleMacTracker trackers = new MultipleMacTracker(wrapper);
+        wrapper.trackers = trackers;
+        return trackers;
+    }
+
+    static class ListenerWrapper implements Listener {
+        final Listener listener;
+        MultipleMacTracker trackers;
+
+        ListenerWrapper(Listener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public void onNewMacAbsence(MacDetectedEvent event) {
+            listener.onNewMacAbsence(event);
+            trackers.removeTrackerFor(event.mac);
+        }
+
+        @Override
+        public void onNewMacPresence(MacDetectedEvent event) {
+            listener.onNewMacPresence(event);
+        }
+
+        @Override
+        public void onMacDetected(MacDetectedEvent event) {
+            listener.onMacDetected(event);
+        }
     }
 
     @Override
@@ -24,8 +48,8 @@ final class MultipleMacTracker implements MacTracker {
     }
 
     void notifyAllTrackers(Packet packet) {
-        for (int i=0; i<count; i++) {
-            trackers[i].accept(packet);
+        for (SingleMacTracker tracker : trackers) {
+            tracker.accept(packet);
         }
     }
 
@@ -36,16 +60,23 @@ final class MultipleMacTracker implements MacTracker {
     }
 
     void ensureTrackerExistsFor(Mac mac) {
-        if (!macs.contains(mac)) {
+        if (!macs.containsKey(mac)) {
             createTrackerFor(mac);
         }
     }
 
     void createTrackerFor(Mac mac) {
         SingleMacTracker tracker = SingleMacTracker.of(mac,listener);
-        macs.add(mac);
-        trackers[count] = tracker;
-        count++;
+        macs.put(mac,tracker);
+        createTrackerArray();
     }
 
+    void removeTrackerFor(Mac mac) {
+        macs.remove(mac);
+        createTrackerArray();
+    }
+
+    void createTrackerArray() {
+        trackers = macs.values().toArray(new SingleMacTracker[macs.size()]);
+    }
 }
