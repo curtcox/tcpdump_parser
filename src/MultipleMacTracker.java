@@ -3,7 +3,12 @@ import java.util.*;
 final class MultipleMacTracker implements MacTracker {
 
     final Listener listener;
-    final Map<Mac,SingleMacTracker> trackers = new HashMap<>();
+    // A HashMap is the obvious choice instead of the set, array, count combo below.
+    // However, notifyAllTrackers is a profiled hot-spot and the implementation below is
+    // considerably faster.
+    private final Set<Mac> macs = new HashSet<>();
+    private int count = 0;
+    private final SingleMacTracker[] trackers = new SingleMacTracker[10_000];
 
     private MultipleMacTracker(Listener listener) {
         this.listener = listener;
@@ -19,8 +24,8 @@ final class MultipleMacTracker implements MacTracker {
     }
 
     void notifyAllTrackers(Packet packet) {
-        for (MacTracker tracker : trackers.values()) {
-            tracker.accept(packet);
+        for (int i=0; i<count; i++) {
+            trackers[i].accept(packet);
         }
     }
 
@@ -31,8 +36,16 @@ final class MultipleMacTracker implements MacTracker {
     }
 
     void ensureTrackerExistsFor(Mac mac) {
-        if (!trackers.containsKey(mac)) {
-            trackers.put(mac,SingleMacTracker.of(mac,listener));
+        if (!macs.contains(mac)) {
+            createTrackerFor(mac);
         }
     }
+
+    void createTrackerFor(Mac mac) {
+        SingleMacTracker tracker = SingleMacTracker.of(mac,listener);
+        macs.add(mac);
+        trackers[count] = tracker;
+        count++;
+    }
+
 }
