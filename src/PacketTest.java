@@ -49,11 +49,11 @@ public class PacketTest {
     public void toString_contains_localTime_when_specified() {
         Packet.Builder builder = Packet.builder();
         builder.localTime = Timestamp.NOON;
-        assertStringIs(builder.build(),"Packet:{localTime=12:00}");
+        assertStringIs(builder.build(),"Packet:{timestamp=12:00}");
         builder.localTime = Timestamp.MIDNIGHT;
-        assertStringIs(builder.build(),"Packet:{localTime=00:00}");
+        assertStringIs(builder.build(),"Packet:{timestamp=00:00}");
         builder.localTime = Timestamp.MAX;
-        assertStringIs(builder.build(),"Packet:{localTime=23:59:59.999999999}");
+        assertStringIs(builder.build(),"Packet:{timestamp=23:59:59.999999999}");
     }
 
     @Test

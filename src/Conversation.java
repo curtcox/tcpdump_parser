@@ -47,7 +47,7 @@ final class Conversation {
         }
 
         void add(Packet packet) {
-            Timestamp time = packet.localTime;
+            Timestamp time = packet.timestamp;
             if (begin==null) {
                 begin = time;
             }

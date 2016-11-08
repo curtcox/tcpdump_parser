@@ -2,7 +2,7 @@ import java.util.*;
 
 final class Packet {
 
-    final Timestamp localTime;
+    final Timestamp timestamp;
     final Mac BSSID;
     final Mac DA;
     final Mac RA;
@@ -22,7 +22,7 @@ final class Packet {
 
     private Packet(Builder builder) {
         line      = builder.line;
-        localTime = builder.localTime;
+        timestamp = builder.localTime;
         BSSID     = builder.BSSID;
         DA        = builder.DA;
         RA        = builder.RA;
@@ -95,7 +95,7 @@ final class Packet {
     @Override
     public String toString() {
         Map map = new TreeMap();
-        if (localTime != null) { map.put("localTime", localTime.toString());}
+        if (timestamp != null) { map.put("timestamp", timestamp.toString());}
         if (BSSID != null)     { map.put("BSSID",BSSID); }
         if (SA != null)        { map.put("SA",SA); }
         if (TA != null)        { map.put("TA",TA); }
@@ -121,12 +121,12 @@ final class Packet {
                 Objects.equals(RA,that.RA) &&
                 Objects.equals(TA,that.TA) &&
                 Objects.equals(ip,that.ip) &&
-                Objects.equals(localTime,that.localTime)
+                Objects.equals(timestamp,that.timestamp)
         ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(BSSID,SA,DA,RA,TA,ip,localTime);
+        return Objects.hash(BSSID,SA,DA,RA,TA,ip, timestamp);
     }
 }

@@ -81,7 +81,7 @@ public class Reports {
 
     void summarizeIpConversations() {
         for (Mac mac : summarizeIpPackets().allClients()) {
-            summarizeIpPackets().map(packet -> packet.localTime + " " + packet.ip ).forEach(x -> print(x));
+            summarizeIpPackets().map(packet -> packet.timestamp + " " + packet.ip ).forEach(x -> print(x));
         }
     }
 

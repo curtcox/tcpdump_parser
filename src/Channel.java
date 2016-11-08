@@ -1,4 +1,3 @@
-import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,7 +50,7 @@ final class Channel implements Comparable<Channel> {
         }
 
         void add(Packet packet) {
-            Timestamp time = packet.localTime;
+            Timestamp time = packet.timestamp;
             check(time);
             if (begin==null) {
                 begin = time;

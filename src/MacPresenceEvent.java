@@ -13,7 +13,7 @@ final class MacPresenceEvent {
     }
 
     String time(Packet packet) {
-        return packet==null ? "" : packet.localTime.toString();
+        return packet==null ? "" : packet.timestamp.toString();
     }
 
     @Override
@@ -22,7 +22,7 @@ final class MacPresenceEvent {
     }
 
     public static MacPresenceEvent present(Mac mac, Packet current, Packet previousLastSeenPacketWithMAC) {
-        return new MacPresenceEvent(mac,current.localTime,current,previousLastSeenPacketWithMAC);
+        return new MacPresenceEvent(mac,current.timestamp,current,previousLastSeenPacketWithMAC);
     }
 
     public static MacPresenceEvent absent(Mac mac, Timestamp timestamp, Packet lastSeenPacketWithMAC) {

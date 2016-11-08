@@ -1,5 +1,3 @@
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -42,7 +40,7 @@ final class Packets {
                     builder.DA = packet.DA;
                     builder.SA = packet.SA;
                     builder.ip = packet.ip;
-                    builder.localTime = packet.localTime.truncatedToSeconds();
+                    builder.localTime = packet.timestamp.truncatedToSeconds();
                     return builder.build();
                 }).distinct());
     }

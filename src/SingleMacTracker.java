@@ -37,17 +37,17 @@ final class SingleMacTracker implements MacTracker {
         } else {
             if (present && lastSeenPacketWithMAC != null && lastSeenLongEnoughAgo(packet)) {
                 present = false;
-                listener.onNewMacAbsence(absentEvent(packet.localTime));
+                listener.onNewMacAbsence(absentEvent(packet.timestamp));
             }
         }
     }
 
     boolean lastSeenLongEnoughAgo(Packet packet) {
-        return gapDetector.isGapBetween(previousTime(),packet.localTime);
+        return gapDetector.isGapBetween(previousTime(),packet.timestamp);
     }
 
     Timestamp previousTime() {
-        return lastSeenPacketWithMAC == null ? null : lastSeenPacketWithMAC.localTime;
+        return lastSeenPacketWithMAC == null ? null : lastSeenPacketWithMAC.timestamp;
     }
 
     MacPresenceEvent presentEvent(Packet current) {

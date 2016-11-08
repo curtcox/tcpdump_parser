@@ -136,7 +136,7 @@ public class ChannelTest {
         builder.localTime = localTime;
         Channel channel = of(builder.build());
         Packet packet = channel.conversations.get(0).packets.get(0);
-        assertSame(channel.begin,packet.localTime);
+        assertSame(channel.begin,packet.timestamp);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class ChannelTest {
         builder.localTime = localTime;
         Channel channel = of(builder.build());
         Packet packet = channel.conversations.get(0).packets.get(0);
-        assertSame(channel.end,packet.localTime);
+        assertSame(channel.end,packet.timestamp);
     }
 
     @Test

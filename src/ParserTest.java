@@ -123,9 +123,9 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
 
     @Test
     public void localTime() {
-        assertEquals(Timestamp.of(07,21,41,535679000),parse(line1).localTime);
-        assertEquals(Timestamp.of(11,37,22,811107000),parse(line2).localTime);
-        assertEquals(Timestamp.of(16,50,50,421556000),parse(line17).localTime);
+        assertEquals(Timestamp.of(07,21,41,535679000),parse(line1).timestamp);
+        assertEquals(Timestamp.of(11,37,22,811107000),parse(line2).timestamp);
+        assertEquals(Timestamp.of(16,50,50,421556000),parse(line17).timestamp);
     }
 
     @Test

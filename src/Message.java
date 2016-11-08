@@ -53,9 +53,9 @@ final class Message {
         void add(Packet packet) {
             packets.add(packet);
             if (begin == null) {
-                begin = packet.localTime;
+                begin = packet.timestamp;
             }
-            end = packet.localTime;
+            end = packet.timestamp;
             if (direction==null) {
                 direction = PacketDirection.of(packet);
                 server = direction.server;
@@ -91,7 +91,7 @@ final class Message {
     private String line(Packet packet) {
         String arrow = PacketDirection.of(packet).arrow;
         return String.format("%s %s %s %s %s %s",
-                packet.localTime,port(packet),tcp(packet),arrow,length(packet),http(packet));
+                packet.timestamp,port(packet),tcp(packet),arrow,length(packet),http(packet));
     }
 
     private static String length(Packet packet) {
