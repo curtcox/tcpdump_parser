@@ -18,8 +18,24 @@ public class Reports {
     }
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         Reports reports = new Reports();
-        reports.printTimeline();
+        reports.printPresenceChangesForAllMacs();
+        long end = System.currentTimeMillis();
+        long duration = end - start;
+        reports.print("Duration = " + duration);
+    }
+
+    void printPresenceChangesForAllMacs() {
+        MacTracker.Listener listener = new MacPresenceChangeAction(e->{print(e);});
+        MacTracker tracker = MultipleMacTracker.of(listener);
+        packets().forEach(p -> tracker.accept(p));
+    }
+
+    void printPresenceChangesForOneMac(Mac mac) {
+        MacTracker.Listener listener = new MacPresenceChangeAction(e->{print(e);});
+        MacTracker tracker = SingleMacTracker.of(mac,listener);
+        packets().forEach(p -> tracker.accept(p));
     }
 
     void printTimeline() {

@@ -27,7 +27,7 @@ final class SingleMacTracker implements MacTracker {
         // MultipleMacTracker. Inlining the methods and caching results as done below, roughly
         // cuts the execution time of this method in half.
         if (packet.contains(mac)) {
-            final MacPresenceEvent event = presenceEvent(packet);
+            final MacPresenceEvent event = presentEvent(packet);
             listener.onMacDetected(event);
             if (!present && lastSeenLongEnoughAgo(packet)) {
                 present = true;
@@ -50,7 +50,7 @@ final class SingleMacTracker implements MacTracker {
         return lastSeenPacketWithMAC == null ? null : lastSeenPacketWithMAC.localTime;
     }
 
-    MacPresenceEvent presenceEvent(Packet current) {
+    MacPresenceEvent presentEvent(Packet current) {
         return MacPresenceEvent.present(mac,current, lastSeenPacketWithMAC);
     }
 
@@ -58,4 +58,9 @@ final class SingleMacTracker implements MacTracker {
         return MacPresenceEvent.absent(mac,timestamp, lastSeenPacketWithMAC);
     }
 
+    public static void main(String[] args) {
+        Mac mac = args.length < 1 ? Mac.all0 : Mac.of(args[0]);
+        Listener listener = new MacPresenceChangeAction(e->{System.out.println(e);});
+        Parser.parse(() -> System.in).forEach(packet -> SingleMacTracker.of(mac,listener));
+    }
 }
