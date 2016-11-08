@@ -12,7 +12,7 @@ final class FilteredTimelineFactory {
     }
 
     Packets packets() {
-        return Parser.parseValid(input()).reliable();
+        return Parser.parse(input()).reliable();
     }
 
     Packets ipPackets() {

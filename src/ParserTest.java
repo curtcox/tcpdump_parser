@@ -41,11 +41,11 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     Packet parse(String line) {
-        return Parser.parse(line);
+        return Parser.parse(UnparsedPacket.of(line));
     }
 
     boolean canParse(String line) {
-        return Parser.canParse(line);
+        return Parser.canParse(UnparsedPacket.of(line));
     }
 
     @Test

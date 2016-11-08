@@ -49,13 +49,12 @@ public class Reports {
     }
 
     void dumpAllPackets() {
-        Parser.parseValid(input())
-                .forEach(packet -> print(packet));
+        Parser.parse(input()).forEach(packet -> print(packet));
     }
 
     void networkQuality() {
-        long all = Parser.parseValid(input()).count();
-        long reliable = Parser.parseValid(input()).reliable().count();
+        long all = Parser.parse(input()).count();
+        long reliable = Parser.parse(input()).reliable().count();
         double percent = (reliable  * 100.0 ) / all;
         print(reliable + " / " + all + " or " + percent + "% OK");
     }
@@ -120,7 +119,7 @@ public class Reports {
     }
 
     Packets packets() {
-        return Parser.parseValid(input()).reliable();
+        return Parser.parse(input()).reliable();
     }
 
     Packets ipPackets() {

@@ -81,6 +81,7 @@ final class Packet {
         IP ip;
         DNS dns;
         String type;
+        String[] dump;
 
         Packet build() {
             return new Packet(this);

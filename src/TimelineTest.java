@@ -84,6 +84,6 @@ public class TimelineTest {
     }
 
     static Packet parse(String line) {
-        return Parser.parse(line);
+        return Parser.parse(UnparsedPacket.of(line));
     }
 }

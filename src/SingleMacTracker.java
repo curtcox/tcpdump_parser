@@ -61,6 +61,7 @@ final class SingleMacTracker implements MacTracker {
     public static void main(String[] args) {
         Mac mac = args.length < 1 ? Mac.all0 : Mac.of(args[0]);
         Listener listener = new MacPresenceChangeAction(e->{System.out.println(e);});
-        Parser.parse(() -> System.in).forEach(packet -> SingleMacTracker.of(mac,listener));
+        Parser.parse(() -> System.in).reliable()
+                .forEach(packet -> SingleMacTracker.of(mac,listener));
     }
 }

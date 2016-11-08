@@ -4,27 +4,27 @@ import java.util.function.Supplier;
 
 final class Parser {
 
-    static Packet parse(String line) {
+    static Packet parse(UnparsedPacket unparsed) {
         try {
-            return parse0(line);
+            return parse0(unparsed);
         } catch (RuntimeException e) {
-            throw new IllegalArgumentException("Unable to parse " + line,e);
+            throw new IllegalArgumentException("Unable to parse " + unparsed,e);
         }
     }
 
-    static boolean canParse(String line) {
+    static boolean canParse(UnparsedPacket unparsed) {
         try {
-            return parse0(line) != null;
+            return parse0(unparsed) != null;
         } catch (RuntimeException e) {
-            System.err.println("Unable to parse " + line);
+            System.err.println("Unable to parse " + unparsed);
             return false;
         }
     }
 
-    private static Packet parse0(String line) {
-        Fields fields     = Fields.of(line);
+    private static Packet parse0(UnparsedPacket unparsed) {
+        Fields fields     = Fields.of(unparsed.line);
         Packet.Builder builder = Packet.builder();
-        builder.line      = line;
+        builder.line      = unparsed.line;
         builder.localTime = Timestamp.parse(fields);
         builder.BSSID     = BSSID(fields);
         builder.DA        = DA(fields);
@@ -41,25 +41,13 @@ final class Parser {
         builder.ip        = IP.parse(fields);
         builder.dns       = DNS.parse(fields);
         builder.type      = Type.parse(fields);
+        builder.dump      = unparsed.dump;
         return builder.build();
     }
 
     static Packets parse(Supplier<InputStream> inputStream) {
         return Packets.of(() -> {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream.get()));
-            return reader.lines()
-                    .filter(line -> !line.trim().isEmpty())
-                    .map(line -> parse(line));
-        });
-    }
-
-    static Packets parseValid(Supplier<InputStream> inputStream) {
-        return Packets.of(() -> {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream.get()));
-            return reader.lines()
-                    .filter(line -> !line.trim().isEmpty())
-                    .filter(line -> !line.startsWith("\t0x"))
-                    .filter(line -> Parser.canParse(line))
+            return UnparsedPacketReader.of(inputStream).packets()
                     .map(line -> parse(line));
         });
     }
