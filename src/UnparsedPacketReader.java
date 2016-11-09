@@ -28,13 +28,23 @@ final class UnparsedPacketReader {
         String nextLine = null;
         String[] dump = new String[0];
 
+        boolean summary(String line) {
+            return  line != null &&
+                    !line.trim().isEmpty() &&
+                    !line.startsWith("\t0x") &&
+                    Parser.canParse(UnparsedPacket.of(line,dump));
+        }
+
         @Override
         public boolean hasNext() {
-            if (summary(nextLine)) {
+            if (nextLine != null) {
                 return true;
             } else {
                 try {
                     nextLine = reader.readLine();
+                    while (nextLine != null && !summary(nextLine)) {
+                        nextLine = reader.readLine();
+                    }
                     return summary(nextLine);
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
@@ -42,12 +52,6 @@ final class UnparsedPacketReader {
             }
         }
 
-        boolean summary(String line) {
-            return   line != null &&
-                    !line.trim().isEmpty() &&
-                    !line.startsWith("\t0x") &&
-                    Parser.canParse(UnparsedPacket.of(line,dump));
-        }
 
         @Override
         public UnparsedPacket next() {

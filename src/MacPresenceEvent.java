@@ -4,12 +4,14 @@ final class MacPresenceEvent {
     final Timestamp timestamp;
     final Packet current;
     final Packet previous;
+    final boolean present;
 
     private MacPresenceEvent(Mac mac, Timestamp timestamp, Packet current, Packet previous) {
         this.mac = mac;
         this.timestamp = timestamp;
         this.current = current;
         this.previous = previous;
+        present = current != null;
     }
 
     String time(Packet packet) {
