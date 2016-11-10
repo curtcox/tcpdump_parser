@@ -16,4 +16,8 @@ final class UnparsedPacket {
         return new UnparsedPacket(line,new String[0]);
     }
 
+    @Override
+    public String toString() {
+        return line;
+    }
 }

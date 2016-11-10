@@ -35,20 +35,24 @@ final class UnparsedPacketReader {
                     Parser.canParse(UnparsedPacket.of(line,dump));
         }
 
+        void readNext() {
+            try {
+                nextLine = reader.readLine();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
         @Override
         public boolean hasNext() {
             if (nextLine != null) {
                 return true;
             } else {
-                try {
-                    nextLine = reader.readLine();
-                    while (nextLine != null && !summary(nextLine)) {
-                        nextLine = reader.readLine();
-                    }
-                    return summary(nextLine);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
+                readNext();
+                while (nextLine != null && !summary(nextLine)) {
+                    readNext();
                 }
+                return summary(nextLine);
             }
         }
 
@@ -56,12 +60,16 @@ final class UnparsedPacketReader {
         @Override
         public UnparsedPacket next() {
             if (summary(nextLine) || hasNext()) {
-                String line = nextLine;
-                nextLine = null;
-                return UnparsedPacket.of(line,dump);
+                return constructPacket();
             } else {
                 throw new NoSuchElementException();
             }
+        }
+
+        UnparsedPacket constructPacket() {
+            UnparsedPacket packet = UnparsedPacket.of(nextLine,dump);
+            nextLine = null;
+            return packet;
         }
     }
 }
