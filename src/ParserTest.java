@@ -318,6 +318,8 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
         assertSA(line6, "5a:5a:5a:5a:1f:c4");
         assertSA(line7, null);
         assertSA(line8, "5a:5a:5a:5a:76:58");
+        assertSA(line11, "5a:5a:5a:5a:5d:f5");
+        assertSA(line12, "5a:5a:5a:5a:67:1b");
         assertSA(line16, "ba:27:eb:05:20:10");
         assertSA(line17, "00:1f:5b:3b:71:14");
     }
@@ -332,6 +334,8 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
         assertDA(line6, "da:da:da:da:e4:4d");
         assertDA(line7, null);
         assertDA(line8, "da:da:da:da:ee:fd");
+        assertDA(line11, "da:da:da:da:b8:7f");
+        assertDA(line12, "da:da:da:da:69:18");
         assertDA(line16, "b8:27:eb:05:20:10");
         assertDA(line17, "00:16:cb:ac:de:e4");
     }
