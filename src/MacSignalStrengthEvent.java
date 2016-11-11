@@ -28,7 +28,15 @@ final class MacSignalStrengthEvent {
     }
 
     private String bar(Packet current) {
-        return "";
+        StringBuilder out = new StringBuilder();
+        for (int i=0; i< strength(current); i++) {
+            out.append("*");
+        }
+        return out.toString();
+    }
+
+    int strength(Packet current) {
+        return current.signal.value - current.noise.value;
     }
 
     public static MacSignalStrengthEvent of(Mac mac, Packet current, Packet previousLastSeenPacketWithMAC) {
