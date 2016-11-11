@@ -2,11 +2,11 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-public class SingleMacTrackerTest {
+public class SingleMacPresenceTrackerTest {
 
     Mac mac = Mac.of("01:02:03:04:05:06");
     Listener listener = new Listener();
-    SingleMacTracker detector = SingleMacTracker.of(mac,listener);
+    SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener);
 
     static class Listener implements MacTracker.Listener {
 
@@ -107,7 +107,7 @@ public class SingleMacTrackerTest {
         builder.DA = mac;
         Packet packet = builder.build();
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(t1, t2) -> false);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,(t1, t2) -> false);
         detector.accept(packet);
 
         assertOnlyDetectedEvent();
@@ -120,7 +120,7 @@ public class SingleMacTrackerTest {
         builder.DA = mac;
         Packet packet = builder.build();
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(t1, t2) -> true);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,(t1, t2) -> true);
         detector.accept(packet);
 
         assertPresenceEvent();
@@ -152,7 +152,7 @@ public class SingleMacTrackerTest {
         Packet packet = builder.build();
         FakeGapDetector gapDetector = new FakeGapDetector(false);
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,gapDetector);
 
         detector.accept(packet);
 
@@ -170,7 +170,7 @@ public class SingleMacTrackerTest {
         Packet packet2 = builder.build();
         FakeGapDetector gapDetector = new FakeGapDetector(false);
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,gapDetector);
 
         detector.accept(packet1);
         detector.accept(packet2);
@@ -191,7 +191,7 @@ public class SingleMacTrackerTest {
         Packet packet2 = builder.build();
         FakeGapDetector gapDetector = new FakeGapDetector(false);
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,gapDetector);
 
         detector.accept(packet1);
         detector.accept(packet2);
@@ -211,7 +211,7 @@ public class SingleMacTrackerTest {
         builder.localTime = t2;
         Packet packet2 = builder.build();
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(ta, tb) -> true);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,(ta, tb) -> true);
 
         detector.accept(packet1);
         listener.reset();
@@ -233,7 +233,7 @@ public class SingleMacTrackerTest {
         Packet packet2 = builder.build();
         FakeGapDetector gapDetector = new FakeGapDetector(true);
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,gapDetector);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,gapDetector);
 
         detector.accept(packet1);
         detector.accept(packet2);
@@ -254,7 +254,7 @@ public class SingleMacTrackerTest {
         builder.DA = null;
         Packet packet2 = builder.build();
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(ta, tb) -> true);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,(ta, tb) -> true);
 
         detector.accept(packet1);
         listener.reset();
@@ -278,7 +278,7 @@ public class SingleMacTrackerTest {
         Packet packet2 = builder.build();
         Packet packet3 = builder.build();
 
-        SingleMacTracker detector = SingleMacTracker.of(mac,listener,(ta, tb) -> true);
+        SingleMacPresenceTracker detector = SingleMacPresenceTracker.of(mac,listener,(ta, tb) -> true);
 
         detector.accept(packet1);
         detector.accept(packet2);
