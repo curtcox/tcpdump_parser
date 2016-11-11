@@ -4,7 +4,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class MultipleMacTrackerTest {
+public class MultipleMacPresenceTrackerTest {
 
     Mac mac = Mac.of("01:02:03:04:05:06");
     Mac mac1 = Mac.of("00:02:03:04:05:07");
@@ -13,7 +13,7 @@ public class MultipleMacTrackerTest {
     Mac mac4 = Mac.of("00:02:03:04:05:0a");
     Mac mac5 = Mac.of("00:02:03:04:05:0b");
     Listener listener = new Listener();
-    MultipleMacTracker detector = MultipleMacTracker.of(listener);
+    MultipleMacPresenceTracker detector = MultipleMacPresenceTracker.of(listener);
 
     static class Listener implements MacTracker.Listener {
         Map<Mac, MacPresenceEvent> presence = new HashMap<>();

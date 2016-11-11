@@ -24,7 +24,7 @@ final class SingleMacTracker implements MacTracker {
     public void accept(Packet packet) {
         // This method was profiled and optimized, since replacing it with a NOP showed it accounts
         // for more than half of (typical?) execution time in running packets through a
-        // MultipleMacTracker. Inlining the methods and caching results as done below, roughly
+        // MultipleMacPresenceTracker. Inlining the methods and caching results as done below, roughly
         // cuts the execution time of this method in half.
         if (packet.contains(mac)) {
             final MacPresenceEvent event = presentEvent(packet);

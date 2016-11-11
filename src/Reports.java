@@ -28,7 +28,7 @@ public class Reports {
 
     void printPresenceChangesForAllMacs() {
         MacTracker.Listener listener = new MacPresenceChangeAction(e->{print(e);});
-        MacTracker tracker = MultipleMacTracker.of(listener);
+        MacTracker tracker = MultipleMacPresenceTracker.of(listener);
         packets().forEach(p -> tracker.accept(p));
     }
 
