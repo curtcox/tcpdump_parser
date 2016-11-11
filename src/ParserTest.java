@@ -389,7 +389,7 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     void assertSignal(String line, String signal) {
-        assertEquals(parse(line).signal, signal);
+        assertEquals(parse(line).signal, DB.of(signal));
     }
 
     void assertType(String line, String type) {
@@ -397,7 +397,7 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     void assertNoise(String line, String noise) {
-        assertEquals(parse(line).noise, noise);
+        assertEquals(parse(line).noise, DB.of(noise));
     }
 
     void assertOffset(String line, Long offset) {

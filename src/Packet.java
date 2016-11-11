@@ -8,8 +8,8 @@ final class Packet {
     final Mac RA;
     final Mac SA;
     final Mac TA;
-    final String signal;
-    final String noise;
+    final DB signal;
+    final DB noise;
     final String type;
     final Microseconds offset;
     final Microseconds duration;
@@ -71,8 +71,8 @@ final class Packet {
         Mac RA;
         Mac SA;
         Mac TA;
-        String signal;
-        String noise;
+        DB signal;
+        DB noise;
         Microseconds offset;
         Microseconds duration;
         RadioTap radioTap;

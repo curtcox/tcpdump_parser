@@ -52,11 +52,11 @@ final class Parser {
         });
     }
 
-    private static Mac BSSID(Fields fields)       { return mac("BSSID",fields); }
-    private static Mac RA(Fields fields)          { return mac("RA",fields); }
-    private static Mac TA(Fields fields)          { return mac("TA",fields); }
-    private static String signal(Fields fields)   { return dB("signal",fields); }
-    private static String noise(Fields fields)    { return dB("noise",fields); }
+    private static Mac BSSID(Fields fields)   { return mac("BSSID",fields); }
+    private static Mac RA(Fields fields)      { return mac("RA",fields); }
+    private static Mac TA(Fields fields)      { return mac("TA",fields); }
+    private static DB signal(Fields fields)   { return dB("signal",fields); }
+    private static DB noise(Fields fields)    { return dB("noise",fields); }
 
     private static Mac SA(Fields fields) {
         Mac SA = mac("SA",fields);
@@ -87,8 +87,8 @@ final class Parser {
         return Microseconds.parse(fields.at(1));
     }
 
-    private static String dB(String type, Fields fields)  {
-        return fields.directlyBefore(type);
+    private static DB dB(String type, Fields fields)  {
+        return DB.of(fields.directlyBefore(type));
     }
 
     private static Integer length(Fields fields)  {

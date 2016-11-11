@@ -115,7 +115,7 @@ public class PacketTest {
     @Test
     public void toString_contains_signal_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.signal = "-9dB";
+        builder.signal = DB.of("-9dB");
         Packet packet = builder.build();
         assertStringIs(packet,"Packet:{signal=-9dB}");
     }
@@ -123,7 +123,7 @@ public class PacketTest {
     @Test
     public void toString_contains_noise_when_specified() {
         Packet.Builder builder = Packet.builder();
-        builder.noise = "-2dB";
+        builder.noise = DB.of("-2dB");
         Packet packet = builder.build();
         assertStringIs(packet,"Packet:{noise=-2dB}");
     }

@@ -23,9 +23,9 @@ final class SingleMacPresenceTracker implements MacTracker {
     @Override
     public void accept(Packet packet) {
         // This method was profiled and optimized, since replacing it with a NOP showed it accounts
-        // for more than half of (typical?) execution time in running packets through a
+        // for more than half of (typical?) execution signal in running packets through a
         // MultipleMacPresenceTracker. Inlining the methods and caching results as done below, roughly
-        // cuts the execution time of this method in half.
+        // cuts the execution signal of this method in half.
         if (packet.contains(mac)) {
             final MacPresenceEvent event = presentEvent(packet);
             listener.onMacDetected(event);
@@ -61,7 +61,8 @@ final class SingleMacPresenceTracker implements MacTracker {
     public static void main(String[] args) {
         Mac mac = args.length < 1 ? Mac.all0 : Mac.of(args[0]);
         MacPresenceEvent.Listener listener = new MacPresenceChangeAction(e->{System.out.println(e);});
+        MacTracker tracker = SingleMacPresenceTracker.of(mac,listener);
         Parser.parse(() -> System.in).reliable()
-                .forEach(packet -> SingleMacPresenceTracker.of(mac,listener));
+                .forEach(packet -> tracker.accept(packet));
     }
 }
