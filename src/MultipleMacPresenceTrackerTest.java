@@ -15,7 +15,7 @@ public class MultipleMacPresenceTrackerTest {
     Listener listener = new Listener();
     MultipleMacPresenceTracker detector = MultipleMacPresenceTracker.of(listener);
 
-    static class Listener implements MacTracker.Listener {
+    static class Listener implements MacPresenceEvent.Listener {
         Map<Mac, MacPresenceEvent> presence = new HashMap<>();
         Map<Mac, MacPresenceEvent> detected = new HashMap<>();
         Map<Mac, MacPresenceEvent> absence = new HashMap<>();

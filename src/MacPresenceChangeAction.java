@@ -1,6 +1,6 @@
 import java.util.function.Consumer;
 
-final class MacPresenceChangeAction implements MacTracker.Listener {
+final class MacPresenceChangeAction implements MacPresenceEvent.Listener {
 
     final Consumer<MacPresenceEvent> consumer;
 

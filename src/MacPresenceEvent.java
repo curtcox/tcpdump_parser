@@ -6,6 +6,12 @@ final class MacPresenceEvent {
     final Packet previous;
     final boolean present;
 
+    interface Listener {
+        void onNewMacAbsence(MacPresenceEvent event);
+        void onNewMacPresence(MacPresenceEvent event);
+        void onMacDetected(MacPresenceEvent event);
+    }
+
     private MacPresenceEvent(Mac mac, Timestamp timestamp, Packet current, Packet previous) {
         this.mac = mac;
         this.timestamp = timestamp;
