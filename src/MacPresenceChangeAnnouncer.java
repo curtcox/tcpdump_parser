@@ -20,7 +20,6 @@ final class MacPresenceChangeAnnouncer implements Consumer<MacPresenceEvent> {
 
     void say(String message) {
         Speaker.say(message);
-        print(message);
     }
 
     public static void main(String[] args) {
