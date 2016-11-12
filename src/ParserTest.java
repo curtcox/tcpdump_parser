@@ -34,6 +34,9 @@ String line14 = "07:16:21.770393 1180213370us tsft -39dB signal -99dB noise ante
 String line15 = "21:45:29.292557 IP 10.0.1.6.51185 > 10.0.1.70.rfb: Flags [.], ack 4, win 4191, options [nop,nop,TS val 1924602467 ecr 121440208], length 0";
 String line16 = "21:53:13.432996 ba:27:eb:05:20:10 (oui Unknown) > b8:27:eb:05:20:10 (oui Unknown), ethertype Unknown (0x886c), length 86: ";
 String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:de:e4 (oui Unknown), ethertype IPv6 (0x86dd), length 86: bobs-bass-pro.local.55390 > cooper-mini-3.local.ssh: Flags [.], ack 231736, win 4060, options [nop,nop,TS val 1993124491 ecr 622095219], length 0";
+String line18 = "12:27:51.797934 f8:1e:df:f8:02:f5 (oui Unknown) > Broadcast, ethertype ARP (0x0806), length 60: Request who-has 10.0.1.6 tell 10.0.1.14, length 46";
+String line19 = "12:27:51.797966 00:1f:5b:3b:71:14 (oui Unknown) > f8:1e:df:f8:02:f5 (oui Unknown), ethertype ARP (0x0806), length 42: Reply 10.0.1.6 is-at 00:1f:5b:3b:71:14 (oui Unknown), length 28";
+String line20 = "12:27:31.355104 00:1f:5b:3b:71:14 (oui Unknown) > b8:c7:5d:cc:ee:fd (oui Unknown), ethertype IPv4 (0x0800), length 82: 10.0.1.6.56518 > 10.0.1.1.domain: 42263+ PTR? 70.1.0.10.in-addr.arpa. (40)";
 
     @Test
     public void parse_returns_a_packet() {
@@ -67,6 +70,9 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
         assert(canParse(line15));
         assert(canParse(line16));
         assert(canParse(line17));
+        assert(canParse(line18));
+        assert(canParse(line19));
+        assert(canParse(line20));
     }
 
     @Test
