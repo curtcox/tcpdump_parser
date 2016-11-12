@@ -10,7 +10,7 @@ final class Packet {
     final Mac TA;
     final DB signal;
     final DB noise;
-    final String type;
+    final Type type;
     final Microseconds offset;
     final Microseconds duration;
     final Integer length;
@@ -80,7 +80,7 @@ final class Packet {
         HTTP http;
         IP ip;
         DNS dns;
-        String type;
+        Type type;
         String[] dump;
 
         Packet build() {

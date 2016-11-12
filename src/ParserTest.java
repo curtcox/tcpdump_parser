@@ -393,7 +393,7 @@ String line17 = "16:50:50.421556 00:1f:5b:3b:71:14 (oui Unknown) > 00:16:cb:ac:d
     }
 
     void assertType(String line, String type) {
-        assertEquals(parse(line).type, type);
+        assertEquals(parse(line).type, Type.of(type));
     }
 
     void assertNoise(String line, String noise) {
