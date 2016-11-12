@@ -32,13 +32,11 @@ final class RadioTap {
 
     static RadioTap parse(Fields fields) {
         Builder builder = builder();
-        for (String field : fields) {
-            if (field.equals("bad-fcs")) { builder.badFcs = true;}
-            if (field.equals("fragmented")) {builder.fragmented = true;}
-            if (field.equals("preamble")) {builder.shortPreamble = true;}
-            if (field.equals("wep")) {builder.wep = true;}
-            if (field.equals("cfp")) {builder.cfp = true;}
-        }
+        builder.badFcs        = fields.contains("bad-fcs");
+        builder.fragmented    = fields.contains("fragmented");
+        builder.shortPreamble = fields.contains("preamble");
+        builder.wep           = fields.contains("wep");
+        builder.cfp           = fields.contains("cfp");
         return builder.build();
     }
 }

@@ -103,12 +103,8 @@ final class Parser {
     }
 
     private static Mac mac(String type,Fields fields) {
-        for (String field : fields) {
-            if (field.startsWith(type)) {
-                return Mac.of(field.split(type + ":")[1]);
-            }
-        }
-        return null;
+        String value = fields.firstStartingWith(type);
+        return value==null ? null : Mac.of(value.split(type + ":")[1]);
     }
 
     private static int arrow(Fields fields) {

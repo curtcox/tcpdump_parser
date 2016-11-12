@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 
-final class Fields implements Iterable<String> {
+final class Fields {
 
     private String[] parts;
 
@@ -68,8 +68,26 @@ final class Fields implements Iterable<String> {
         return -1;
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        return Arrays.asList(parts).iterator();
+    boolean contains(String value) {
+        for (String field : parts) {
+            if (field.equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    Iterable<String> all() {
+        return Arrays.asList(parts);
+    }
+
+    String firstStartingWith(String prefix) {
+        for (String field : parts) {
+            if (field.startsWith(prefix)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
 }

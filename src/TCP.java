@@ -33,12 +33,7 @@ final class TCP {
     }
 
     static boolean validTCP(Fields parts) {
-        for (String part : parts) {
-            if (part.equals("Flags")) {
-                return true;
-            }
-        }
-        return false;
+        return parts.contains("Flags");
     }
 
     static Builder builder() {

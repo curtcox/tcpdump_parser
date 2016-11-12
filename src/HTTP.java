@@ -29,7 +29,7 @@ final class HTTP {
 
     static boolean isHTTP(Fields parts) {
         boolean lengthFound = false;
-        for (String part : parts) {
+        for (String part : parts.all()) {
             if (lengthFound && part.startsWith("HTTP")) {
                 return true;
             }

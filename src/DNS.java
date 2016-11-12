@@ -18,21 +18,11 @@ final class DNS {
     }
 
     static boolean valid(Fields parts) {
-        for (String part : parts) {
-            if (part.equals("A?") || part.equals("CNAME")) {
-                return true;
-            }
-        }
-        return false;
+        return parts.contains("A?") || parts.contains("CNAME");
     }
 
     private static boolean query(Fields parts) {
-        for (String part : parts) {
-            if (part.equals("A?")) {
-                return true;
-            }
-        }
-        return false;
+        return parts.contains("A?");
     }
 
     private static Host A(Fields parts) {
