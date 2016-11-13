@@ -3,10 +3,11 @@ import java.util.stream.Collectors;
 
 final class MacListPresenceTracker implements MacTracker {
 
-    final List<SingleMacPresenceTracker> trackers;
+    final MacTracker trackers;
 
     private MacListPresenceTracker(List<Mac> macs, MacPresenceEvent.Listener listener) {
-        trackers = macs.stream().map(m -> SingleMacPresenceTracker.of(m,listener)).collect(Collectors.toList());
+        trackers = MacTrackerList.of(
+                macs.stream().map(m -> SingleMacPresenceTracker.of(m,listener)).collect(Collectors.toList()));
     }
 
     static MacListPresenceTracker of(List<Mac> macs, MacPresenceEvent.Listener listener) {
@@ -15,8 +16,6 @@ final class MacListPresenceTracker implements MacTracker {
 
     @Override
     public void accept(Packet packet) {
-        for (SingleMacPresenceTracker tracker : trackers) {
-            tracker.accept(packet);
-        }
+        trackers.accept(packet);
     }
 }
