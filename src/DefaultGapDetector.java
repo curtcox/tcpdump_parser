@@ -2,8 +2,17 @@ import static java.lang.Math.*;
 
 final class DefaultGapDetector implements GapDetector {
 
-    static final long gap        = 1_000_000_000L * 60;
+    final long gap;
+    static final long minute        = 1_000_000_000L * 60;
     static final long full_cycle = 1_000_000_000L * 60 * 60 * 24;
+
+    private DefaultGapDetector(long gap) {
+        this.gap = gap;
+    }
+
+    static DefaultGapDetector minutes(int minutes) {
+        return new DefaultGapDetector(minutes * minute);
+    }
 
     @Override
     public boolean isGapBetween(Timestamp t1, Timestamp t2) {

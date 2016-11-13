@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 
 public class DefaultGapDetectorTest {
 
-    DefaultGapDetector detector = new DefaultGapDetector();
+    DefaultGapDetector detector = DefaultGapDetector.minutes(1);
 
     @Test
     public void no_gap() {

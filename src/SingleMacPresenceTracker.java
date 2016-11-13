@@ -13,7 +13,7 @@ final class SingleMacPresenceTracker implements MacTracker {
     }
 
     static SingleMacPresenceTracker of(Mac mac, MacPresenceEvent.Listener listener) {
-        return new SingleMacPresenceTracker(mac,listener, new DefaultGapDetector());
+        return new SingleMacPresenceTracker(mac,listener, DefaultGapDetector.minutes(3));
     }
 
     static SingleMacPresenceTracker of(Mac mac, MacPresenceEvent.Listener listener, GapDetector gapDetector) {
