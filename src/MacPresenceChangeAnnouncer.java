@@ -23,29 +23,16 @@ final class MacPresenceChangeAnnouncer implements Consumer<MacPresenceEvent> {
     }
 
     public static void main(String[] args) {
-        announce(namesFromCommandLine(args));
+        announce(Main.of(args).namesFromCommandLine());
     }
 
     static void announce(Map<Mac,String> names) {
         print("tracking " + names);
-        MacTracker tracker = trackerFor(names);
-        Parser.parse(() -> System.in).reliable()
-                .forEach(packet -> tracker.accept(packet));
+        Main.forEachReliablePacket(trackerFor(names));
     }
 
     static MacTracker trackerFor(Map<Mac,String> names) {
-        List<Mac> macs = new ArrayList(names.keySet());
-        MacPresenceEvent.Listener listener = new MacPresenceChangeAction(MacPresenceChangeAnnouncer.of(names));
-        return MacListPresenceTracker.of(macs,listener);
-    }
-
-    static Map<Mac,String> namesFromCommandLine(String[] args) {
-        Map<Mac,String> names = new HashMap<>();
-        for (String arg : args) {
-            String[] parts = arg.split("=");
-            names.put(Mac.of(parts[0]),parts[1]);
-        }
-        return names;
+        return MacListPresenceTracker.of(names.keySet(),MacPresenceChangeAction.of(MacPresenceChangeAnnouncer.of(names)));
     }
 
     static void print(String message) {

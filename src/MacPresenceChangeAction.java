@@ -4,8 +4,12 @@ final class MacPresenceChangeAction implements MacPresenceEvent.Listener {
 
     final Consumer<MacPresenceEvent> consumer;
 
-    MacPresenceChangeAction(Consumer<MacPresenceEvent> consumer) {
+    private MacPresenceChangeAction(Consumer<MacPresenceEvent> consumer) {
         this.consumer = consumer;
+    }
+
+    static MacPresenceChangeAction of(Consumer<MacPresenceEvent> consumer) {
+        return new MacPresenceChangeAction(consumer);
     }
 
     @Override

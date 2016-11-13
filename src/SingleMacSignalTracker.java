@@ -37,9 +37,7 @@ final class SingleMacSignalTracker implements MacTracker {
     public static void main(String[] args) {
         Mac mac = args.length < 1 ? Mac.all0 : Mac.of(args[0]);
         print("Listening for " + mac);
-        MacTracker tracker = SingleMacSignalTracker.of(mac,e -> {print(e);});
-        Parser.parse(() -> System.in).reliable()
-                .forEach(packet -> tracker.accept(packet));
+        Main.forEachReliablePacket(SingleMacSignalTracker.of(mac,e -> {print(e);}));
     }
 
     static void print(Object o) {

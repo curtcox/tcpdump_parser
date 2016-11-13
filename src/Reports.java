@@ -27,13 +27,13 @@ public class Reports {
     }
 
     void printPresenceChangesForAllMacs() {
-        MacPresenceEvent.Listener listener = new MacPresenceChangeAction(e->{print(e);});
+        MacPresenceEvent.Listener listener = MacPresenceChangeAction.of(e->{print(e);});
         MacTracker tracker = MultipleMacPresenceTracker.of(listener);
         packets().forEach(p -> tracker.accept(p));
     }
 
     void printPresenceChangesForOneMac(Mac mac) {
-        MacPresenceEvent.Listener listener = new MacPresenceChangeAction(e->{print(e);});
+        MacPresenceEvent.Listener listener = MacPresenceChangeAction.of(e->{print(e);});
         MacTracker tracker = SingleMacPresenceTracker.of(mac,listener);
         packets().forEach(p -> tracker.accept(p));
     }
