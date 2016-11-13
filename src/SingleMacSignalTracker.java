@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 final class SingleMacSignalTracker implements MacTracker {
 
     private final Mac mac;
