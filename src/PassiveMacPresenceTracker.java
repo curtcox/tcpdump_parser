@@ -1,4 +1,4 @@
-final class SingleMacPresenceTracker implements MacTracker {
+final class PassiveMacPresenceTracker implements MacTracker {
 
     private final Mac mac;
     private final MacPresenceEvent.Listener listener;
@@ -6,18 +6,18 @@ final class SingleMacPresenceTracker implements MacTracker {
     private Packet lastSeenPacketWithMAC;
     private boolean present;
 
-    private SingleMacPresenceTracker(Mac mac, MacPresenceEvent.Listener listener, GapDetector gapDetector) {
+    private PassiveMacPresenceTracker(Mac mac, MacPresenceEvent.Listener listener, GapDetector gapDetector) {
         this.mac = mac;
         this.listener = listener;
         this.gapDetector = gapDetector;
     }
 
-    static SingleMacPresenceTracker of(Mac mac, MacPresenceEvent.Listener listener) {
-        return new SingleMacPresenceTracker(mac,listener, DefaultGapDetector.minutes(3));
+    static PassiveMacPresenceTracker of(Mac mac, MacPresenceEvent.Listener listener) {
+        return new PassiveMacPresenceTracker(mac,listener, DefaultGapDetector.minutes(3));
     }
 
-    static SingleMacPresenceTracker of(Mac mac, MacPresenceEvent.Listener listener, GapDetector gapDetector) {
-        return new SingleMacPresenceTracker(mac,listener, gapDetector);
+    static PassiveMacPresenceTracker of(Mac mac, MacPresenceEvent.Listener listener, GapDetector gapDetector) {
+        return new PassiveMacPresenceTracker(mac,listener, gapDetector);
     }
 
     @Override
@@ -61,6 +61,6 @@ final class SingleMacPresenceTracker implements MacTracker {
     public static void main(String[] args) {
         Mac mac = args.length < 1 ? Mac.all0 : Mac.of(args[0]);
         MacPresenceEvent.Listener listener = MacPresenceChangeAction.of(e->{System.out.println(e);});
-        Main.forEachReliablePacket(SingleMacPresenceTracker.of(mac,listener));
+        Main.forEachReliablePacket(PassiveMacPresenceTracker.of(mac,listener));
     }
 }

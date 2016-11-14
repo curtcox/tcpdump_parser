@@ -7,7 +7,7 @@ final class MacListPresenceTracker implements MacTracker {
 
     private MacListPresenceTracker(Collection<Mac> macs, MacPresenceEvent.Listener listener) {
         trackers = MacTrackerList.of(
-                macs.stream().map(m -> SingleMacPresenceTracker.of(m,listener)).collect(Collectors.toList()));
+                macs.stream().map(m -> PassiveMacPresenceTracker.of(m,listener)).collect(Collectors.toList()));
     }
 
     static MacListPresenceTracker of(Collection<Mac> macs, MacPresenceEvent.Listener listener) {

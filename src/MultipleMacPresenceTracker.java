@@ -3,8 +3,8 @@ import java.util.*;
 final class MultipleMacPresenceTracker implements MacTracker {
 
     final MacPresenceEvent.Listener listener;
-    private final Map<Mac, SingleMacPresenceTracker> macs = new HashMap<>();
-    private SingleMacPresenceTracker[] trackers = new SingleMacPresenceTracker[0];
+    private final Map<Mac, PassiveMacPresenceTracker> macs = new HashMap<>();
+    private PassiveMacPresenceTracker[] trackers = new PassiveMacPresenceTracker[0];
 
     private MultipleMacPresenceTracker(MacPresenceEvent.Listener listener) {
         this.listener = listener;
@@ -48,7 +48,7 @@ final class MultipleMacPresenceTracker implements MacTracker {
     }
 
     void notifyAllTrackers(Packet packet) {
-        for (SingleMacPresenceTracker tracker : trackers) {
+        for (PassiveMacPresenceTracker tracker : trackers) {
             tracker.accept(packet);
         }
     }
@@ -66,7 +66,7 @@ final class MultipleMacPresenceTracker implements MacTracker {
     }
 
     void createTrackerFor(Mac mac) {
-        SingleMacPresenceTracker tracker = SingleMacPresenceTracker.of(mac,listener);
+        PassiveMacPresenceTracker tracker = PassiveMacPresenceTracker.of(mac,listener);
         macs.put(mac,tracker);
         createTrackerArray();
     }
@@ -77,6 +77,6 @@ final class MultipleMacPresenceTracker implements MacTracker {
     }
 
     void createTrackerArray() {
-        trackers = macs.values().toArray(new SingleMacPresenceTracker[macs.size()]);
+        trackers = macs.values().toArray(new PassiveMacPresenceTracker[macs.size()]);
     }
 }
